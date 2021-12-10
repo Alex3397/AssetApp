@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import { ImageBackground, StyleSheet, Text, TextInput, View, Button, Pressable } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -45,6 +45,8 @@ export default function App({ navigation }) {
     
   })()
   
+  const tenantInput = useRef();
+  const urlInput = useRef();
 
   return (
     <>
@@ -62,9 +64,9 @@ export default function App({ navigation }) {
             <Text style={{ color: colors.text, fontFamily: 'serif' }}>Será que estou em lagoinha</Text>
           </View>
 
-          <TextInput autoCapitalize="characters" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 25, marginBottom: 25 }} placeholder="Organização" defaultValue={org} placeholderTextColor={colors.text} onChangeText={org => setOrg(org)} />
-          <TextInput autoCapitalize="characters" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 25, marginBottom: 25 }} placeholder="Tenant" defaultValue={tenant} placeholderTextColor={colors.text} onChangeText={tenant => setTenant(tenant)} />
-          <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 25, marginBottom: 25 }} placeholder="Endereço do servidor" defaultValue={url} placeholderTextColor={colors.text} onChangeText={url => setUrl(url)} />
+          <TextInput autoCapitalize="characters" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 25, marginBottom: 25 }} placeholder="Organização" defaultValue={org} placeholderTextColor={colors.text} onChangeText={ org => { setOrg(org); saveArticle('organization', org); } } onSubmitEditing={() => { tenantInput.current.focus(); }} returnKeyType="next" />
+          <TextInput autoCapitalize="characters" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 25, marginBottom: 25 }} placeholder="Tenant" defaultValue={tenant} placeholderTextColor={colors.text} onChangeText={ tenant => { setTenant(tenant); saveArticle('tenant', tenant); } } ref={tenantInput} onSubmitEditing={() => { urlInput.current.focus(); }} returnKeyType="next" />
+          <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 25, marginBottom: 25 }} placeholder="Endereço do servidor" defaultValue={url} placeholderTextColor={colors.text} onChangeText={ url => { setUrl(url); saveArticle('host', url); } } ref={urlInput} onSubmitEditing={() => { navigation.navigate('Login'); saveData(); }} returnKeyType="send" />
 
           <Pressable style={{ marginTop: 25, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 35, borderRadius: 16, elevation: 3, backgroundColor: colors.card }} onPress={() => { navigation.navigate('Login'); saveData(); }} >
             <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.text }}>Concluído</Text>

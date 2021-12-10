@@ -14,6 +14,7 @@ export default function HomeScreen({ navigation }) {
     const [pass, setPass] = useState('');
     const [warning, setWarning] = useState('');
     const [response, setResponse] = useState('');
+    const [modalTitle, setModalTitle] = useState('');
     const image = colors.background.toString() === 'rgb(1, 1, 1)' ? require('./../../images/folk-pattern-black.png') : require('./../../images/folk-pattern.png');
 
     const passwordInput = useRef();
@@ -41,13 +42,16 @@ export default function HomeScreen({ navigation }) {
         if ((!user || !pass)) {
             setWarning('Usuário e senha não podem estar em branco.')
         } else if (organization != null && tenant != null && host != null) {
-            
+
 
             var xhr = new XMLHttpRequest();
-            var url = 'http://192.168.1.102:8080/getPart?token=7cc743bb-d0d0-4d69-90ee-26a822d09ffe';
-            xhr.open("GET", url);
+            var url = host + ':8080/validate';
+            xhr.open("POST", url);
 
             xhr.setRequestHeader("Accept", "*/*");
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.timeout = 2500;
+            xhr.ontimeout = () => { xhr.abort }
 
             xhr.onreadystatechange = function () {
                 console.log(xhr.readyState)
@@ -55,11 +59,35 @@ export default function HomeScreen({ navigation }) {
                     console.log(xhr.status);
                     console.log(xhr.response);
                     setModalVisible(true)
-                    setResponse(xhr.response)
+
+                    if (xhr.responseText.includes("User validated.")) {
+                        setModalTitle('Bem vindo.')
+                        setResponse('Seu usuário foi validado com sucesso.')
+                    } else {
+                        if (xhr.status == 0) {
+                            setModalTitle('Erro de rede.')
+                            setResponse('Não foi possível verificar usuário, \nDevido a uma falta de conexão com o servidor. \n\nVerifique as configurações.')
+                        } else {
+                            setModalTitle('Erro não previsto.');
+                            setResponse(xhr.response);
+                        }
+                    }
                 }
             };
 
-            xhr.send(null);
+            console.log('before sending data: ')
+            console.log(user)
+            console.log(pass)
+            console.log(organization)
+            console.log(tenant)
+
+            var data = {
+                userName: user,
+                password: pass,
+                organization: organization,
+                tenant: tenant
+            };
+            xhr.send(JSON.stringify(data));
         }
         else {
             setWarning('Não é possivel conectar com o servidor. Verifique os parâmetros de configuração.')
@@ -68,28 +96,13 @@ export default function HomeScreen({ navigation }) {
 
     return (
         <>
-            <ImageBackground
-                source={image}
-                style={{ width: '100%', height: '100%', position: 'absolute' }}
-                resizeMode="repeat"
-            >
-                <Modal
-                    animationType="fade"
-                    statusBarTranslucent={true}
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                        Alert.alert("Modal has been closed.");
-                        setModalVisible(!modalVisible);
-                    }}>
+            <ImageBackground source={image} style={{ width: '100%', height: '100%', position: 'absolute' }} resizeMode="repeat">
+                <Modal animationType="fade" statusBarTranslucent={true} transparent={true} visible={modalVisible} onRequestClose={() => { Alert.alert("Modal has been closed."); setModalVisible(!modalVisible); }}>
                     <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 22 }}>
-                        <View style={{ margin: 20, backgroundColor: "white", borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5}}>
-                            <Text style={{ marginBottom: 15, textAlign: "center" }}>Hello World!</Text>
-                            <Text>{response}</Text>
-                            <Pressable
-                                style={{ borderRadius: 20,padding: 10, elevation: 2, backgroundColor: "#2196F3" }}
-                                onPress={() => setModalVisible(!modalVisible)}
-                            >
+                        <View style={{ margin: 20, backgroundColor: "white", borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
+                            <Text style={{ marginBottom: 15, textAlign: "center" }}>{modalTitle}</Text>
+                            <Text style={{ marginBottom: 15, textAlign: "center" }}>{response}</Text>
+                            <Pressable style={{ borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3" }} onPress={() => setModalVisible(!modalVisible)} >
                                 <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>Hide Modal</Text>
                             </Pressable>
                         </View>
@@ -104,7 +117,7 @@ export default function HomeScreen({ navigation }) {
                         <Text style={{ color: colors.text, fontFamily: 'serif' }}>Será que estou em lagoinha</Text>
                     </View>
 
-                    <TextInput autoCapitalize='none' style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 25, marginBottom: 25 }} placeholder="Usuário" placeholderTextColor={colors.text} onChangeText={user => setUser(user)} onSubmitEditing={() => { passwordInput.current.focus(); }} returnKeyType="next" />
+                    <TextInput autoCapitalize='characters' style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 25, marginBottom: 25 }} placeholder="Usuário" placeholderTextColor={colors.text} onChangeText={user => setUser(user)} onSubmitEditing={() => { passwordInput.current.focus(); }} returnKeyType="next" />
                     <TextInput autoCapitalize='none' secureTextEntry={true} style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 25, marginBottom: 5 }} placeholder="Senha" placeholderTextColor={colors.text} onChangeText={pass => setPass(pass)} ref={passwordInput} returnKeyType="send" onSubmitEditing={() => { validate() }} />
 
                     <Text style={{ color: 'red', fontSize: 12, alignSelf: 'center' }}>{warning}</Text>
