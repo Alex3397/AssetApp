@@ -2,8 +2,11 @@ import React from 'react';
 import PropTypes from "prop-types"
 import Icon from "react-native-vector-icons/FontAwesome"
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 
 export default function CheckBox(props) {
+
+  const { colors } = useTheme();
 
   function handleChange() {
     const { onChange } = props;
@@ -20,8 +23,8 @@ export default function CheckBox(props) {
           {props.label}
         </Text>
         
-        <TouchableOpacity onPress={handleChange} style={[styles.CheckBox]}>
-          {props.value ? <Icon name="check" style={{ fontSize: 16, }} /> : null}
+        <TouchableOpacity onPress={handleChange} style={{ width: 25, height: 25, borderWidth: 1, borderColor: colors.text, justifyContent: "center", alignItems: "center" }}>
+          {props.value ? <Icon name="check" style={{ fontSize: 16, }} color={colors.text} /> : null}
         </TouchableOpacity>
   
       </View>
@@ -30,8 +33,8 @@ export default function CheckBox(props) {
     return (
       <View style={styles.WrapperCheckBox}>
   
-        <TouchableOpacity onPress={handleChange} style={[styles.CheckBox]}>
-          {props.value ? <Icon name="check" style={{ fontSize: 16, }} /> : null}
+        <TouchableOpacity onPress={handleChange} style={{ width: 25, height: 25, borderWidth: 1, borderColor: colors.text, justifyContent: "center", alignItems: "center" }}>
+          {props.value ? <Icon name="check" style={{ fontSize: 16 }} color={colors.text} /> : null}
         </TouchableOpacity>
   
         <Text style={[styles.LabelCheck, props.labelStyle]}>
@@ -43,8 +46,8 @@ export default function CheckBox(props) {
     return (
       <View style={styles.WrapperCheckBox}>
   
-        <TouchableOpacity onPress={handleChange} style={[styles.CheckBox]}>
-          {props.value ? <Icon name="check" style={{ fontSize: 16, }} /> : null}
+        <TouchableOpacity onPress={handleChange} style={{ width: 25, height: 25, borderWidth: 1, borderColor: colors.text, justifyContent: "center", alignItems: "center" }}>
+          {props.value ? <Icon name="check" style={{ fontSize: 16, }} color={colors.text} /> : null}
         </TouchableOpacity>
   
         <Text style={[styles.LabelCheck, props.labelStyle]}>
@@ -56,14 +59,6 @@ export default function CheckBox(props) {
 }
 
 const styles = StyleSheet.create({
-  CheckBox: {
-    width: 25,
-    height: 25,
-    borderWidth: 1,
-    borderColor: "rgb(104, 104, 104)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   WrapperCheckBox: {
     flexDirection: "row",
     alignItems: "center",

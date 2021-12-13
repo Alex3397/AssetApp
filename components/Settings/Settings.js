@@ -55,7 +55,7 @@ export default function App({ navigation }) {
         style={{ width: '100%', height: '100%' }}
         resizeMode="repeat"
       >
-        <View style={{ flex: 1.25, alignItems: 'center', justifyContent: 'center' }} >
+        <View style={{ flex: 1.5, alignItems: 'center', justifyContent: 'center' }} >
           <Text style={{ color: colors.text, fontSize: 50, fontFamily: 'serif' }}>Titulo</Text>
         </View>
         <View style={{ flex: 2, justifyContent: 'center', borderTopLeftRadius: 50, borderTopRightRadius: 50, backgroundColor: colors.background, padding: 25 }}>
