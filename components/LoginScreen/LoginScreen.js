@@ -86,7 +86,10 @@ export default function HomeScreen({ navigation }) {
                     if (xhr.responseText.includes("User validated.")) {
                         setModalTitle('Bem vindo.');
                         setResponse('Seu usuário foi validado com sucesso.');
-                        setButtonText('Continuar.')
+                        setButtonText('Continuar.');
+                        var token = xhr.responseText.replace("User validated.","");
+                        console.log('token: ' + token);
+                        saveArticle('token',token);
                     } else {
                         if (xhr.status == 0) {
                             setModalTitle('Erro de rede.');
