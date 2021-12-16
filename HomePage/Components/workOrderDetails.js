@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useTheme } from '@react-navigation/native';
-import { ImageBackground, Image, StyleSheet, TextInput, Text, Button, Pressable, FlatList, View } from "react-native";
+import { ImageBackground, Image, StyleSheet, TextInput, Text, Button, Pressable, FlatList, View, ScrollView } from "react-native";
 import Storage from '../../classes/Storage/Storage';
 
 export default function HomeScreen({ navigation }) {
@@ -12,7 +12,7 @@ export default function HomeScreen({ navigation }) {
 
     useEffect(() => {
         xumbrega()
-        }, [])
+    }, [])
 
     async function xumbrega() {
         console.log('called xumbrega')
@@ -44,9 +44,13 @@ export default function HomeScreen({ navigation }) {
 
     return (
         <>
-           <Text style={{ color: colors.text}}>Hello</Text>
-           <Text style={{ color: colors.text}}>{string}</Text>
-           <Text style={{ color: colors.text}}>{item}</Text>
+            <Pressable style={{ borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3", position: "absolute", top: -45, right: 50, borderColor: 'white', borderWidth: 1, zIndex: 9999999 }} onPress={() => { console.log('Pressed.'); xumbrega() }} >
+                <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>Procurar</Text>
+            </Pressable>
+            <Text style={{ color: colors.text }}>Hello</Text>
+            <ScrollView>
+                <Text style={{ color: colors.text }}>{JSON.stringify(JSON.parse(string),null,8)}</Text>
+            </ScrollView>
         </>
     );
 }
