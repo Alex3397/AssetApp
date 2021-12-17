@@ -49,7 +49,7 @@ export default function HomeScreen({ navigation }) {
             </Pressable>
             <Text style={{ color: colors.text }}>Hello</Text>
             <ScrollView>
-                <Text style={{ color: colors.text }}>{JSON.stringify(JSON.parse(string),null,8)}</Text>
+                <Text style={{ color: colors.text }}>{JSON.stringify(item, null, 6)}</Text>
             </ScrollView>
         </>
     );
