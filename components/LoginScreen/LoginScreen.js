@@ -124,6 +124,7 @@ export default function HomeScreen({ navigation }) {
                 organization: organization,
                 tenant: tenant
             };
+            console.log(data);
             xhr.send(JSON.stringify(data));
         }
         else {

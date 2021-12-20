@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useTheme } from '@react-navigation/native';
 import { ImageBackground, Image, StyleSheet, TextInput, Text, Button, Pressable, FlatList, View } from "react-native";
 import Storage from '../../classes/Storage/Storage';
@@ -41,6 +41,9 @@ export default function HomeScreen({ navigation }) {
 
     }
 
+    useEffect(() => {
+        xumbrega()
+    }, [])
 
     return (
         <>
