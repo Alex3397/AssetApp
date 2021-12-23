@@ -5,6 +5,7 @@ export default class Storage {
 
     async getArticle(key) {
         try {
+            console.log('Getting value from ' + key)
             return await AsyncStorage.getItem('@'.concat(key));
         } catch (e) {
             console.log(e);
@@ -13,8 +14,8 @@ export default class Storage {
     
     async saveArticle(key, value) {
         try {
-            await AsyncStorage.setItem('@'.concat(key), value);
             console.log('Saving ' + value + ' using ' + key)
+            await AsyncStorage.setItem('@'.concat(key), value).then(console.log('Saved ' + value + ' using ' + key));
         } catch (e) {
             console.log(e);
         }

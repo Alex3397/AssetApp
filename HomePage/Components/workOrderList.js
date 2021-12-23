@@ -34,6 +34,7 @@ export default function HomeScreen({ navigation }) {
                     jsonData[index] = element;
                 }
                 setData(jsonData)
+                storage.saveObject('workOrderList')
             }
         };
 
@@ -47,8 +48,8 @@ export default function HomeScreen({ navigation }) {
 
     return (
         <>
-            <Pressable style={{ borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3", position: "absolute", top: -45, right: 50, borderColor: 'white', borderWidth: 1, zIndex: 9999999 }} onPress={() => { console.log('Pressed.'); xumbrega() }} >
-                <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>Procurar</Text>
+            <Pressable style={{ borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3", position: "absolute", top: -45, right: 25, zIndex: 9999999 }} onPress={() => { xumbrega() }} >
+                <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>Lupa</Text>
             </Pressable>
             <FlatList data={respData} renderItem={({ item }) =>
                 <Pressable style={{ borderWidth: 1, borderColor: colors.border, padding: 10, backgroundColor: colors.card }} onPress={() => { console.log('pressed'); storage.saveObject('selectedItem',item); navigation.navigate('Ordem de Serviço'); }}>
