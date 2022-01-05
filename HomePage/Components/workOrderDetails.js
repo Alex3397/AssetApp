@@ -11,14 +11,14 @@ export default function HomeScreen({ navigation }) {
     const storage = new Storage();
 
     useEffect(() => {
-        xumbrega()
+        getWorkOrder()
         navigation.addListener('focus', () => {
-            xumbrega();
+            getWorkOrder();
           });
     }, [])
 
-    async function xumbrega() {
-        console.log('called xumbrega')
+    async function getWorkOrder() {
+        console.log('called getWorkOrder')
         var selectedItem = await storage.getObject('selectedItem');
         var host = await storage.getArticle('host');
         var token = await storage.getArticle('token');
@@ -44,7 +44,7 @@ export default function HomeScreen({ navigation }) {
 
     return (
         <>
-            <Pressable style={{ borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3", position: "absolute", top: -45, right: 50, borderColor: 'white', borderWidth: 1, zIndex: 9999999 }} onPress={() => { console.log('Pressed.'); xumbrega() }} >
+            <Pressable style={{ borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3", position: "absolute", top: -45, right: 50, borderColor: 'white', borderWidth: 1, zIndex: 9999999 }} onPress={() => { console.log('Pressed.'); getWorkOrder() }} >
                 <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>Procurar</Text>
             </Pressable>
             <ScrollView>

@@ -4,7 +4,6 @@ import { ImageBackground, Image, StyleSheet, TextInput, Text, Modal } from "reac
 import { useTheme } from '@react-navigation/native';
 import CheckBox from '../Utilities/CheckBox';
 import Icon from "react-native-vector-icons/FontAwesome";
-import TextBox from 'react-native-password-eye';
 import Storage from '../../classes/Storage/Storage';
 
 export default function HomeScreen({ navigation }) {
@@ -25,6 +24,8 @@ export default function HomeScreen({ navigation }) {
     const image = colors.background.toString() === 'rgb(1, 1, 1)' ? require('./../../images/folk-pattern-black.png') : require('./../../images/folk-pattern.png');
 
     const passwordInput = useRef();
+
+    console.log(colors)
 
     const saveUserData = async (user, pass) => {
         try {
