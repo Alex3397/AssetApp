@@ -2,14 +2,21 @@ import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useTheme } from '@react-navigation/native';
 import { ImageBackground, Image, StyleSheet, TextInput, Text, Button, Pressable, FlatList, View } from "react-native";
 import Storage from '../../classes/Storage/Storage';
+import * as Network from 'expo-network';
 
 export default function HomeScreen({ navigation }) {
     const { colors } = useTheme();
 
     const [respData, setData] = useState(JSON.parse('{}'));
+    const [workOrderData, setWorkOrderData] = useState(JSON.parse('{}'));
     const storage = new Storage();
 
-    async function getWorkOrderList() {
+    async function getWorkOrderList(update) {
+        var workOrderList = await storage.getObject('workOrderList');
+        if (workOrderList != null && !update) {
+            setData(workOrderList);
+            return workOrderList;
+        }
         var host = await storage.getArticle('host');
         var token = await storage.getArticle('token');
 
@@ -34,25 +41,57 @@ export default function HomeScreen({ navigation }) {
                     jsonData[index] = element;
                 }
                 setData(jsonData)
-                storage.saveObject('workOrderList')
+                storage.saveObject('workOrderList',jsonData);
+                return jsonData;
             }
         };
 
         xhr.send();
-
     }
 
-    useEffect(() => {
-        getWorkOrderList()
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+
+    async function getWorkOrder(woCode, woOrganization) {
+        var key = element.workOrderCode + " : " + element.organization;
+        var networkState = await Network.getNetworkStateAsync();
+
+        var host = await storage.getArticle('host');
+        var token = await storage.getArticle('token');
+
+        var url = host + ':8080/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + woCode + '&organization=' + woOrganization;
+        fetch(url).then(response => response.json()).then((data) => {console.log("gotData" + data); setWorkOrderData(data)})
+        storage.saveObject(key,workOrderData);
+        return workOrder;
+    }
+
+    useEffect(async () => {
+        var networkState = await Network.getNetworkStateAsync();
+        var date = await storage.getObject('today');
+        if (networkState.isConnected && networkState.type.includes('WIFI') && new Date().getDate() != date) {
+            getWorkOrderList(true).then( async () => {
+                var workOrderList = await storage.getObject('workOrderList');
+                for (let i = 0; i < workOrderList.length; i++) {
+                    const element = workOrderList[i];
+                    getWorkOrder(element.workOrderCode, element.organization);
+                    await sleep(2000);
+                }
+                console.log('hello');
+            });
+            storage.saveObject('today',new Date().getDate());
+        } else {
+            getWorkOrderList(false)
+        }
     }, [])
 
     return (
         <>
-            <Pressable style={{ borderRadius: 20, padding: 12.5, elevation: 2, backgroundColor: colors.card, position: "absolute", top: -47.5, right: 25, zIndex: 9999999 }} onPress={() => { getWorkOrderList() }} >
+            <Pressable style={{ borderRadius: 20, padding: 12.5, elevation: 2, backgroundColor: colors.card, position: "absolute", top: -47.5, right: 25, zIndex: 9999999 }} onPress={() => { getWorkOrderList(true) }} >
                 <Text style={{ color: colors.text, fontWeight: "bold", textAlign: "center" }}>Lupa</Text>
             </Pressable>
             <FlatList data={respData} renderItem={({ item }) =>
-                <Pressable style={{ padding: 8, backgroundColor: colors.background }} onPress={() => { console.log('pressed'); storage.saveObject('selectedItem', item); navigation.navigate('Ordem de Serviço'); }}>
+                <Pressable style={{ padding: 8, backgroundColor: colors.background }} onPress={() => {storage.saveObject('selectedItem', item); getWorkOrder(); navigation.navigate('Ordem de Serviço'); }}>
                     <View style={{ backgroundColor: colors.card, padding: 12.5, borderRadius: 15, marginBottom: 5 }}>
                         <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5 }}>
                             <Text style={{ color: colors.text, fontSize: 17, alignSelf: "flex-start" }}>{item.workOrderCode + ' - ' + item.description}</Text>

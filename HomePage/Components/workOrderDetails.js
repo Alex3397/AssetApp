@@ -4,51 +4,61 @@ import { ImageBackground, Image, StyleSheet, TextInput, Text, Button, Pressable,
 import Storage from '../../classes/Storage/Storage';
 
 export default function HomeScreen({ navigation }) {
+    const storage = new Storage();
     const { colors } = useTheme();
 
     const [item, setData] = useState(JSON.parse('{}'));
     const [string, setString] = useState('');
-    const storage = new Storage();
 
-    useEffect(() => {
-        getWorkOrder()
-        navigation.addListener('focus', () => {
-            getWorkOrder();
-          });
-    }, [])
-
-    async function getWorkOrder() {
-        console.log('called getWorkOrder')
+    useEffect( async() => {
         var selectedItem = await storage.getObject('selectedItem');
+        var workOrder = await storage.getObject(selectedItem.workOrderCode + ' : ' + selectedItem.organization);
+
+        if (workOrder != null) {
+            setData(workOrder);
+            return workOrder;
+        }
+
         var host = await storage.getArticle('host');
         var token = await storage.getArticle('token');
 
-        var xhr = new XMLHttpRequest();
         var url = host + ':8080/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + selectedItem.workOrderCode + '&organization=' + selectedItem.organization;
-        xhr.open("GET", url);
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                setString(xhr.responseText)
-                var jsonData = JSON.parse(xhr.response)
-                for (let index = 0; index < jsonData.length; index++) {
-                    const element = jsonData[index];
-                    jsonData[index] = element;
-                }
-                setData(jsonData)
-            }
-        };
-
-        xhr.send();
-    }
+        fetch(url).then(response => response.json()).then((data) => {console.log("gotData" + data); setData(data)})
+        
+        navigation.addListener('focus', () => {
+            fetch(url).then(response => response.json()).then((data) => {console.log("gotData" + data); setData(data)})
+          });
+    }, [])
 
     return (
         <>
-            <Pressable style={{ borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3", position: "absolute", top: -45, right: 50, borderColor: 'white', borderWidth: 1, zIndex: 9999999 }} onPress={() => { console.log('Pressed.'); getWorkOrder() }} >
+            <Pressable style={{ borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3", position: "absolute", top: -45, right: 50, borderColor: 'white', borderWidth: 1, zIndex: 9999999 }} onPress={() => { console.log('Pressed.'); }} >
                 <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>Procurar</Text>
             </Pressable>
             <ScrollView>
-                <Text style={{ color: colors.text }}>{JSON.stringify(item, null, 6)}</Text>
+                <View>
+                    <Text style={{ color: colors.text }}>
+                        <Text>Ordem de serviço: {item.workOrderId.code} - {item.workOrderId.description}</Text>
+                    </Text>
+                </View>
+                <View>
+                    <Text style={{ color: colors.text }}>Programação</Text>
+                </View>
+                <View>
+                    <Text style={{ color: colors.text }}>Detalhes de referência linear</Text>
+                </View>
+                <View>
+                    <Text style={{ color: colors.text }}>Detalhes da OS</Text>
+                </View>
+                <View>
+                    <Text style={{ color: colors.text }}>Atividade</Text>
+                </View>
+                <View>
+                    <Text style={{ color: colors.text }}>Campos definidos pelo usuário</Text>
+                </View>
+                <View>
+                    <Text style={{ color: colors.text }}>Campos personalizados</Text>
+                </View>
             </ScrollView>
         </>
     );
