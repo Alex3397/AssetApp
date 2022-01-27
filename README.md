@@ -1,5 +1,5 @@
-### ASSET APP
+## ASSET APP
 
-## TODO:
+### TODO:
 
    * Adicionar opção de conectar no servidor remoto caso esteja utilizando internet celullar
