@@ -1,6 +1,4 @@
-��#� �A�s�s�e�t�A�p�p�
-�
-�
+### ASSET APP
 
 ## TODO:
 
