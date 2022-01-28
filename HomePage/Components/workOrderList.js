@@ -54,8 +54,7 @@ export default function HomeScreen({ navigation }) {
       }
 
     async function getWorkOrder(woCode, woOrganization) {
-        var key = element.workOrderCode + " : " + element.organization;
-        var networkState = await Network.getNetworkStateAsync();
+        var key = woCode + " : " + woOrganization;
 
         var host = await storage.getArticle('host');
         var token = await storage.getArticle('token');
@@ -63,7 +62,6 @@ export default function HomeScreen({ navigation }) {
         var url = host + ':8080/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + woCode + '&organization=' + woOrganization;
         fetch(url).then(response => response.json()).then((data) => {console.log("gotData" + data); setWorkOrderData(data)})
         storage.saveObject(key,workOrderData);
-        return workOrder;
     }
 
     useEffect(async () => {

@@ -184,7 +184,7 @@ export default function HomeScreen({ navigation }) {
                     </View>
 
                     <Text style={{ color: 'red', fontSize: 12, alignSelf: 'center' }}>{warning}</Text>
-                    <CheckBox label="Lembrar informações" labelSide="right" labelStyle={{ color: colors.text }} value={saveUserInfo} onChange={() => { setSaveUserInfo(!saveUserInfo); saveArticle('savedata', JSON.stringify(!saveUserInfo)); saveUserInfo ? saveUserData(user, pass) : saveUserData('', '') }} />
+                    <CheckBox label="Lembrar informações" labelSide="right" labelStyle={{ color: colors.text }} value={saveUserInfo} onChange={() => { setSaveUserInfo(!saveUserInfo); storage.saveArticle('savedata', JSON.stringify(!saveUserInfo)); saveUserInfo ? saveUserData(user, pass) : saveUserData('', '') }} />
 
                     <Pressable style={{ marginTop: 45, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 35, borderRadius: 16, elevation: 3, backgroundColor: colors.card }} onPress={() => { validate(); }} >
                         <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.text }}>Entrar</Text>
