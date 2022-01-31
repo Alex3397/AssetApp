@@ -87,6 +87,11 @@ export default function HomeScreen({ navigation }) {
                             setResponse('O usuário e/ou senha estão incorretos.\n\nVerifique se as credenciais foram inseridas corretamente.\nVocê poderá continuar utilizando o aplicativo. Todos os dados que forem gerados dentro do aplicativo ficarão salvos, mas somente quando você estabelecer a conexão com o servidor de forma correta os dados serão enviados.')
                             setButtonText('Tudo bem.')
                         }
+                        else if (xhr.responseText.includes('Connection timed out')) {
+                            setModalTitle('Servidor demorou para responder.')
+                            setResponse('Tente novamente mais tarde.')
+                            setButtonText('Tudo bem.')
+                        }
                         else {
                             setModalTitle('Erro não previsto.');
                             setResponse(xhr.response);

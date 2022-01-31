@@ -61,51 +61,44 @@ export default function HomeScreen({ navigation }) {
                         <Text style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "flex-end", top: -22, marginBottom: -22 }}>Organização: {item.organization}</Text>
                         <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Tipo: {item.type}</Text>
                         <Text style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "flex-end", top: -22, marginBottom: -22  }}>Departamento: {item.department}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Criado por: {item.createdBy}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "flex-end", top: -22, marginBottom: -22 }}>Criado em: {item.createdDate}</Text>
                     </View>
 
                     <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                        <Text style={{ padding: 2, color: colors.text }}>Posição: {item.positionCode} - {item.positionDescription}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Localização: {item.locationCode} - {item.locationDescription}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Espaço de Trabalho: {item.workspace}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Localização: {item.locationCode} - {item.locationDescription}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Espaço de Trabalho: {item.workspace}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Tipo de Cobertura: {item.coverageType}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Site OEM/ID de Sistem: {item.oemSite}</Text>
                     </View>
 
                     <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                        <Text style={{ padding: 2, color: colors.text }}>Equipamento: {item.equipmentCode} - {item.equipmentDescription}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Tipo de Equipamento: {item.equipmentType}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Organização do Equipamento: {item.equipmentOrganization}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Alias de Equipamento: {item.equipmentAlias}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Número de série: {item.serialNumber}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Fabricante do Equipamento: {item.equipmentManufacturer}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Fornecedor: {item.supplier}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Modelo: {item.model}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Varios Equipamentos: {item.multipleEquipments}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Segurança: {item.safety}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "flex-end", top: -22, marginBottom: -22 }}>Garantia: {item.warranty}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Dependente: {item.depend}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "flex-end", top: -22, marginBottom: -22 }}>Pesquisa: {item.survey}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Varios Equipamentos: {item.multipleEquipments}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "flex-end", top: -22, marginBottom: -22 }}>Impresso: {item.printed}</Text>
+                    </View>
+
+                    <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, paddingTop: 10, borderRadius: 25 }}>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center", marginBottom: 5 }}>Equipamento</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>{item.equipmentCode} - {item.equipmentDescription}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Tipo: {item.equipmentType}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "flex-end", top: -22, marginBottom: -22 }}>Organização: {item.equipmentOrganization}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Posição: {item.positionCode} - {item.positionDescription}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "flex-end", top: -22, marginBottom: -22 }}>Alias: {item.equipmentAlias}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Fabricante: {item.equipmentManufacturer}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "flex-end", top: -22, marginBottom: -22 }}>Fornecedor: {item.supplier}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Número de série: {item.serialNumber}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "flex-end", top: -22, marginBottom: -22 }}>Modelo: {item.model}</Text>
                     </View>
 
                     <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                        <Text style={{ padding: 2, color: colors.text }}>Site OEM/ID de Sistem: {item.oemSite}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Segurança: {item.safety}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Garantia: {item.warranty}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Dependente: {item.depend}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Pesquisa: {item.survey}</Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Assinatura Eletrônica: </Text>
+                        <Text style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "center" }}>{item.esigner}  -  {item.esignDate}  -  {item.esignType}</Text>
                     </View>
 
-                    <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                        <Text style={{ padding: 2, color: colors.text }}>Criado por: {item.createdBy}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Data da criação: {item.createdDate}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Tipo de Cobertura: {item.coverageType}</Text>
-                    </View>
-
-                    <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                        <Text style={{ padding: 2, color: colors.text }}>Assinatura Eletrônica: {item.esigner}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Data da Assinatura Eletrônica: {item.esignDate}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Tipo de Assinatura Eletrônica: {item.esignType}</Text>
-                    </View>
-
-                    <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                        <Text style={{ padding: 2, color: colors.text }}>Classificação de confiabilidade: {item.reliabilityRanking}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Índice de Classificação de confiabilidade: {item.reliabilityRankingIndex}</Text>
-                        <Text style={{ padding: 2, color: colors.text }}>Pontuação de Classificação de confiabilidade: {item.reliabilityRankingScore}</Text>
-                    </View>
                 </View>
 
                 <View>
@@ -125,6 +118,18 @@ export default function HomeScreen({ navigation }) {
                 </View>
                 <View>
                     <Text style={{ color: colors.text }}>Campos personalizados</Text>
+                </View>
+                <View>
+                    <Text style={{ color: colors.text }}>Detalhes de serviço ao cliente</Text>
+                </View>
+                <View>
+                    <Text style={{ color: colors.text }}>Controle de incidentes</Text>
+                </View>
+                <View>
+                    <Text style={{ color: colors.text }}>Detalhes de Produção</Text>
+                </View>
+                <View>
+                    <Text style={{ color: colors.text }}>Detalhes de Conformidade</Text>
                 </View>
             </ScrollView>
         </>
