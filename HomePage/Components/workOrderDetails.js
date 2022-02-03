@@ -209,17 +209,121 @@ export default function HomeScreen({ navigation }) {
                 <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
                     <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Atividade</Text>
 
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Atividade: {item.activity.activityCode}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nível: {item.activity.tradeCode}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Plano de tarefa: {item.activity.taskCode}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Lista de materiais: {item.activity.materialList}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Motivo do reparo: {item.activity.repairReason}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Trabalho executado: {item.activity.workAccomplished}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Falha da peça segundo técnico: {item.activity.technicianPartFailure}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Fabricante: {item.activity.manufacturerCode}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de Inicio: {item.activity.activityStartDate}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de Término: {item.activity.activityEndDate}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Horas Estimadas: {item.activity.estimatedHours}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Horas Restantes: {item.activity.hoursRemaining}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Pessoal Requerido: {item.activity.persons}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nível do Sistema: {item.activity.systemLevel}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nível de Montagem: {item.activity.assemblyLevel}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nível de Componente: {item.activity.componentLevel}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Localização do Componente: {item.activity.partLocation}</Text>
                 </View>
 
                 <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Campos definidos pelo usuário</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Campos definidos pelo usuário - SUBSTITUIR AS LABELS</Text>
 
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº01: {item.userDefinedFields.udfChar01}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº02: {item.userDefinedFields.udfChar02}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº03: {item.userDefinedFields.udfChar03}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº04: {item.userDefinedFields.udfChar04}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº05: {item.userDefinedFields.udfChar05}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº06: {item.userDefinedFields.udfChar06}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº07: {item.userDefinedFields.udfChar07}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº08: {item.userDefinedFields.udfChar08}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº09: {item.userDefinedFields.udfChar09}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº10: {item.userDefinedFields.udfChar10}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº11: {item.userDefinedFields.udfChar11}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº12: {item.userDefinedFields.udfChar12}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº13: {item.userDefinedFields.udfChar13}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº14: {item.userDefinedFields.udfChar14}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº15: {item.userDefinedFields.udfChar15}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº16: {item.userDefinedFields.udfChar16}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº17: {item.userDefinedFields.udfChar17}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº18: {item.userDefinedFields.udfChar18}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº19: {item.userDefinedFields.udfChar19}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº20: {item.userDefinedFields.udfChar20}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº21: {item.userDefinedFields.udfChar21}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº22: {item.userDefinedFields.udfChar22}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº23: {item.userDefinedFields.udfChar23}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº24: {item.userDefinedFields.udfChar24}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº25: {item.userDefinedFields.udfChar25}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº26: {item.userDefinedFields.udfChar26}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº27: {item.userDefinedFields.udfChar27}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº28: {item.userDefinedFields.udfChar28}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº29: {item.userDefinedFields.udfChar29}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº30: {item.userDefinedFields.udfChar30}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº31: {item.userDefinedFields.udfChar31}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº32: {item.userDefinedFields.udfChar32}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº33: {item.userDefinedFields.udfChar33}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº34: {item.userDefinedFields.udfChar34}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº35: {item.userDefinedFields.udfChar35}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº36: {item.userDefinedFields.udfChar36}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº37: {item.userDefinedFields.udfChar37}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº38: {item.userDefinedFields.udfChar38}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº39: {item.userDefinedFields.udfChar39}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº40: {item.userDefinedFields.udfChar40}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº41: {item.userDefinedFields.udfChar41}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº42: {item.userDefinedFields.udfChar42}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº43: {item.userDefinedFields.udfChar43}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº44: {item.userDefinedFields.udfChar44}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campo definido pelo usuário Nº45: {item.userDefinedFields.udfChar45}</Text>
+
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16, marginTop: 16 }}>Número definido pelo usuário: {item.userDefinedFields.udfNum1}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Número definido pelo usuário: {item.userDefinedFields.udfNum2}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Número definido pelo usuário: {item.userDefinedFields.udfNum3}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Número definido pelo usuário: {item.userDefinedFields.udfNum4}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Número definido pelo usuário: {item.userDefinedFields.udfNum5}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Número definido pelo usuário: {item.userDefinedFields.udfNum6}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Número definido pelo usuário: {item.userDefinedFields.udfNum7}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Número definido pelo usuário: {item.userDefinedFields.udfNum8}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Número definido pelo usuário: {item.userDefinedFields.udfNum9}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Número definido pelo usuário: {item.userDefinedFields.udfNum10}</Text>
+
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16, marginTop: 16 }}>Data definida pelo usuário: {item.userDefinedFields.udfDate1}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data definida pelo usuário: {item.userDefinedFields.udfDate2}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data definida pelo usuário: {item.userDefinedFields.udfDate3}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data definida pelo usuário: {item.userDefinedFields.udfDate4}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data definida pelo usuário: {item.userDefinedFields.udfDate5}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data definida pelo usuário: {item.userDefinedFields.udfDate6}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data definida pelo usuário: {item.userDefinedFields.udfDate7}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data definida pelo usuário: {item.userDefinedFields.udfDate8}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data definida pelo usuário: {item.userDefinedFields.udfDate9}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data definida pelo usuário: {item.userDefinedFields.udfDate10}</Text>
+
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16, marginTop: 16 }}>Checkbox definido pelo usuário: {item.userDefinedFields.udfChkBox01}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Checkbox definido pelo usuário: {item.userDefinedFields.udfChkBox02}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Checkbox definido pelo usuário: {item.userDefinedFields.udfChkBox03}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Checkbox definido pelo usuário: {item.userDefinedFields.udfChkBox04}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Checkbox definido pelo usuário: {item.userDefinedFields.udfChkBox05}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Checkbox definido pelo usuário: {item.userDefinedFields.udfChkBox06}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Checkbox definido pelo usuário: {item.userDefinedFields.udfChkBox07}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Checkbox definido pelo usuário: {item.userDefinedFields.udfChkBox08}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Checkbox definido pelo usuário: {item.userDefinedFields.udfChkBox09}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Checkbox definido pelo usuário: {item.userDefinedFields.udfChkBox10}</Text>
+
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16, marginTop: 16 }}>Nota definida pelo usuário: {item.userDefinedFields.udfNote01}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nota definida pelo usuário: {item.userDefinedFields.udfNote02}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nota definida pelo usuário: {item.userDefinedFields.udfNote03}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nota definida pelo usuário: {item.userDefinedFields.udfNote04}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nota definida pelo usuário: {item.userDefinedFields.udfNote05}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nota definida pelo usuário: {item.userDefinedFields.udfNote06}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nota definida pelo usuário: {item.userDefinedFields.udfNote07}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nota definida pelo usuário: {item.userDefinedFields.udfNote08}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nota definida pelo usuário: {item.userDefinedFields.udfNote09}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nota definida pelo usuário: {item.userDefinedFields.udfNote10}</Text>
                 </View>
 
                 <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Campos personalizados</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Campos personalizados - VER DEPOIS</Text>
 
                     <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
                 </View>
@@ -227,7 +331,20 @@ export default function HomeScreen({ navigation }) {
                 <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
                     <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes de serviço ao cliente</Text>
 
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Capacidade de utilização do equipmento: {item.customerServiceDetails.equipmentUsability}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data potencial de conserto temporário: {item.customerServiceDetails.tempFixPromiseDate}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Fornecedor: {item.customerServiceDetails.supplierServiceCategoryCode}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Organização do fornecedor: {item.customerServiceDetails.supplierServiceCategoryOrganization}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Categoria de serviço: {item.customerServiceDetails.providerServiceCategoryCode}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Organização da Categoria de serviço: {item.customerServiceDetails.providerServiceCategoryOrganization}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Endereço do trabalho: {item.customerServiceDetails.workAddress}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Custo Estimado de mão de obra: {item.customerServiceDetails.estimatedLaborCost}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Custo Estimado de material: {item.customerServiceDetails.estimatedMaterialCost}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Custo Estimado diversos: {item.customerServiceDetails.estimatedMiscellaneousCost}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Custo Estimado Totais: {item.customerServiceDetails.estimatedTotalCost}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data potencial de conserto permanente: {item.customerServiceDetails.permanentFixPromisedDate}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de conclusão de conserto temporário: {item.customerServiceDetails.temporaryFixDateCompleted}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Código de serviço: {item.customerServiceDetails.problemCode}</Text>
                 </View>
 
                 <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
