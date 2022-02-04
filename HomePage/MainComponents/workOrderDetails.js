@@ -3,16 +3,18 @@ import { useTheme } from '@react-navigation/native';
 import { ImageBackground, Image, StyleSheet, TextInput, Text, Button, Pressable, FlatList, View, ScrollView } from "react-native";
 import Storage from '../../classes/Storage/Storage';
 import * as WorkOrderDetailsTemplate from '../../Templates/WorkOrderDetailsTemplate.json';
+import * as UserDefinedFieldsLabels from '../../Templates/UserDefinedFieldsLabels.json';
 import * as Network from 'expo-network';
 import { color } from 'react-native-reanimated';
+import UserDefinedFields from '../MinorComponents/UserDefinedFields';
 
 export default function HomeScreen({ navigation, route }) {
     const storage = new Storage();
     const { colors } = useTheme();
 
     const [item, setData] = useState(WorkOrderDetailsTemplate);
+    const [userLabels, setLabels] = useState(UserDefinedFieldsLabels)
     const [called, setCalled] = useState(false);
-    const { workOrderLabels } = route.params;
 
     (() => {
         if (item.status == 500) {
@@ -34,6 +36,8 @@ export default function HomeScreen({ navigation, route }) {
             var url = host + ':8080/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + selectedItem.workOrderCode + '&organization=' + selectedItem.organization;
             fetch(url).then(response => response.json()).then((data) => { setData(data) })
 
+            var labelUrl = host + ':8080/mobile/userDefinedFieldsLabels?token=' + token;
+            fetch(labelUrl).then(response => response.json()).then((data) => {setLabels(data); storage.saveObject("labels",data)})
         } else {
             var workOrderData = storage.getObject(key);
             setData(workOrderData)
@@ -210,57 +214,93 @@ export default function HomeScreen({ navigation, route }) {
                 <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
                     <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Atividade</Text>
 
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Atividade: {item.activity.activityCode}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nível: {item.activity.tradeCode}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Plano de tarefa: {item.activity.taskCode}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Lista de materiais: {item.activity.materialList}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Motivo do reparo: {item.activity.repairReason}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Trabalho executado: {item.activity.workAccomplished}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Falha da peça segundo técnico: {item.activity.technicianPartFailure}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Fabricante: {item.activity.manufacturerCode}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de Inicio: {item.activity.activityStartDate}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de Término: {item.activity.activityEndDate}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Horas Estimadas: {item.activity.estimatedHours}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Horas Restantes: {item.activity.hoursRemaining}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Pessoal Requerido: {item.activity.persons}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nível do Sistema: {item.activity.systemLevel}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nível de Montagem: {item.activity.assemblyLevel}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nível de Componente: {item.activity.componentLevel}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Localização do Componente: {item.activity.partLocation}</Text>
                 </View>
 
-                <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Campos definidos pelo usuário</Text>
-
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
-                </View>
-
-                <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Campos personalizados</Text>
-
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
-                </View>
+                
 
                 <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
                     <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes de serviço ao cliente</Text>
 
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Capacidade de utilização do equipmento: {item.customerServiceDetails.equipmentUsability}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data potencial de conserto temporário: {item.customerServiceDetails.tempFixPromiseDate}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Fornecedor: {item.customerServiceDetails.supplierServiceCategoryCode}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Organização do fornecedor: {item.customerServiceDetails.supplierServiceCategoryOrganization}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Categoria de serviço: {item.customerServiceDetails.providerServiceCategoryCode}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Organização da Categoria de serviço: {item.customerServiceDetails.providerServiceCategoryOrganization}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Endereço do trabalho: {item.customerServiceDetails.workAddress}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Custo Estimado de mão de obra: {item.customerServiceDetails.estimatedLaborCost}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Custo Estimado de material: {item.customerServiceDetails.estimatedMaterialCost}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Custo Estimado diversos: {item.customerServiceDetails.estimatedMiscellaneousCost}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Custo Estimado Totais: {item.customerServiceDetails.estimatedTotalCost}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data potencial de conserto permanente: {item.customerServiceDetails.permanentFixPromisedDate}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de conclusão de conserto temporário: {item.customerServiceDetails.temporaryFixDateCompleted}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Código de serviço: {item.customerServiceDetails.problemCode}</Text>
                 </View>
 
                 <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
                     <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Controle de incidentes</Text>
 
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Lesão de paciente/visitante : {item.incidentControl.patientIncident}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Lesão/Enfermidade de pessoal: {item.incidentControl.staffInjuryIncident}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Incidente de Segurança: {item.incidentControl.securityIncident}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Dano à Propriedade: {item.incidentControl.propertyDamageIncident}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Incidente com Materiais Perigosos: {item.incidentControl.hazardousMaterialsIncident}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Incidente de Segurança contra incêndios: {item.incidentControl.fireSafetyIncident}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Incidente com Equipamentos Médicos: {item.incidentControl.medicalEquipmentIncident}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Incidente no Sistema de Serviços Públicos: {item.incidentControl.utilitySystemIncident}</Text>
                 </View>
 
                 <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
                     <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes de Produção</Text>
 
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Solicitação de Produção: {item.productionDetails.productionRequest}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Revisão da Solicitação de Produção: {item.productionDetails.productionRequestRevision}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Ordem de Produção: {item.productionDetails.productionOrder}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Propriedade de Produção: {item.productionDetails.productionPriority}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Descrição da Propriedade de Produção: {item.productionDetails.productionPriorityDescription}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de Inicio da Produção: {item.productionDetails.productionStartDate}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de Término da Produção: {item.productionDetails.productionEndDate}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Entidade Contábil: {item.productionDetails.accountingEntity}</Text>
                 </View>
 
                 <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
                     <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes de Conformidade</Text>
 
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Licença de Obra Acima do Teto: {item.compliance.aboveCeilingPermit}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Segurança de Vida Provisória: {item.compliance.interimLifeSafety}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Controle de Infecção Provisório: {item.compliance.interimInfectionControl}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Avaliação de Riscos Pré-construção: {item.compliance.preConstructionRiskAssessment}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Plano de Aperfeiçoamento: {item.compliance.planImprovement}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Declaração de Condições: {item.compliance.statementOfCondition}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Programa de Manutenção Predial: {item.compliance.buildMaintenanceProgram}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Equipamento de Proteção Individual: {item.compliance.personalProtectiveEquipment}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Bloqueio/Etiquetagem: {item.compliance.lockout}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Autorização Foco de Incêndio: {item.compliance.burnPermit}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Espaço Confinado: {item.compliance.confinedSpace}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Segurança do Paciente: {item.compliance.patientSafety}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Aviso de Recall: {item.compliance.recallNotice}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>SMDA: {item.compliance.smda}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Confidencialidade HIPAA: {item.compliance.hipaaConfidentiality}</Text>
                 </View>
+
+                <UserDefinedFields userLabels={userLabels} item={item}/>
 
                 <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
                     <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Assinatura Eletrônica: </Text>

@@ -13,7 +13,8 @@ export default class Storage {
     
     async saveArticle(key, value) {
         try {
-            await AsyncStorage.setItem('@'.concat(key), value).then(console.log('Saved ' + value + ' using ' + key));
+            var storedValue = await this.getArticle(key);
+            if (storedValue != value) {await AsyncStorage.setItem('@'.concat(key), value).then(console.log('Saved ' + value + ' using ' + key));}
         } catch (e) {
             console.log(e);
         }
@@ -34,4 +35,20 @@ export default class Storage {
             console.log(e);
         }
     };
+
+    async removeArticle(key) {
+        try {
+            await AsyncStorage.removeItem('@'.concat(key));
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    async nuke() {
+        try {
+            await AsyncStorage.clear();
+        } catch (e) {
+            console.log(e);
+        }
+    }
 }

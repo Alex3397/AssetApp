@@ -3,8 +3,8 @@ import { Button, View, SafeAreaView, Pressable } from 'react-native';
 import { ImageBackground, Image, StyleSheet, TextInput, Text } from "react-native";
 import { useTheme } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import WorkOrderList from './Components/workOrderList';
-import WorkOrderDetails from './Components/workOrderDetails';
+import WorkOrderList from './MainComponents/workOrderList';
+import WorkOrderDetails from './MainComponents/workOrderDetails';
 
 const Drawer = createDrawerNavigator();
 
