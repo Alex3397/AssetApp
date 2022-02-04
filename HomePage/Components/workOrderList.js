@@ -3,12 +3,14 @@ import { useTheme } from '@react-navigation/native';
 import { ImageBackground, Image, StyleSheet, TextInput, Text, Button, Pressable, FlatList, View } from "react-native";
 import Storage from '../../classes/Storage/Storage';
 import * as Network from 'expo-network';
+import * as UserDefinedFieldsLabels from '../../Templates/UserDefinedFieldsLabels.json';
 
 export default function HomeScreen({ navigation }) {
     const { colors } = useTheme();
 
     const [respData, setData] = useState(JSON.parse('{}'));
     const [workOrderData, setWorkOrderData] = useState(JSON.parse('{}'));
+    const [UserDefinedFieldsLabels, setUserDefinedFieldsLabels] = useState(UserDefinedFieldsLabels);
     const storage = new Storage();
 
     async function getWorkOrderList(update) {
@@ -47,6 +49,9 @@ export default function HomeScreen({ navigation }) {
         };
 
         xhr.send();
+
+        var labelUrl = host + ':8080/mobile/userDefinedFieldsLabels?token=' + token;
+        fetch(labelUrl).then(response => response.json()).then((data) => {console.log("got Labels" + data); setUserDefinedFieldsLabels(data)})
     }
 
     function sleep(ms) {
@@ -89,7 +94,7 @@ export default function HomeScreen({ navigation }) {
                 <Text style={{ color: colors.text, fontWeight: "bold", textAlign: "center" }}>Lupa</Text>
             </Pressable>
             <FlatList data={respData} renderItem={({ item }) =>
-                <Pressable style={{ padding: 8, backgroundColor: colors.background }} onPress={() => {storage.saveObject('selectedItem', item); getWorkOrder(); navigation.navigate('Ordem de Serviço'); }}>
+                <Pressable style={{ padding: 8, backgroundColor: colors.background }} onPress={() => {storage.saveObject('selectedItem', item); getWorkOrder(); navigation.navigate('Ordem de Serviço',{UserDefinedFieldsLabels}); }}>
                     <View style={{ backgroundColor: colors.card, padding: 12.5, borderRadius: 15, marginBottom: 5 }}>
                         <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5 }}>
                             <Text style={{ color: colors.text, fontSize: 17, alignSelf: "flex-start" }}>{item.workOrderCode + ' - ' + item.description}</Text>
