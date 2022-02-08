@@ -7,6 +7,14 @@ import * as UserDefinedFieldsLabels from '../../Templates/UserDefinedFieldsLabel
 import * as Network from 'expo-network';
 import { color } from 'react-native-reanimated';
 import UserDefinedFields from '../MinorComponents/UserDefinedFields';
+import ComplianceDetails from '../MinorComponents/ComplianceDetails';
+import ProductionDetails from '../MinorComponents/ProductionDetails';
+import IncidentControl from '../MinorComponents/IncidentControl';
+import CustomerDetails from '../MinorComponents/CustomerDetails';
+import Activity from '../MinorComponents/Activity';
+import Details from '../MinorComponents/Details';
+import LinearReferenceDetails from '../MinorComponents/LinearReferenceDetails';
+import Schedule from '../MinorComponents/Schedule';
 
 export default function HomeScreen({ navigation, route }) {
     const storage = new Storage();
@@ -101,205 +109,14 @@ export default function HomeScreen({ navigation, route }) {
 
                 </View>
 
-                <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Programação</Text>
-
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reportado por: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data Reportada: {item.schedule.reportedDate}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Atribuído por: {item.schedule.assignedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Atribuído a: {item.schedule.assignedTo}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de início progamada: {item.schedule.programedStartDate}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de fim progamada: {item.schedule.programedEndDate}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de início solicitada: {item.schedule.solicitedStartDate}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de fim solicitada: {item.schedule.solicitedEndDate}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de início: {item.schedule.startDate}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de fim: {item.schedule.endDate}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Turno: {item.schedule.shift}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Orçamento: {item.schedule.campaign}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Campanha: {item.schedule.campaign}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Status da Campanha: {item.schedule.campaignStatus}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>SS-Nº da Solicitação de Serviço: {item.schedule.serviceRequestCode}</Text>
-                </View>
-
-                <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes de referência linear</Text>
-
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Ponto Inicial: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Descrição da Referência: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Referência Geográfica: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Ponto Final: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Descrição da Referência: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Referência Geográfica: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Direção de Inspeção: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Fluxo: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Tipo de relação: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "center" }}>Deixar expansível aqui</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Ponto de Referência Inicial: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>% de Deslocamento Inicial: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Direção do Deslocamento Inicial: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Referência Inicial: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Deslocamento de Referência Inicial: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Direção do Deslocamento de Referência Inicial: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Coordenada X Inicial: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Coordenada Y Inicial: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Latitude Inicial: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Longitude Inicial: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Tipo de relação Inicial: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Deslocamento Horizontal Inicial: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Tipo de Deslocamento Horizontal Inicial: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Deslocamento Vertical Inicial: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Tipo de Deslocamento Vertical Inicial: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16, marginTop: 20 }}>Ponto de Referência Final: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>% de Deslocamento Final: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Direção do Deslocamento Final: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Referência Final: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Deslocamento de Referência Final: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Direção do Deslocamento de Referência Final: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Coordenada X Final: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Coordenada Y Final: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Latitude Final: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Longitude Final: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Tipo de relação Final: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Deslocamento Horizontal Final: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Tipo de Deslocamento Horizontal Final: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Deslocamento Vertical Final: {item.schedule.reportedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Tipo de Deslocamento Vertical Final: {item.schedule.reportedBy}</Text>
-                </View>
-
-                <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes da OS</Text>
-
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Classe: {item.details.classId}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Código de Problema: {item.details.problemCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nível Critico: {item.details.criticality}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Código de MP: {item.details.ppmCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Plano de manutenção - Sequência: {item.details.maintenancePatternCode} - {item.details.maintenancePatterDescription}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>OS Principal: {item.details.parentWorkOrder}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Número AT: {item.details.cnNumber}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Sessão de Programação: {item.details.msProject}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Tipo de Sessão de Programação: {item.details.schedulingSessionType}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Código de Motivo: {item.details.causeCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Cliente: {item.details.customerCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Propriedade: {item.details.level1}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nome do Chamador: {item.details.callerName}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Motivo da Rejeição: {item.details.rejectionReason}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Reaberto: {item.details.reOpened}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Contrato de Cliente: {item.details.customerContractCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Pacote de Serviços: {item.details.workPackage}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Alerta: {item.details.alertCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Segurança Revisada por: {item.details.safetyReviewedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Autorizações Revisadas por: {item.details.permitReviewedBy}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>OS Padrão: {item.details.standardWo}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Prioridade: {item.details.priorityCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Código de custo: {item.details.costCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Valor de Destino: {item.details.targetValue}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Última leitura do medidor: {item.details.lastMeterRating}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Ativar Evento: {item.details.triggerEvent}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Código de Falha: {item.details.failureCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Código de Ação: {item.details.actionCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Rota: {item.details.routeCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Status da Inspeção: {item.details.routeStatus}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Custo de Parada: {item.details.downTimeCost}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Horas de Parada: {item.details.downTimeHours}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de vencimento MP Original: Falta Achar</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>OS de Origem - Atividade: {item.details.originalWorkOrder}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Trabalho de Origem: Falta Achar</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Prioridade Calculada: {item.details.calculatedPriority}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Secundário: {item.details.minor}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Preservar Prioridade Calculada: {item.details.preserveCalculatedPriority}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Latitude: {item.details.latitude}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Longitude: {item.details.longitude}</Text>
-                </View>
-
-                <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Atividade</Text>
-
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Atividade: {item.activity.activityCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nível: {item.activity.tradeCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Plano de tarefa: {item.activity.taskCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Lista de materiais: {item.activity.materialList}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Motivo do reparo: {item.activity.repairReason}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Trabalho executado: {item.activity.workAccomplished}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Falha da peça segundo técnico: {item.activity.technicianPartFailure}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Fabricante: {item.activity.manufacturerCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de Inicio: {item.activity.activityStartDate}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de Término: {item.activity.activityEndDate}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Horas Estimadas: {item.activity.estimatedHours}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Horas Restantes: {item.activity.hoursRemaining}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Pessoal Requerido: {item.activity.persons}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nível do Sistema: {item.activity.systemLevel}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nível de Montagem: {item.activity.assemblyLevel}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Nível de Componente: {item.activity.componentLevel}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Localização do Componente: {item.activity.partLocation}</Text>
-                </View>
-
-                
-
-                <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes de serviço ao cliente</Text>
-
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Capacidade de utilização do equipmento: {item.customerServiceDetails.equipmentUsability}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data potencial de conserto temporário: {item.customerServiceDetails.tempFixPromiseDate}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Fornecedor: {item.customerServiceDetails.supplierServiceCategoryCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Organização do fornecedor: {item.customerServiceDetails.supplierServiceCategoryOrganization}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Categoria de serviço: {item.customerServiceDetails.providerServiceCategoryCode}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Organização da Categoria de serviço: {item.customerServiceDetails.providerServiceCategoryOrganization}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Endereço do trabalho: {item.customerServiceDetails.workAddress}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Custo Estimado de mão de obra: {item.customerServiceDetails.estimatedLaborCost}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Custo Estimado de material: {item.customerServiceDetails.estimatedMaterialCost}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Custo Estimado diversos: {item.customerServiceDetails.estimatedMiscellaneousCost}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Custo Estimado Totais: {item.customerServiceDetails.estimatedTotalCost}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data potencial de conserto permanente: {item.customerServiceDetails.permanentFixPromisedDate}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de conclusão de conserto temporário: {item.customerServiceDetails.temporaryFixDateCompleted}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Código de serviço: {item.customerServiceDetails.problemCode}</Text>
-                </View>
-
-                <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Controle de incidentes</Text>
-
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Lesão de paciente/visitante : {item.incidentControl.patientIncident}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Lesão/Enfermidade de pessoal: {item.incidentControl.staffInjuryIncident}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Incidente de Segurança: {item.incidentControl.securityIncident}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Dano à Propriedade: {item.incidentControl.propertyDamageIncident}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Incidente com Materiais Perigosos: {item.incidentControl.hazardousMaterialsIncident}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Incidente de Segurança contra incêndios: {item.incidentControl.fireSafetyIncident}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Incidente com Equipamentos Médicos: {item.incidentControl.medicalEquipmentIncident}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Incidente no Sistema de Serviços Públicos: {item.incidentControl.utilitySystemIncident}</Text>
-                </View>
-
-                <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes de Produção</Text>
-
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Solicitação de Produção: {item.productionDetails.productionRequest}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Revisão da Solicitação de Produção: {item.productionDetails.productionRequestRevision}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Ordem de Produção: {item.productionDetails.productionOrder}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Propriedade de Produção: {item.productionDetails.productionPriority}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Descrição da Propriedade de Produção: {item.productionDetails.productionPriorityDescription}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de Inicio da Produção: {item.productionDetails.productionStartDate}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Data de Término da Produção: {item.productionDetails.productionEndDate}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Entidade Contábil: {item.productionDetails.accountingEntity}</Text>
-                </View>
-
-                <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes de Conformidade</Text>
-
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Licença de Obra Acima do Teto: {item.compliance.aboveCeilingPermit}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Segurança de Vida Provisória: {item.compliance.interimLifeSafety}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Controle de Infecção Provisório: {item.compliance.interimInfectionControl}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Avaliação de Riscos Pré-construção: {item.compliance.preConstructionRiskAssessment}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Plano de Aperfeiçoamento: {item.compliance.planImprovement}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Declaração de Condições: {item.compliance.statementOfCondition}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Programa de Manutenção Predial: {item.compliance.buildMaintenanceProgram}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Equipamento de Proteção Individual: {item.compliance.personalProtectiveEquipment}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Bloqueio/Etiquetagem: {item.compliance.lockout}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Autorização Foco de Incêndio: {item.compliance.burnPermit}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Espaço Confinado: {item.compliance.confinedSpace}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Segurança do Paciente: {item.compliance.patientSafety}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Aviso de Recall: {item.compliance.recallNotice}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>SMDA: {item.compliance.smda}</Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Confidencialidade HIPAA: {item.compliance.hipaaConfidentiality}</Text>
-                </View>
-
+                <Schedule item={item}/>
+                <LinearReferenceDetails item={item}/>
+                <Details item={item}/>
+                <Activity item={item}/>
+                <CustomerDetails item={item}/>
+                <ProductionDetails item={item}/>
+                <IncidentControl item={item}/>
+                <ComplianceDetails item={item}/>
                 <UserDefinedFields userLabels={userLabels} item={item}/>
 
                 <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
