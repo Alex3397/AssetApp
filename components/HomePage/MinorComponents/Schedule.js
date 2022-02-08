@@ -1,11 +1,10 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import HideableTextField from './HideableTextField';
-import Storage from '../../classes/Storage/Storage';
+import HideableTextField from '../UtilityComponents/HideableTextField';
+
 
 const Schedule = (props) => {
-    const storage = new Storage();
     const { colors } = useTheme();
     var item = props.item;
 

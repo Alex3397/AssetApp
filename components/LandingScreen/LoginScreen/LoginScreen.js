@@ -2,9 +2,9 @@ import React, { useState, useContext, useRef, useEffect } from "react";
 import { Button, View, SafeAreaView, Pressable } from 'react-native';
 import { ImageBackground, Image, StyleSheet, TextInput, Text, Modal } from "react-native";
 import { useTheme } from '@react-navigation/native';
-import CheckBox from '../Utilities/CheckBox';
+import CheckBox from '../../HomePage/UtilityComponents/CheckBox';
 import Icon from "react-native-vector-icons/FontAwesome";
-import Storage from '../../classes/Storage/Storage';
+import Storage from '../../../classes/Storage/Storage';
 
 export default function HomeScreen({ navigation }) {
     const storage = new Storage();
@@ -21,18 +21,14 @@ export default function HomeScreen({ navigation }) {
     const [savedOrganization, setOrg] = useState('');
     const [savedTenant, setTenant] = useState('');
     const [savedUrl, setUrl] = useState('');
-    const image = colors.background.toString() === 'rgb(1, 1, 1)' ? require('./../../images/folk-pattern-black.png') : require('./../../images/folk-pattern.png');
+    const [savedCon, setCon] = useState('');
+    const image = colors.background.toString() === 'rgb(1, 1, 1)' ? require('../../../images/folk-pattern-black.png') : require('../../../images/folk-pattern.png');
 
     const passwordInput = useRef();
-
-    console.log(colors)
-
     const saveUserData = async (user, pass) => {
         try {
-            console.log('saving user data');
             storage.saveArticle('username', user);
             storage.saveArticle('password', pass);
-            console.log('saved user data');
         } catch (e) {
             console.log(e)
         }
@@ -43,12 +39,6 @@ export default function HomeScreen({ navigation }) {
         var organization = await storage.getArticle('organization');
         var tenant = await storage.getArticle('tenant');
         var host = await storage.getArticle('host');
-
-        console.log(organization)
-        console.log(tenant)
-        console.log(host)
-        console.log(user)
-        console.log(pass)
 
         if ((!user || !pass)) {
             setWarning('Usuário e senha não podem estar em branco.')
@@ -64,10 +54,7 @@ export default function HomeScreen({ navigation }) {
             xhr.ontimeout = () => { xhr.abort }
 
             xhr.onreadystatechange = function () {
-                console.log(xhr.readyState)
                 if (xhr.readyState === 4) {
-                    console.log(xhr.status);
-                    console.log(xhr.response);
                     setModalVisible(true)
 
                     if (xhr.responseText.includes("User validated.")) {
@@ -75,7 +62,6 @@ export default function HomeScreen({ navigation }) {
                         setResponse('Seu usuário foi validado com sucesso.');
                         setButtonText('Continuar.');
                         var token = xhr.responseText.replace("User validated.", "");
-                        console.log('token: ' + token);
                         storage.saveArticle('token', token);
                     } else {
                         if (xhr.status == 0) {
@@ -104,19 +90,12 @@ export default function HomeScreen({ navigation }) {
                 }
             };
 
-            console.log('before sending data: ')
-            console.log(user)
-            console.log(pass)
-            console.log(organization)
-            console.log(tenant)
-
             var data = {
                 userName: user,
                 password: pass,
                 organization: organization,
                 tenant: tenant
             };
-            console.log(data);
             xhr.send(JSON.stringify(data));
         }
         else {
@@ -128,17 +107,18 @@ export default function HomeScreen({ navigation }) {
         var organization = await storage.getArticle('organization');
         var tenant = await storage.getArticle('tenant');
         var host = await storage.getArticle('host');
+        var con = await storage.getArticle('con');
         
         setOrg(organization);
         setTenant(tenant)
         setUrl(host.replace(/[^0-9.]/g, ''))
+        setCon(con);
     }
 
     (async () => {
         getSavedVariables()
 
         var saveData = JSON.parse(await storage.getArticle('savedata'));
-        console.log(saveData);
         if (saveData != null) setSaveUserInfo(saveData);
 
         if (saveUserInfo) {
@@ -183,7 +163,7 @@ export default function HomeScreen({ navigation }) {
                     <View>
                         <TextInput autoCapitalize='none' secureTextEntry={iconName == 'eye' ? true : false} style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 20, marginBottom: 5 }} placeholder="Senha" placeholderTextColor={colors.text} onChangeText={pass => { setPass(pass); saveUserData(user, pass); }} ref={passwordInput} returnKeyType="send" onSubmitEditing={() => { validate() }} defaultValue={pass} />
 
-                        <Pressable style={{ position: "absolute", alignSelf: "flex-end", marginTop: 25, padding: 8 }} onPress={() => { iconName == 'eye' ? setIconName('eye-slash') : setIconName('eye') }}>
+                        <Pressable style={{ position: "absolute", alignSelf: "flex-end", marginTop: 25, padding: 2, paddingRight: 6 }} onPress={() => { iconName == 'eye' ? setIconName('eye-slash') : setIconName('eye') }}>
                             <Icon name={iconName} style={{ fontSize: 20 }} color={colors.text} />
                         </Pressable>
                     </View>
@@ -194,7 +174,7 @@ export default function HomeScreen({ navigation }) {
                     <Pressable style={{ marginTop: 45, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 35, borderRadius: 16, elevation: 3, backgroundColor: colors.card }} onPress={() => { validate(); }} >
                         <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.text }}>Entrar</Text>
                     </Pressable>
-                    <Pressable style={{ marginTop: 25, marginBottom: 25, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 35, borderRadius: 16, elevation: 3, backgroundColor: colors.card }} onPress={() => {getSavedVariables(); navigation.navigate('Settings',{savedOrganization,savedTenant,savedUrl})}} >
+                    <Pressable style={{ marginTop: 25, marginBottom: 25, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 35, borderRadius: 16, elevation: 3, backgroundColor: colors.card }} onPress={() => {getSavedVariables(); navigation.navigate('Settings',{savedOrganization,savedTenant,savedUrl,savedCon})}} >
                         <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.primary }}>Configuração</Text>
                     </Pressable>
                 </View>

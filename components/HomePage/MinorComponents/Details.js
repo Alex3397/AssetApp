@@ -1,11 +1,11 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import HideableTextField from './HideableTextField';
-import Storage from '../../classes/Storage/Storage';
+import HideableTextField from '../UtilityComponents/HideableTextField';
+import HideableCheckBox from '../UtilityComponents/HideableCheckBox';
+
 
 const Details = (props) => {
-    const storage = new Storage();
     const { colors } = useTheme();
     var item = props.item;
 
@@ -30,7 +30,7 @@ const Details = (props) => {
             <HideableTextField label="Propriedade" data={item.details.level1} />
             <HideableTextField label="Nome do Chamador" data={item.details.callerName} />
             <HideableTextField label="Motivo da Rejeição" data={item.details.rejectionReason} />
-            <HideableTextField label="Reaberto" data={item.details.reOpened} />
+            <HideableCheckBox label="Reaberto" data={item.details.reOpened} />
             <HideableTextField label="Contrato de Cliente" data={item.details.customerContractCode} />
             <HideableTextField label="Pacote de Serviços" data={item.details.workPackage} />
             <HideableTextField label="Alerta" data={item.details.alertCode} />
@@ -52,8 +52,8 @@ const Details = (props) => {
             <HideableTextField label="OS de Origem - Atividade" data={item.details.originalWorkOrder} />
             <HideableTextField label="Trabalho de Origem" data={String("Falta Achar")} />
             <HideableTextField label="Prioridade Calculada" data={item.details.calculatedPriority} />
-            <HideableTextField label="Secundário" data={item.details.minor} />
-            <HideableTextField label="Preservar Prioridade Calculada" data={item.details.preserveCalculatedPriority} />
+            <HideableCheckBox label="Secundário" data={item.details.minor} />
+            <HideableCheckBox label="Preservar Prioridade Calculada" data={item.details.preserveCalculatedPriority} />
             <HideableTextField label="Latitude" data={item.details.latitude} />
             <HideableTextField label="Longitude" data={item.details.longitude} />
         </View>

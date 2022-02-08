@@ -1,9 +1,9 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useState, useContext, useRef, useEffect, useCallback } from 'react';
 import { useTheme } from '@react-navigation/native';
-import { ImageBackground, Image, StyleSheet, TextInput, Text, Button, Pressable, FlatList, View, ScrollView } from "react-native";
-import Storage from '../../classes/Storage/Storage';
-import * as WorkOrderDetailsTemplate from '../../Templates/WorkOrderDetailsTemplate.json';
-import * as UserDefinedFieldsLabels from '../../Templates/UserDefinedFieldsLabels.json';
+import { ImageBackground, Image, StyleSheet, TextInput, Text, Button, Pressable, FlatList, View, RefreshControl, ScrollView } from "react-native";
+import Storage from '../../../classes/Storage/Storage';
+import * as WorkOrderDetailsTemplate from '../../../Templates/WorkOrderDetailsTemplate.json';
+import * as UserDefinedFieldsLabels from '../../../Templates/UserDefinedFieldsLabels.json';
 import * as Network from 'expo-network';
 import { color } from 'react-native-reanimated';
 import UserDefinedFields from '../MinorComponents/UserDefinedFields';
@@ -20,9 +20,15 @@ export default function HomeScreen({ navigation, route }) {
     const storage = new Storage();
     const { colors } = useTheme();
 
+    const [refreshing, setRefreshing] = useState(false);
     const [item, setData] = useState(WorkOrderDetailsTemplate);
     const [userLabels, setLabels] = useState(UserDefinedFieldsLabels)
     const [called, setCalled] = useState(false);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        getWorkOrderDetails(true).then(() => setRefreshing(false));
+      }, []);
 
     (() => {
         if (item.status == 500) {
@@ -62,12 +68,9 @@ export default function HomeScreen({ navigation, route }) {
 
     return (
         <>
-            <Pressable style={{ borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3", position: "absolute", top: -45, right: 50, borderColor: 'white', borderWidth: 1, zIndex: 9999999 }} onPress={() => { console.log('Pressed.'); getWorkOrderDetails(true) }} >
-                <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>Procurar</Text>
-            </Pressable>
-            <ScrollView>
-
+            <ScrollView style={{ marginTop: 28 }} refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> }>
                 <View>
+
                     <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
                         <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>{item.code} - {item.description}</Text>
                         <Text style={{ padding: 2, color: colors.text, fontSize: 16 }}>Status: {item.status}</Text>
@@ -121,7 +124,7 @@ export default function HomeScreen({ navigation, route }) {
 
                 <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
                     <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Assinatura Eletrônica: </Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "center" }}>{item.esigner}  -  {item.esignDate}  -  {item.esignType}</Text>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "center" }}>{item.esigner} : {item.esignDate} : {item.esignType}</Text>
                 </View>
             </ScrollView>
         </>

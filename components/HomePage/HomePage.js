@@ -12,7 +12,7 @@ export default function HomeScreen() {
     const { colors } = useTheme();
     return (
         <>
-            <Drawer.Navigator screenOptions={{ headerStyle: { backgroundColor: colors.background }, headerTintColor: colors.text }}>
+            <Drawer.Navigator screenOptions={{ headerShown: false, swipeEnabled: false, headerStyle: { backgroundColor: colors.background }, headerTintColor: colors.text }}>
                 <Drawer.Screen name='Ordens de Serviço' component={WorkOrderList} />
                 <Drawer.Screen name='Ordem de Serviço' component={WorkOrderDetails} />
             </Drawer.Navigator>

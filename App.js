@@ -2,10 +2,10 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AppearanceProvider, useColorScheme } from 'react-native-appearance';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import LoginScreen from './components/LoginScreen/LoginScreen';
-import HomePage from './HomePage/HomePage';
-import Settings from './components/Settings/Settings';
 import { StatusBar } from 'expo-status-bar';
+import LoginScreen from './components/LandingScreen/LoginScreen/LoginScreen';
+import Settings from './components/LandingScreen/Settings/Settings';
+import HomePage from './components/HomePage/HomePage';
 
 const Stack = createStackNavigator();
 
