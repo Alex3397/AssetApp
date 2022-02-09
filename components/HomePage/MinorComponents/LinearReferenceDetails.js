@@ -82,21 +82,21 @@ const LinearReferenceDetails = (props) => {
             <HideableTextField label="Deslocamento Vertical Inicial" data={item.linearReferenceDetails.fromVerticalOffset}/>
             <HideableTextField label="Tipo de Deslocamento Vertical Inicial" data={item.linearReferenceDetails.fromVerticalOffsetType}/>
 
-            <HideableTextField label="Ponto de Referência Final" data={item.linearReferenceDetails.fromReferenceCode}/>
-            <HideableTextField label="% de Deslocamento Final" data={item.linearReferenceDetails.fromOffsetPercent}/>
-            <HideableTextField label="Direção do Deslocamento Final" data={item.linearReferenceDetails.fromOffsetDirectionCode}/>
-            <HideableTextField label="Referência Final" data={item.linearReferenceDetails.fromReferenceDescription}/>
-            <HideableTextField label="Deslocamento de Referência Final" data={item.linearReferenceDetails.fromOffset}/>
-            <HideableTextField label="Direção do Deslocamento de Referência Final" data={item.linearReferenceDetails.fromOffsetLinearReferenceDetails}/>
-            <HideableTextField label="Coordenada X Final" data={item.linearReferenceDetails.fromCoordinateX}/>
-            <HideableTextField label="Coordenada Y Final" data={item.linearReferenceDetails.fromCoordinateY}/>
-            <HideableTextField label="Latitude Final" data={item.linearReferenceDetails.fromLatitude}/>
-            <HideableTextField label="Longitude Final" data={item.linearReferenceDetails.fromLongitude}/>
-            <HideableTextField label="Tipo de relação Final" data={item.linearReferenceDetails.fromVerticalRelationShip}/>
-            <HideableTextField label="Deslocamento Horizontal Final" data={item.linearReferenceDetails.fromHorizontalOffset}/>
-            <HideableTextField label="Tipo de Deslocamento Horizontal Final" data={item.linearReferenceDetails.fromHorizontalOffsetType}/>
-            <HideableTextField label="Deslocamento Vertical Final" data={item.linearReferenceDetails.fromVerticalOffset}/>
-            <HideableTextField label="Tipo de Deslocamento Vertical Final" data={item.linearReferenceDetails.fromVerticalOffsetType}/>
+            <HideableTextField label="Ponto de Referência Final" data={item.linearReferenceDetails.toReferenceCode}/>
+            <HideableTextField label="% de Deslocamento Final" data={item.linearReferenceDetails.toOffsetPercent}/>
+            <HideableTextField label="Direção do Deslocamento Final" data={item.linearReferenceDetails.toOffsetDirectionCode}/>
+            <HideableTextField label="Referência Final" data={item.linearReferenceDetails.toReferenceDescription}/>
+            <HideableTextField label="Deslocamento de Referência Final" data={item.linearReferenceDetails.toOffset}/>
+            <HideableTextField label="Direção do Deslocamento de Referência Final" data={item.linearReferenceDetails.toOffsetLinearReferenceDetails}/>
+            <HideableTextField label="Coordenada X Final" data={item.linearReferenceDetails.toCoordinateX}/>
+            <HideableTextField label="Coordenada Y Final" data={item.linearReferenceDetails.toCoordinateY}/>
+            <HideableTextField label="Latitude Final" data={item.linearReferenceDetails.toLatitude}/>
+            <HideableTextField label="Longitude Final" data={item.linearReferenceDetails.toLongitude}/>
+            <HideableTextField label="Tipo de relação Final" data={item.linearReferenceDetails.toVerticalRelationShip}/>
+            <HideableTextField label="Deslocamento Horizontal Final" data={item.linearReferenceDetails.toHorizontalOffset}/>
+            <HideableTextField label="Tipo de Deslocamento Horizontal Final" data={item.linearReferenceDetails.toHorizontalOffsetType}/>
+            <HideableTextField label="Deslocamento Vertical Final" data={item.linearReferenceDetails.toVerticalOffset}/>
+            <HideableTextField label="Tipo de Deslocamento Vertical Final" data={item.linearReferenceDetails.toVerticalOffsetType}/>
         </View>
     );
 }

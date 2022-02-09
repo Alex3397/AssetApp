@@ -15,44 +15,53 @@ export default function CheckBox(props) {
     }
   }
 
+  var viewStyles = props.labelSide;
+  if (viewStyles == undefined) viewStyles = {};
+
   if (props.labelSide == "left") {
     return (
-      <View style={styles.WrapperCheckBox}>
-  
-        <Text style={[styles.LabelCheck, props.labelStyle]}>
-          {props.label}
-        </Text>
-        
-        <TouchableOpacity onPress={handleChange} style={{ width: 25, height: 25, borderWidth: 1, borderColor: colors.text, justifyContent: "center", alignItems: "center" }}>
-          {props.value ? <Icon name="check" style={{ fontSize: 16, }} color={colors.text} /> : null}
-        </TouchableOpacity>
-  
+      <View style={props.viewStyle}>
+        <View style={styles.WrapperCheckBox}>
+
+          <Text style={[styles.LabelCheck, props.labelStyle]}>
+            {props.label}
+          </Text>
+
+          <TouchableOpacity onPress={handleChange} style={{ width: 25, height: 25, borderWidth: 1, borderColor: colors.text, justifyContent: "center", alignItems: "center" }}>
+            {props.value ? <Icon name="check" style={{ fontSize: 16, }} color={colors.text} /> : null}
+          </TouchableOpacity>
+
+        </View>
       </View>
     );
   } else if (props.labelSide == "right") {
     return (
-      <View style={styles.WrapperCheckBox}>
-  
-        <TouchableOpacity onPress={handleChange} style={{ width: 25, height: 25, borderWidth: 1, borderColor: colors.text, justifyContent: "center", alignItems: "center" }}>
-          {props.value ? <Icon name="check" style={{ fontSize: 16 }} color={colors.text} /> : null}
-        </TouchableOpacity>
-  
-        <Text style={[styles.LabelCheck, props.labelStyle]}>
-          {props.label}
-        </Text>
+      <View style={props.viewStyle}>
+        <View style={styles.WrapperCheckBox}>
+
+          <TouchableOpacity onPress={handleChange} style={{ width: 25, height: 25, borderWidth: 1, borderColor: colors.text, justifyContent: "center", alignItems: "center" }}>
+            {props.value ? <Icon name="check" style={{ fontSize: 16 }} color={colors.text} /> : null}
+          </TouchableOpacity>
+
+          <Text style={[styles.LabelCheck, props.labelStyle]}>
+            {props.label}
+          </Text>
+        </View>
       </View>
     );
   } else {
     return (
-      <View style={styles.WrapperCheckBox}>
-  
-        <TouchableOpacity onPress={handleChange} style={{ width: 25, height: 25, borderWidth: 1, borderColor: colors.text, justifyContent: "center", alignItems: "center" }}>
-          {props.value ? <Icon name="check" style={{ fontSize: 16, }} color={colors.text} /> : null}
-        </TouchableOpacity>
-  
-        <Text style={[styles.LabelCheck, props.labelStyle]}>
-          {props.label}
-        </Text>
+      <View style={props.viewStyle}>
+        <View style={styles.WrapperCheckBox}>
+
+          <TouchableOpacity onPress={handleChange} style={{ width: 25, height: 25, borderWidth: 1, borderColor: colors.text, justifyContent: "center", alignItems: "center" }}>
+            {props.value ? <Icon name="check" style={{ fontSize: 16, }} color={colors.text} /> : null}
+          </TouchableOpacity>
+
+          <Text style={[styles.LabelCheck, props.labelStyle]}>
+            {props.label}
+          </Text>
+        </View>
       </View>
     );
   }

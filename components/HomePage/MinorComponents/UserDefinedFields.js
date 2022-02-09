@@ -219,77 +219,77 @@ const UserDefinedFields = (props) => {
 
             <View>
                 <View style={{ margin: charPadding }}>
-                    <HideableTextField label={props.userLabels.udfChar01Label} data={props.item.userDefinedFields.udfChar01} />
-                    <HideableTextField label={props.userLabels.udfChar02Label} data={props.item.userDefinedFields.udfChar02} />
-                    <HideableTextField label={props.userLabels.udfChar03Label} data={props.item.userDefinedFields.udfChar03} />
-                    <HideableTextField label={props.userLabels.udfChar04Label} data={props.item.userDefinedFields.udfChar04} />
-                    <HideableTextField label={props.userLabels.udfChar05Label} data={props.item.userDefinedFields.udfChar05} />
-                    <HideableTextField label={props.userLabels.udfChar06Label} data={props.item.userDefinedFields.udfChar06} />
-                    <HideableTextField label={props.userLabels.udfChar07Label} data={props.item.userDefinedFields.udfChar07} />
-                    <HideableTextField label={props.userLabels.udfChar08Label} data={props.item.userDefinedFields.udfChar08} />
-                    <HideableTextField label={props.userLabels.udfChar09Label} data={props.item.userDefinedFields.udfChar09} />
-                    <HideableTextField label={props.userLabels.udfChar10Label} data={props.item.userDefinedFields.udfChar10} />
-                    <HideableTextField label={props.userLabels.udfChar11Label} data={props.item.userDefinedFields.udfChar11} />
-                    <HideableTextField label={props.userLabels.udfChar12Label} data={props.item.userDefinedFields.udfChar12} />
-                    <HideableTextField label={props.userLabels.udfChar13Label} data={props.item.userDefinedFields.udfChar13} />
-                    <HideableTextField label={props.userLabels.udfChar14Label} data={props.item.userDefinedFields.udfChar14} />
-                    <HideableTextField label={props.userLabels.udfChar10Label} data={props.item.userDefinedFields.udfChar10} />
-                    <HideableTextField label={props.userLabels.udfChar16Label} data={props.item.userDefinedFields.udfChar16} />
-                    <HideableTextField label={props.userLabels.udfChar17Label} data={props.item.userDefinedFields.udfChar17} />
-                    <HideableTextField label={props.userLabels.udfChar18Label} data={props.item.userDefinedFields.udfChar18} />
-                    <HideableTextField label={props.userLabels.udfChar19Label} data={props.item.userDefinedFields.udfChar19} />
-                    <HideableTextField label={props.userLabels.udfChar20Label} data={props.item.userDefinedFields.udfChar20} />
-                    <HideableTextField label={props.userLabels.udfChar21Label} data={props.item.userDefinedFields.udfChar21} />
-                    <HideableTextField label={props.userLabels.udfChar22Label} data={props.item.userDefinedFields.udfChar22} />
-                    <HideableTextField label={props.userLabels.udfChar23Label} data={props.item.userDefinedFields.udfChar23} />
-                    <HideableTextField label={props.userLabels.udfChar24Label} data={props.item.userDefinedFields.udfChar24} />
-                    <HideableTextField label={props.userLabels.udfChar25Label} data={props.item.userDefinedFields.udfChar25} />
-                    <HideableTextField label={props.userLabels.udfChar26Label} data={props.item.userDefinedFields.udfChar26} />
-                    <HideableTextField label={props.userLabels.udfChar27Label} data={props.item.userDefinedFields.udfChar27} />
-                    <HideableTextField label={props.userLabels.udfChar28Label} data={props.item.userDefinedFields.udfChar28} />
-                    <HideableTextField label={props.userLabels.udfChar29Label} data={props.item.userDefinedFields.udfChar29} />
-                    <HideableTextField label={props.userLabels.udfChar30Label} data={props.item.userDefinedFields.udfChar30} />
-                    <HideableTextField label={props.userLabels.udfChar31Label} data={props.item.userDefinedFields.udfChar31} />
-                    <HideableTextField label={props.userLabels.udfChar32Label} data={props.item.userDefinedFields.udfChar32} />
-                    <HideableTextField label={props.userLabels.udfChar33Label} data={props.item.userDefinedFields.udfChar33} />
-                    <HideableTextField label={props.userLabels.udfChar34Label} data={props.item.userDefinedFields.udfChar34} />
-                    <HideableTextField label={props.userLabels.udfChar35Label} data={props.item.userDefinedFields.udfChar35} />
-                    <HideableTextField label={props.userLabels.udfChar36Label} data={props.item.userDefinedFields.udfChar36} />
-                    <HideableTextField label={props.userLabels.udfChar37Label} data={props.item.userDefinedFields.udfChar37} />
-                    <HideableTextField label={props.userLabels.udfChar38Label} data={props.item.userDefinedFields.udfChar38} />
-                    <HideableTextField label={props.userLabels.udfChar39Label} data={props.item.userDefinedFields.udfChar39} />
-                    <HideableTextField label={props.userLabels.udfChar40Label} data={props.item.userDefinedFields.udfChar40} />
-                    <HideableTextField label={props.userLabels.udfChar41Label} data={props.item.userDefinedFields.udfChar41} />
-                    <HideableTextField label={props.userLabels.udfChar42Label} data={props.item.userDefinedFields.udfChar42} />
-                    <HideableTextField label={props.userLabels.udfChar43Label} data={props.item.userDefinedFields.udfChar43} />
-                    <HideableTextField label={props.userLabels.udfChar44Label} data={props.item.userDefinedFields.udfChar44} />
-                    <HideableTextField label={props.userLabels.udfChar45Label} data={props.item.userDefinedFields.udfChar45} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar01Label} data={props.item.userDefinedFields.udfChar01} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar02Label} data={props.item.userDefinedFields.udfChar02} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar03Label} data={props.item.userDefinedFields.udfChar03} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar04Label} data={props.item.userDefinedFields.udfChar04} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar05Label} data={props.item.userDefinedFields.udfChar05} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar06Label} data={props.item.userDefinedFields.udfChar06} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar07Label} data={props.item.userDefinedFields.udfChar07} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar08Label} data={props.item.userDefinedFields.udfChar08} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar09Label} data={props.item.userDefinedFields.udfChar09} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar10Label} data={props.item.userDefinedFields.udfChar10} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar11Label} data={props.item.userDefinedFields.udfChar11} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar12Label} data={props.item.userDefinedFields.udfChar12} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar13Label} data={props.item.userDefinedFields.udfChar13} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar14Label} data={props.item.userDefinedFields.udfChar14} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar15Label} data={props.item.userDefinedFields.udfChar15} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar16Label} data={props.item.userDefinedFields.udfChar16} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar17Label} data={props.item.userDefinedFields.udfChar17} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar18Label} data={props.item.userDefinedFields.udfChar18} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar19Label} data={props.item.userDefinedFields.udfChar19} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar20Label} data={props.item.userDefinedFields.udfChar20} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar21Label} data={props.item.userDefinedFields.udfChar21} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar22Label} data={props.item.userDefinedFields.udfChar22} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar23Label} data={props.item.userDefinedFields.udfChar23} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar24Label} data={props.item.userDefinedFields.udfChar24} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar25Label} data={props.item.userDefinedFields.udfChar25} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar26Label} data={props.item.userDefinedFields.udfChar26} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar27Label} data={props.item.userDefinedFields.udfChar27} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar28Label} data={props.item.userDefinedFields.udfChar28} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar29Label} data={props.item.userDefinedFields.udfChar29} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar30Label} data={props.item.userDefinedFields.udfChar30} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar31Label} data={props.item.userDefinedFields.udfChar31} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar32Label} data={props.item.userDefinedFields.udfChar32} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar33Label} data={props.item.userDefinedFields.udfChar33} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar34Label} data={props.item.userDefinedFields.udfChar34} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar35Label} data={props.item.userDefinedFields.udfChar35} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar36Label} data={props.item.userDefinedFields.udfChar36} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar37Label} data={props.item.userDefinedFields.udfChar37} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar38Label} data={props.item.userDefinedFields.udfChar38} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar39Label} data={props.item.userDefinedFields.udfChar39} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar40Label} data={props.item.userDefinedFields.udfChar40} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar41Label} data={props.item.userDefinedFields.udfChar41} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar42Label} data={props.item.userDefinedFields.udfChar42} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar43Label} data={props.item.userDefinedFields.udfChar43} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar44Label} data={props.item.userDefinedFields.udfChar44} />
+                    <HideableTextField show={false} label={props.userLabels.udfChar45Label} data={props.item.userDefinedFields.udfChar45} />
                 </View>
 
                 <View style={{ margin: numPadding }}>
-                    <HideableTextField label={props.userLabels.udfNum1Label} data={props.item.userDefinedFields.udfNum1} />
-                    <HideableTextField label={props.userLabels.udfNum2Label} data={props.item.userDefinedFields.udfNum2} />
-                    <HideableTextField label={props.userLabels.udfNum3Label} data={props.item.userDefinedFields.udfNum3} />
-                    <HideableTextField label={props.userLabels.udfNum4Label} data={props.item.userDefinedFields.udfNum4} />
-                    <HideableTextField label={props.userLabels.udfNum5Label} data={props.item.userDefinedFields.udfNum5} />
-                    <HideableTextField label={props.userLabels.udfNum6Label} data={props.item.userDefinedFields.udfNum6} />
-                    <HideableTextField label={props.userLabels.udfNum7Label} data={props.item.userDefinedFields.udfNum7} />
-                    <HideableTextField label={props.userLabels.udfNum8Label} data={props.item.userDefinedFields.udfNum8} />
-                    <HideableTextField label={props.userLabels.udfNum9Label} data={props.item.userDefinedFields.udfNum9} />
-                    <HideableTextField label={props.userLabels.udfNum10Label} data={props.item.userDefinedFields.udfNum10} />
+                    <HideableTextField show={false} label={props.userLabels.udfNum1Label} data={props.item.userDefinedFields.udfNum1} />
+                    <HideableTextField show={false} label={props.userLabels.udfNum2Label} data={props.item.userDefinedFields.udfNum2} />
+                    <HideableTextField show={false} label={props.userLabels.udfNum3Label} data={props.item.userDefinedFields.udfNum3} />
+                    <HideableTextField show={false} label={props.userLabels.udfNum4Label} data={props.item.userDefinedFields.udfNum4} />
+                    <HideableTextField show={false} label={props.userLabels.udfNum5Label} data={props.item.userDefinedFields.udfNum5} />
+                    <HideableTextField show={false} label={props.userLabels.udfNum6Label} data={props.item.userDefinedFields.udfNum6} />
+                    <HideableTextField show={false} label={props.userLabels.udfNum7Label} data={props.item.userDefinedFields.udfNum7} />
+                    <HideableTextField show={false} label={props.userLabels.udfNum8Label} data={props.item.userDefinedFields.udfNum8} />
+                    <HideableTextField show={false} label={props.userLabels.udfNum9Label} data={props.item.userDefinedFields.udfNum9} />
+                    <HideableTextField show={false} label={props.userLabels.udfNum10Label} data={props.item.userDefinedFields.udfNum10} />
                 </View>
 
                 <View style={{ margin: datePadding }}>
-                    <HideableTextField label={props.userLabels.udfDate1Label} data={props.item.userDefinedFields.udfDate1} />
-                    <HideableTextField label={props.userLabels.udfDate2Label} data={props.item.userDefinedFields.udfDate2} />
-                    <HideableTextField label={props.userLabels.udfDate3Label} data={props.item.userDefinedFields.udfDate3} />
-                    <HideableTextField label={props.userLabels.udfDate4Label} data={props.item.userDefinedFields.udfDate4} />
-                    <HideableTextField label={props.userLabels.udfDate5Label} data={props.item.userDefinedFields.udfDate5} />
-                    <HideableTextField label={props.userLabels.udfDate6Label} data={props.item.userDefinedFields.udfDate6} />
-                    <HideableTextField label={props.userLabels.udfDate7Label} data={props.item.userDefinedFields.udfDate7} />
-                    <HideableTextField label={props.userLabels.udfDate8Label} data={props.item.userDefinedFields.udfDate8} />
-                    <HideableTextField label={props.userLabels.udfDate9Label} data={props.item.userDefinedFields.udfDate9} />
-                    <HideableTextField label={props.userLabels.udfDate10Label} data={props.item.userDefinedFields.udfDate10} />
+                    <HideableTextField show={false} label={props.userLabels.udfDate1Label} data={props.item.userDefinedFields.udfDate1} />
+                    <HideableTextField show={false} label={props.userLabels.udfDate2Label} data={props.item.userDefinedFields.udfDate2} />
+                    <HideableTextField show={false} label={props.userLabels.udfDate3Label} data={props.item.userDefinedFields.udfDate3} />
+                    <HideableTextField show={false} label={props.userLabels.udfDate4Label} data={props.item.userDefinedFields.udfDate4} />
+                    <HideableTextField show={false} label={props.userLabels.udfDate5Label} data={props.item.userDefinedFields.udfDate5} />
+                    <HideableTextField show={false} label={props.userLabels.udfDate6Label} data={props.item.userDefinedFields.udfDate6} />
+                    <HideableTextField show={false} label={props.userLabels.udfDate7Label} data={props.item.userDefinedFields.udfDate7} />
+                    <HideableTextField show={false} label={props.userLabels.udfDate8Label} data={props.item.userDefinedFields.udfDate8} />
+                    <HideableTextField show={false} label={props.userLabels.udfDate9Label} data={props.item.userDefinedFields.udfDate9} />
+                    <HideableTextField show={false} label={props.userLabels.udfDate10Label} data={props.item.userDefinedFields.udfDate10} />
                 </View>
 
                 <View style={{ margin: checkPadding }}>
@@ -306,16 +306,16 @@ const UserDefinedFields = (props) => {
                 </View>
 
                 <View style={{ margin: notePadding }}>
-                    <HideableTextField label={props.userLabels.udfNote01Labels} data={props.item.userDefinedFields.udfNote01} />
-                    <HideableTextField label={props.userLabels.udfNote02Labels} data={props.item.userDefinedFields.udfNote02} />
-                    <HideableTextField label={props.userLabels.udfNote03Labels} data={props.item.userDefinedFields.udfNote03} />
-                    <HideableTextField label={props.userLabels.udfNote04Labels} data={props.item.userDefinedFields.udfNote04} />
-                    <HideableTextField label={props.userLabels.udfNote05Labels} data={props.item.userDefinedFields.udfNote05} />
-                    <HideableTextField label={props.userLabels.udfNote06Labels} data={props.item.userDefinedFields.udfNote06} />
-                    <HideableTextField label={props.userLabels.udfNote07Labels} data={props.item.userDefinedFields.udfNote07} />
-                    <HideableTextField label={props.userLabels.udfNote08Labels} data={props.item.userDefinedFields.udfNote08} />
-                    <HideableTextField label={props.userLabels.udfNote09Labels} data={props.item.userDefinedFields.udfNote09} />
-                    <HideableTextField label={props.userLabels.udfNote10Labels} data={props.item.userDefinedFields.udfNote10} />
+                    <HideableTextField show={false} label={props.userLabels.udfNote01Labels} data={props.item.userDefinedFields.udfNote01} />
+                    <HideableTextField show={false} label={props.userLabels.udfNote02Labels} data={props.item.userDefinedFields.udfNote02} />
+                    <HideableTextField show={false} label={props.userLabels.udfNote03Labels} data={props.item.userDefinedFields.udfNote03} />
+                    <HideableTextField show={false} label={props.userLabels.udfNote04Labels} data={props.item.userDefinedFields.udfNote04} />
+                    <HideableTextField show={false} label={props.userLabels.udfNote05Labels} data={props.item.userDefinedFields.udfNote05} />
+                    <HideableTextField show={false} label={props.userLabels.udfNote06Labels} data={props.item.userDefinedFields.udfNote06} />
+                    <HideableTextField show={false} label={props.userLabels.udfNote07Labels} data={props.item.userDefinedFields.udfNote07} />
+                    <HideableTextField show={false} label={props.userLabels.udfNote08Labels} data={props.item.userDefinedFields.udfNote08} />
+                    <HideableTextField show={false} label={props.userLabels.udfNote09Labels} data={props.item.userDefinedFields.udfNote09} />
+                    <HideableTextField show={false} label={props.userLabels.udfNote10Labels} data={props.item.userDefinedFields.udfNote10} />
                 </View>
             </View>
         </View>

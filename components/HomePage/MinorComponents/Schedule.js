@@ -41,7 +41,7 @@ const Schedule = (props) => {
             <HideableTextField label="Data de início" data={item.schedule.startDate} />
             <HideableTextField label="Data de fim" data={item.schedule.endDate} />
             <HideableTextField label="Turno" data={item.schedule.shift} />
-            <HideableTextField label="Orçamento" data={item.schedule.campaign} />
+            <HideableTextField label="Orçamento" data={item.schedule.budget} />
             <HideableTextField label="Campanha" data={item.schedule.campaign} />
             <HideableTextField label="Status da Campanha" data={item.schedule.campaignStatus} />
             <HideableTextField label="SS-Nº da Solicitação de Serviço" data={item.schedule.serviceRequestCode} />

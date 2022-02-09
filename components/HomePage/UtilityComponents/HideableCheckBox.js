@@ -6,18 +6,19 @@ import CheckBox from './CheckBox';
 const HideableCheckBox = (props) => {
     const { colors } = useTheme();
 
-    var value = String(props.data).includes("false");
+    var value = String(props.data).includes("true");
     var label = props.label;
+    var show = props.show;
+    
+    if (show == undefined) show = false;
+    if (label == "" && !value) return(<></>);
+    if (!value && !show) return(<></>)
 
-    if (props.data != "false" && label != "" ) {
-        return (
-            <>
-                <CheckBox label={label} labelStyle={{color: colors.text}} labelSide="right" value={!value} />
-            </>
-        );
-    } else {
-        return (<></>)
-    }
+    return (
+        <>
+            <CheckBox viewStyle={props.viewStyle} label={label} labelStyle={{ marginLeft: 1, color: colors.text, fontSize: 16 }} labelSide="left" value={value} />
+        </>
+    );
 }
 
 export default HideableCheckBox;
