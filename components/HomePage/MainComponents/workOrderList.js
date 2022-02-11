@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTheme } from '@react-navigation/native';
-import { TextInput, Text, RefreshControl, Pressable, FlatList, View } from "react-native";
+import { TextInput, Text, RefreshControl, Pressable, FlatList, View, Keyboard } from "react-native";
 import Storage from '../../../classes/Storage/Storage';
 import * as Network from 'expo-network';
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -13,6 +13,7 @@ export default function HomeScreen({ navigation }) {
     const [respData, setData] = useState(JSON.parse('{}'));
     const [searchData, setSearchData] = useState(JSON.parse('{}'));
     const [workOrderData, setWorkOrderData] = useState(JSON.parse('{}'));
+    const [modalVisible, setModalVisible] = useState(false);
     const storage = new Storage();
 
     let search = []
@@ -46,23 +47,37 @@ export default function HomeScreen({ navigation }) {
         setSearchData(search)
     }
 
+    const focusIn = () => {
+        setModalVisible(true);
+    }
+
+    const focusOut = () => {
+        Keyboard.dismiss();
+        setModalVisible(false);
+    }
+
+    const renderOverlay = (render) => {
+        if (render) return (<Pressable onPress={() => focusOut()} style={{ position: "absolute", backgroundColor: "black", opacity: 0.5, width: "100%", height: "100%", top: 82 }} />);
+        else if (!render) return (<></>);
+    }
+
     async function getWorkOrderList(update) {
-        var workOrderList = await storage.getObject('workOrderList');
+        let workOrderList = await storage.getObject('workOrderList');
         if (workOrderList != null && !update) {
             setData(workOrderList);
             setSearchData(workOrderList);
             return workOrderList;
         }
-        var host = await storage.getArticle('host');
-        var token = await storage.getArticle('token');
+        let host = await storage.getArticle('host');
+        let token = await storage.getArticle('token');
 
-        var xhr = new XMLHttpRequest();
-        var url = host + ':8080/mobile/workOrderGrid?token=' + token;
+        let xhr = new XMLHttpRequest();
+        let url = host + ':8080/mobile/workOrderGrid?token=' + token;
         xhr.open("GET", url);
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
-                var jsonData = JSON.parse(xhr.response)
+                let jsonData = JSON.parse(xhr.response)
                 for (let index = 0; index < jsonData.length; index++) {
                     const element = jsonData[index];
                     if (element.scheduledStartDate == '') {
@@ -96,28 +111,31 @@ export default function HomeScreen({ navigation }) {
     }, []);
 
     async function getWorkOrder(woCode, woOrganization) {
-        var key = woCode + " : " + woOrganization;
+        let key = woCode + " : " + woOrganization;
 
-        var host = await storage.getArticle('host');
-        var token = await storage.getArticle('token');
+        let host = await storage.getArticle('host');
+        let token = await storage.getArticle('token');
 
-        var url = host + ':8080/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + woCode + '&organization=' + woOrganization;
-        fetch(url).then(response => response.json()).then((data) => { console.log("gotData" + data); setWorkOrderData(data) })
+        let url = host + ':8080/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + woCode + '&organization=' + woOrganization;
+        fetch(url).then(response => response.json()).then((data) => { setWorkOrderData(data) })
         storage.saveObject(key, workOrderData);
     }
 
     useEffect(async () => {
-        var networkState = await Network.getNetworkStateAsync();
-        var date = await storage.getObject('today');
+        let networkState = await Network.getNetworkStateAsync();
+        let date = await storage.getObject('today');
+    
         if (networkState.isConnected && networkState.type.includes('WIFI') && new Date().getDate() != date) {
+
             getWorkOrderList(true).then(async () => {
-                var workOrderList = await storage.getObject('workOrderList');
+                let workOrderList = await storage.getObject('workOrderList');
                 for (let i = 0; i < workOrderList.length; i++) {
                     const element = workOrderList[i];
                     getWorkOrder(element.workOrderCode, element.organization);
                     await sleep(2000);
                 }
             });
+
             storage.saveObject('today', new Date().getDate());
         } else {
             getWorkOrderList(false)
@@ -127,34 +145,35 @@ export default function HomeScreen({ navigation }) {
     return (
         <>
             <View style={{ borderRadius: 20, padding: 12.5, backgroundColor: colors.card, marginTop: 30, alignContent: "center", alignItems: "flex-start" }}>
-                <TextInput style={{ color: colors.text, fontSize: 17, width: "100%" }} placeholder="Filtrar por dados" placeholderTextColor="gray" onChangeText={term => setSearchTerm(term)} onSubmitEditing={() => { findWorkOrders(respData) }} returnKeyType="send" />
+                <TextInput style={{ color: colors.text, fontSize: 17, width: "100%" }} placeholder="Filtrar por dados" placeholderTextColor="gray" onChangeText={term => { setSearchTerm(term); findWorkOrders(respData) }} onSubmitEditing={() => { findWorkOrders(respData); focusOut() }} onFocus={() => focusIn()} returnKeyType="send" />
             </View>
-            <Pressable style={{ borderRadius: 25, padding: 2, width: 40, height: 40, backgroundColor: colors.background, position: "absolute", top: 36, right: 15 }} onPress={() => { findWorkOrders(respData) }} >
+            <Pressable style={{ borderRadius: 25, padding: 2, width: 40, height: 40, backgroundColor: colors.background, position: "absolute", top: 36, right: 15 }} onPress={() => { findWorkOrders(respData); focusOut() }} >
                 <Icon name="search" style={{ color: colors.text, fontSize: 18, marginLeft: 2, padding: 8 }} color={colors.text} />
             </Pressable>
-                <FlatList data={searchData} refreshControl={<RefreshControl progressViewOffset={-55} refreshing={refreshing} onRefresh={onRefresh} />} renderItem={({ item }) =>
-                    <Pressable style={{ padding: 8, backgroundColor: colors.background }} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(); navigation.navigate('Ordem de Serviço'); }}>
-                        <View style={{ backgroundColor: colors.card, padding: 12.5, borderRadius: 15, marginBottom: 5 }}>
-                            <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5 }}>
-                                <Text style={{ color: colors.text, fontSize: 17, alignSelf: "flex-start" }}>{item.workOrderCode + ' - ' + item.description}</Text>
+            <FlatList data={searchData} refreshControl={<RefreshControl progressViewOffset={-55} refreshing={refreshing} onRefresh={onRefresh} />} renderItem={({ item }) =>
+                <Pressable style={{ padding: 8, backgroundColor: colors.background }} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(); navigation.navigate('Ordem de Serviço'); }}>
+                    <View style={{ backgroundColor: colors.card, padding: 12.5, borderRadius: 15, marginBottom: 5 }}>
+                        <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5 }}>
+                            <Text style={{ color: colors.text, fontSize: 17, alignSelf: "flex-start" }}>{item.workOrderCode + ' - ' + item.description}</Text>
+                        </View>
+                        <View style={{ marginTop: 2 }}>
+                            <View style={{ marginBottom: -5 }}>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >Status: {item.workOrderStatusDescription}</Text>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >Organização: {item.organization}</Text>
                             </View>
-                            <View style={{ marginTop: 2 }}>
-                                <View style={{ marginBottom: -5 }}>
-                                    <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >Status: {item.workOrderStatusDescription}</Text>
-                                    <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >Organização: {item.organization}</Text>
-                                </View>
-                                <View style={{ marginBottom: -5 }}>
-                                    <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >Equipamento: {item.equipment}</Text>
-                                    <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >Departamento: {item.department}</Text>
-                                </View>
-                                <View style={{ marginBottom: -5 }}>
-                                    <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >Data de início: {item.scheduledStartDate}</Text>
-                                    <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >Data de Vencimento: {item.dueDate}</Text>
-                                </View>
+                            <View style={{ marginBottom: -5 }}>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >Equipamento: {item.equipment}</Text>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >Departamento: {item.department}</Text>
+                            </View>
+                            <View style={{ marginBottom: -5 }}>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >Data de início: {item.scheduledStartDate}</Text>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >Data de Vencimento: {item.dueDate}</Text>
                             </View>
                         </View>
-                    </Pressable>
-                } />
+                    </View>
+                </Pressable>
+            } />
+            {renderOverlay(modalVisible)}
         </>
     );
 }

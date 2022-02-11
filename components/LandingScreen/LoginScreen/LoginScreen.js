@@ -34,6 +34,11 @@ export default function HomeScreen({ navigation }) {
         }
     }
 
+    const getUserStatusAuth = async (host, token) => {
+        let url = host + ':8080/validate/status?token=' + token;
+        fetch(url).then(response => response.json()).then((data) => { console.log(data); storage.saveObject("statusAuth", data); })
+    }
+
     const validate = async () => {
 
         var organization = await storage.getArticle('organization');
@@ -63,6 +68,7 @@ export default function HomeScreen({ navigation }) {
                         setButtonText('Continuar.');
                         var token = xhr.responseText.replace("User validated.", "");
                         storage.saveArticle('token', token);
+                        getUserStatusAuth(host, token);
                     } else {
                         if (xhr.status == 0) {
                             setModalTitle('Erro de rede.');

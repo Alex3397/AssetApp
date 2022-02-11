@@ -27,9 +27,9 @@ const BasicData = (props) => {
             </View>
 
             <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, marginTop: 0, borderRadius: 25 }}>
-                <HideableLine rightLabel="Segurança" rightData={item.safety} leftLabel="Garantia" leftData={item.warranty} type="checkbox" rightShow={true} leftShow={false} />
-                <HideableLine rightLabel="Dependente" rightData={item.depend} leftLabel="Pesquisa" leftData={item.survey} type="checkbox" rightShow={true} leftShow={false} />
-                <HideableLine rightLabel="Varios Equipamentos" rightData={item.multipleEquipments} leftLabel="Impresso" leftData={item.printed} type="checkbox" rightShow={true} leftShow={false} />
+                <HideableLine rightLabel="Segurança" rightData={item.safety} leftLabel="Garantia" leftData={item.warranty} type="checkbox" rightShow={false} leftShow={false} />
+                <HideableLine rightLabel="Dependente" rightData={item.depend} leftLabel="Pesquisa" leftData={item.survey} type="checkbox" rightShow={false} leftShow={false} />
+                <HideableLine rightLabel="Varios Equipamentos" rightData={item.multipleEquipments} leftLabel="Impresso" leftData={item.printed} type="checkbox" rightShow={false} leftShow={false} />
             </View>
 
             <Equipment item={item} />
