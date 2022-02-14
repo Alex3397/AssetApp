@@ -48,9 +48,9 @@ const Details = (props) => {
             <HideableTextField label="Status da Inspeção" data={item.details.routeStatus} />
             <HideableTextField label="Custo de Parada" data={item.details.downTimeCost} />
             <HideableTextField label="Horas de Parada" data={item.details.downTimeHours} />
-            <HideableTextField label="Data de vencimento MP Original" data={String("Falta Achar")} />
+            <HideableTextField label="Data de vencimento MP Original" data={String("DueDate")} />
             <HideableTextField label="OS de Origem - Atividade" data={item.details.originalWorkOrder} />
-            <HideableTextField label="Trabalho de Origem" data={String("Falta Achar")} />
+            <HideableTextField label="Trabalho de Origem" data={String("originatingJob")} />
             <HideableTextField label="Prioridade Calculada" data={item.details.calculatedPriority} />
             <HideableCheckBox label="Secundário" data={item.details.minor} />
             <HideableCheckBox label="Preservar Prioridade Calculada" data={item.details.preserveCalculatedPriority} />

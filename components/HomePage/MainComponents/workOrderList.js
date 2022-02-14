@@ -4,8 +4,16 @@ import { TextInput, Text, RefreshControl, Pressable, FlatList, View, Keyboard } 
 import Storage from '../../../classes/Storage/Storage';
 import * as Network from 'expo-network';
 import Icon from "react-native-vector-icons/FontAwesome";
+import * as Localization from 'expo-localization';
+import * as Locale from '../../../Localization/Localization.json';
 
 export default function HomeScreen({ navigation }) {
+    let language = {};
+
+    if (Localization.locale.includes("pt-BR") && language != Locale["pt-BR"]) language = Locale["pt-BR"];
+    else if (Localization.locale.includes("es") && language != Locale.es) language = Locale.es;
+    else if (language != Locale.en) language = Locale.en;
+
     const { colors } = useTheme();
 
     const [refreshing, setRefreshing] = useState(false);
@@ -81,20 +89,28 @@ export default function HomeScreen({ navigation }) {
                 for (let index = 0; index < jsonData.length; index++) {
                     const element = jsonData[index];
                     if (element.scheduledStartDate == '') {
-                        element.scheduledStartDate = 'Não definido';
+                        element.scheduledStartDate = language.list.notDefined;
                     }
                     if (element.dueDate == '') {
-                        element.dueDate = 'Não definido';
+                        element.dueDate = language.list.notDefined;
                     }
                     if (element.reportedBy == '') {
-                        element.reportedBy = 'Não definido';
+                        element.reportedBy = language.list.notDefined;
                     }
                     jsonData[index] = element;
                 }
-                setData(jsonData);
-                setSearchData(jsonData);
-                storage.saveObject('workOrderList', jsonData);
-                return jsonData;
+                if (jsonData.status != 500) {
+                    setData(jsonData);
+                    setSearchData(jsonData);
+                    storage.saveObject('workOrderList', jsonData);
+                    console.log(jsonData)
+                    return jsonData;
+                } else {
+                    setData(workOrderList);
+                    setSearchData(workOrderList);
+                    console.log(jsonData)
+                    return workOrderList;
+                }
             }
         };
 
@@ -124,7 +140,7 @@ export default function HomeScreen({ navigation }) {
     useEffect(async () => {
         let networkState = await Network.getNetworkStateAsync();
         let date = await storage.getObject('today');
-    
+
         if (networkState.isConnected && networkState.type.includes('WIFI') && new Date().getDate() != date) {
 
             getWorkOrderList(true).then(async () => {
@@ -145,7 +161,7 @@ export default function HomeScreen({ navigation }) {
     return (
         <>
             <View style={{ borderRadius: 20, padding: 12.5, backgroundColor: colors.card, marginTop: 30, alignContent: "center", alignItems: "flex-start" }}>
-                <TextInput style={{ color: colors.text, fontSize: 17, width: "100%" }} placeholder="Filtrar por dados" placeholderTextColor="gray" onChangeText={term => { setSearchTerm(term); findWorkOrders(respData) }} onSubmitEditing={() => { findWorkOrders(respData); focusOut() }} onFocus={() => focusIn()} returnKeyType="send" />
+                <TextInput style={{ color: colors.text, fontSize: 17, width: "100%" }} placeholder={language.list.filter} placeholderTextColor="gray" onChangeText={term => { setSearchTerm(term); findWorkOrders(respData) }} onSubmitEditing={() => { findWorkOrders(respData); focusOut() }} onFocus={() => focusIn()} returnKeyType="send" />
             </View>
             <Pressable style={{ borderRadius: 25, padding: 2, width: 40, height: 40, backgroundColor: colors.background, position: "absolute", top: 36, right: 15 }} onPress={() => { findWorkOrders(respData); focusOut() }} >
                 <Icon name="search" style={{ color: colors.text, fontSize: 18, marginLeft: 2, padding: 8 }} color={colors.text} />
@@ -158,16 +174,16 @@ export default function HomeScreen({ navigation }) {
                         </View>
                         <View style={{ marginTop: 2 }}>
                             <View style={{ marginBottom: -5 }}>
-                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >Status: {item.workOrderStatusDescription}</Text>
-                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >Organização: {item.organization}</Text>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.status}: {item.workOrderStatusDescription}</Text>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >{language.list.organization}: {item.organization}</Text>
                             </View>
                             <View style={{ marginBottom: -5 }}>
-                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >Equipamento: {item.equipment}</Text>
-                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >Departamento: {item.department}</Text>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.equipment}: {item.equipment}</Text>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >{language.list.department}: {item.department}</Text>
                             </View>
                             <View style={{ marginBottom: -5 }}>
-                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >Data de início: {item.scheduledStartDate}</Text>
-                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >Data de Vencimento: {item.dueDate}</Text>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.scheduledStartDate}: {item.scheduledStartDate}</Text>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >{language.list.dueDate}: {item.dueDate}</Text>
                             </View>
                         </View>
                     </View>

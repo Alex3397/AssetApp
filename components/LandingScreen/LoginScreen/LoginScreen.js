@@ -5,6 +5,8 @@ import { useTheme } from '@react-navigation/native';
 import CheckBox from '../../HomePage/UtilityComponents/CheckBox';
 import Icon from "react-native-vector-icons/FontAwesome";
 import Storage from '../../../classes/Storage/Storage';
+import * as Localization from 'expo-localization';
+import * as Locale from '../../../Localization/Localization.json';
 
 export default function HomeScreen({ navigation }) {
     const storage = new Storage();
@@ -23,6 +25,12 @@ export default function HomeScreen({ navigation }) {
     const [savedUrl, setUrl] = useState('');
     const [savedCon, setCon] = useState('');
     const image = colors.background.toString() === 'rgb(1, 1, 1)' ? require('../../../images/folk-pattern-black.png') : require('../../../images/folk-pattern.png');
+
+    let language = {};
+
+    if (Localization.locale.includes("pt-BR") && language != Locale["pt-BR"]) language=Locale["pt-BR"];
+    else if (Localization.locale.includes("es") && language != Locale.es) language=Locale.es;
+    else if (language != Locale.en) language=Locale.en;
 
     const passwordInput = useRef();
     const saveUserData = async (user, pass) => {
@@ -46,7 +54,7 @@ export default function HomeScreen({ navigation }) {
         var host = await storage.getArticle('host');
 
         if ((!user || !pass)) {
-            setWarning('Usuário e senha não podem estar em branco.')
+            setWarning(language.login.warning)
         } else if (organization != null && tenant != null && host != null) {
 
             var xhr = new XMLHttpRequest();
@@ -63,31 +71,31 @@ export default function HomeScreen({ navigation }) {
                     setModalVisible(true)
 
                     if (xhr.responseText.includes("User validated.")) {
-                        setModalTitle('Bem vindo.');
-                        setResponse('Seu usuário foi validado com sucesso.');
-                        setButtonText('Continuar.');
+                        setModalTitle(language.login.modal.positive.title);
+                        setResponse(language.login.modal.positive.response);
+                        setButtonText(language.login.modal.positive.button);
                         var token = xhr.responseText.replace("User validated.", "");
                         storage.saveArticle('token', token);
                         getUserStatusAuth(host, token);
                     } else {
                         if (xhr.status == 0) {
-                            setModalTitle('Erro de rede.');
-                            setResponse('Não foi possível se conectar ao servidor, qualquer dado que for gerado dentro do aplicativo ficará salvo e será enviado ao servidor assim que a conexão for restabelecida.');
-                            setButtonText('Tudo bem.')
+                            setModalTitle(language.login.modal.connectionError.title);
+                            setResponse(language.login.modal.connectionError.response);
+                            setButtonText(language.login.modal.connectionError.button);
                         } else if (xhr.responseText.includes("Please make certain all credentials are entered correctly.")) {
-                            setModalTitle('Usuário inválido.')
-                            setResponse('O usuário e/ou senha estão incorretos.\n\nVerifique se as credenciais foram inseridas corretamente.\nVocê poderá continuar utilizando o aplicativo. Todos os dados que forem gerados dentro do aplicativo ficarão salvos, mas somente quando você estabelecer a conexão com o servidor de forma correta os dados serão enviados.')
-                            setButtonText('Tudo bem.')
+                            setModalTitle(language.login.modal.invalidUser.title);
+                            setResponse(language.login.modal.invalidUser.response);
+                            setButtonText(language.login.modal.invalidUser.button);
                         }
                         else if (xhr.responseText.includes('Connection timed out')) {
-                            setModalTitle('Servidor demorou para responder.')
-                            setResponse('Tente novamente mais tarde.')
-                            setButtonText('Tudo bem.')
+                            setModalTitle(language.login.modal.timedOut.title);
+                            setResponse(language.login.modal.timedOut.response);
+                            setButtonText(language.login.modal.timedOut.button);
                         }
                         else {
-                            setModalTitle('Erro não previsto.');
+                            setModalTitle(language.login.modal.unknown.title);
                             setResponse(xhr.response);
-                            setButtonText('Puts.')
+                            setButtonText(language.login.modal.unknown.button)
                         }
                     }
                     if (saveUserInfo) {
@@ -140,7 +148,7 @@ export default function HomeScreen({ navigation }) {
         navigation.addListener('focus', () => {
             getSavedVariables();
           });
-    }, [])
+    }, []);
 
     return (
         <>
@@ -150,24 +158,24 @@ export default function HomeScreen({ navigation }) {
                         <View style={{ margin: 20, backgroundColor: "white", borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
                             <Text style={{ marginBottom: 15, textAlign: "center", color: "black" }}>{modalTitle}</Text>
                             <Text style={{ marginBottom: 15, textAlign: "center", color: "black" }}>{response}</Text>
-                            <Pressable style={{ borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3" }} onPress={() => { setModalVisible(false); navigation.navigate('HomePage') }} >
+                            <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3" }} onPress={() => { setModalVisible(false); navigation.navigate('HomePage') }} >
                                 <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>{buttonText}</Text>
                             </Pressable>
                         </View>
                     </View>
                 </Modal>
                 <View style={{ flex: 1.5, alignItems: 'center', justifyContent: 'center' }} >
-                    <Text style={{ color: colors.text, fontSize: 50, fontFamily: 'serif' }}>Asset</Text>
+                    <Text style={{ color: colors.text, fontSize: 50, fontFamily: 'serif', fontStyle: "italic" }}>Asset</Text>
                 </View>
                 <View style={{ flex: 1.5, justifyContent: 'center', borderTopLeftRadius: 50, borderTopRightRadius: 50, backgroundColor: colors.background, padding: 25 }}>
                     <View style={{ position: 'absolute', top: 10, alignSelf: 'flex-start', marginTop: 25, marginLeft: 25 }}>
-                        <Text style={{ color: colors.text, fontSize: 25, fontFamily: 'serif' }}>Faça login</Text>
-                        <Text style={{ color: colors.text, fontFamily: 'serif' }}>Insira suas credenciais</Text>
+                        <Text style={{ color: colors.text, fontSize: 25, fontFamily: 'serif' }}>{language.login.title}</Text>
+                        <Text style={{ color: colors.text, fontFamily: 'serif' }}>{language.login.sub}</Text>
                     </View>
 
-                    <TextInput autoCapitalize='characters' style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 80, marginBottom: 20 }} placeholder="Usuário" placeholderTextColor={colors.text} onChangeText={user => { setUser(user); saveUserData(user, pass); }} onSubmitEditing={() => { passwordInput.current.focus(); }} returnKeyType="next" defaultValue={user} />
+                    <TextInput autoCapitalize='characters' style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 80, marginBottom: 20 }} placeholder={language.login.user} placeholderTextColor={colors.text} onChangeText={user => { setUser(user); saveUserData(user, pass); }} onSubmitEditing={() => { passwordInput.current.focus(); }} returnKeyType="next" defaultValue={user} />
                     <View>
-                        <TextInput autoCapitalize='none' secureTextEntry={iconName == 'eye' ? true : false} style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 20, marginBottom: 5 }} placeholder="Senha" placeholderTextColor={colors.text} onChangeText={pass => { setPass(pass); saveUserData(user, pass); }} ref={passwordInput} returnKeyType="send" onSubmitEditing={() => { validate() }} defaultValue={pass} />
+                        <TextInput autoCapitalize='none' secureTextEntry={iconName == 'eye' ? true : false} style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 20, marginBottom: 5 }} placeholder={language.login.password} placeholderTextColor={colors.text} onChangeText={pass => { setPass(pass); saveUserData(user, pass); }} ref={passwordInput} returnKeyType="send" onSubmitEditing={() => { validate() }} defaultValue={pass} />
 
                         <Pressable style={{ position: "absolute", alignSelf: "flex-end", marginTop: 25, padding: 2, paddingRight: 6 }} onPress={() => { iconName == 'eye' ? setIconName('eye-slash') : setIconName('eye') }}>
                             <Icon name={iconName} style={{ fontSize: 20 }} color={colors.text} />
@@ -175,13 +183,13 @@ export default function HomeScreen({ navigation }) {
                     </View>
 
                     <Text style={{ color: 'red', fontSize: 12, alignSelf: 'center' }}>{warning}</Text>
-                    <CheckBox label="Lembrar informações" labelSide="right" labelStyle={{ color: colors.text }} value={saveUserInfo} onChange={() => { setSaveUserInfo(!saveUserInfo); storage.saveArticle('savedata', JSON.stringify(!saveUserInfo)); saveUserInfo ? saveUserData(user, pass) : saveUserData('', '') }} />
+                    <CheckBox label={language.login.checkbox} labelSide="right" labelStyle={{ color: colors.text }} value={saveUserInfo} onChange={() => { setSaveUserInfo(!saveUserInfo); storage.saveArticle('savedata', JSON.stringify(!saveUserInfo)); saveUserInfo ? saveUserData(user, pass) : saveUserData('', '') }} />
 
                     <Pressable style={{ marginTop: 45, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 35, borderRadius: 16, elevation: 3, backgroundColor: colors.card }} onPress={() => { validate(); }} >
-                        <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.text }}>Entrar</Text>
+                        <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.text }}>{language.login.login}</Text>
                     </Pressable>
-                    <Pressable style={{ marginTop: 25, marginBottom: 25, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 35, borderRadius: 16, elevation: 3, backgroundColor: colors.card }} onPress={() => {getSavedVariables(); navigation.navigate('Settings',{savedOrganization,savedTenant,savedUrl,savedCon})}} >
-                        <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.primary }}>Configuração</Text>
+                    <Pressable style={{ marginTop: 25, marginBottom: 25, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 35, borderRadius: 16, elevation: 3, backgroundColor: colors.card }} onPress={() => {getSavedVariables(); navigation.navigate('Settings',{savedOrganization,savedTenant,savedUrl,savedCon, language})}} >
+                        <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.primary }}>{language.login.config}</Text>
                     </Pressable>
                 </View>
             </ImageBackground>

@@ -6,8 +6,16 @@ import { ScrollView } from "react-native-gesture-handler";
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { set } from "react-native-reanimated";
 import CheckBox from "../../HomePage/UtilityComponents/CheckBox";
+import * as Localization from 'expo-localization';
+import * as Locale from '../../../Localization/Localization.json';
 
 export default function Settings({ navigation, route }) {
+  let language = {};
+
+  if (Localization.locale.includes("pt-BR") && language != Locale["pt-BR"]) language = Locale["pt-BR"];
+  else if (Localization.locale.includes("es") && language != Locale.es) language = Locale.es;
+  else if (language != Locale.en) language = Locale.en;
+
   const storage = new Storage();
 
   const { savedOrganization, savedTenant, savedUrl, savedCon } = route.params;
@@ -17,32 +25,33 @@ export default function Settings({ navigation, route }) {
   const [org, setOrg] = useState(savedOrganization);
   const [tenant, setTenant] = useState(savedTenant);
   const [url, setUrl] = useState(savedUrl);
-  const [conLabel, setConLabel] = useState("Tipo de conexão: HTTP");
+  const [conLabel, setConLabel] = useState(language.config.con.concat(": HTTP"));
   const [con, setCon] = useState(savedCon)
   const [conBool, setConBool] = useState(false);
   const { colors } = useTheme();
   const image = colors.background.toString() === 'rgb(1, 1, 1)' ? require('../../../images/folk-pattern-black.png') : require('../../../images/folk-pattern.png');
 
+
   const saveData = async () => {
     storage.saveArticle('organization', org);
     storage.saveArticle('tenant', tenant);
     storage.saveArticle('host', con.concat(url));
-    storage.saveArticle('con',con);
+    storage.saveArticle('con', con);
   }
 
   (() => {
     if (con == "") {
       setCon("http://")
-    } else if (con == "https://" && !conBool && conLabel != "Tipo de conexão: HTTPS") {
-      setConLabel("Tipo de conexão: HTTPS");
+    } else if (con == "https://" && !conBool && conLabel != language.config.con.concat(": HTTPS")) {
+      setConLabel(language.config.con.concat(": HTTPS"));
       setConBool(true);
     }
-    if (conBool && conLabel != "Tipo de conexão: HTTPS" && con != "https://") {
-      setConLabel("Tipo de conexão: HTTPS");
+    if (conBool && conLabel != language.config.con.concat(": HTTPS") && con != "https://") {
+      setConLabel(language.config.con.concat(": HTTPS"));
       setCon("https://");
     }
-    if (!conBool && conLabel != "Tipo de conexão: HTTP" && con != "http://") {
-      setConLabel("Tipo de conexão: HTTP");
+    if (!conBool && conLabel != language.config.con.concat(": HTTP") && con != "http://") {
+      setConLabel(language.config.con.concat(": HTTP"));
       setCon("http://");
     }
   })()
@@ -91,22 +100,22 @@ export default function Settings({ navigation, route }) {
         <GestureRecognizer style={{ flex: viewFlex, justifyContent: 'center', borderTopLeftRadius: 50, borderTopRightRadius: 50, backgroundColor: colors.background, padding: 25, zIndex: 999 }} onSwipeUp={() => { console.log('swiped up'); animateUp() }} onSwipeDown={() => { console.log('swiped down'); animateDown() }}>
 
           <View style={{ position: 'absolute', top: 10, alignSelf: 'flex-start', marginTop: 25, marginLeft: 25 }}>
-            <Text style={{ color: colors.text, fontSize: 25, fontFamily: 'serif' }}>Configurações</Text>
-            <Text style={{ color: colors.text, fontSize: 14, fontFamily: 'serif' }}>Insira os valores nos campos adequados</Text>
+            <Text style={{ color: colors.text, fontSize: 25, fontFamily: 'serif' }}>{language.config.title}</Text>
+            <Text style={{ color: colors.text, fontSize: 14, fontFamily: 'serif' }}>{language.config.sub}</Text>
           </View>
 
           <ScrollView style={{ marginTop: 80 }}>
             <View>
-              <TextInput autoCapitalize="characters" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder="Organização" defaultValue={org} placeholderTextColor={colors.text} onChangeText={org => { setOrg(org); storage.saveArticle('organization', org); }} onSubmitEditing={() => { tenantInput.current.focus(); }} returnKeyType="next" />
-              <TextInput autoCapitalize="characters" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder="Tenant" defaultValue={tenant} placeholderTextColor={colors.text} onChangeText={tenant => { setTenant(tenant); storage.saveArticle('tenant', tenant); }} ref={tenantInput} onSubmitEditing={() => { urlInput.current.focus(); }} returnKeyType="next" />
-              <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder="Endereço do servidor" defaultValue={url} placeholderTextColor={colors.text} onChangeText={url => { setUrl(url); storage.saveArticle('host', con.concat(url)); }} ref={urlInput} onSubmitEditing={() => { navigation.navigate('Login'); saveData(); }} returnKeyType="send" />
-              <CheckBox label={conLabel} labelSide="left" labelStyle={{ color: colors.text }} value={conBool} onChange={() => {setConBool(!conBool)}} />
-              
+              <TextInput autoCapitalize="characters" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder={language.config.organization} defaultValue={org} placeholderTextColor={colors.text} onChangeText={org => { setOrg(org); storage.saveArticle('organization', org); }} onSubmitEditing={() => { tenantInput.current.focus(); }} returnKeyType="next" />
+              <TextInput autoCapitalize="characters" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder={language.config.tenant} defaultValue={tenant} placeholderTextColor={colors.text} onChangeText={tenant => { setTenant(tenant); storage.saveArticle('tenant', tenant); }} ref={tenantInput} onSubmitEditing={() => { urlInput.current.focus(); }} returnKeyType="next" />
+              <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder={language.config.url} defaultValue={url} placeholderTextColor={colors.text} onChangeText={url => { setUrl(url); storage.saveArticle('host', con.concat(url)); }} ref={urlInput} onSubmitEditing={() => { navigation.navigate('Login'); saveData(); }} returnKeyType="send" />
+              <CheckBox label={conLabel} labelSide="left" labelStyle={{ color: colors.text }} value={conBool} onChange={() => { setConBool(!conBool) }} />
+
             </View>
           </ScrollView>
 
           <Pressable style={{ marginTop: 25, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 35, borderRadius: 16, elevation: 3, backgroundColor: colors.card }} onPress={() => { navigation.navigate('Login'); saveData(); }} >
-            <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.text }}>Concluído</Text>
+            <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.text }}>{language.config.submit}</Text>
           </Pressable>
         </GestureRecognizer>
       </ImageBackground>

@@ -1,0 +1,161 @@
+{
+    "pt-BR": {
+        "login": {
+            "title": "Faça login",
+            "sub": "Insira suas credenciais",
+            "user": "Usuário",
+            "password": "Senha",
+            "checkbox": "Lembrar minhas informações",
+            "login": "Entrar",
+            "config": "Configurações",
+            "warning": "Usuário e senha não podem estar em branco.",
+            "modal": {
+                "positive": {
+                    "title": "Bem vindo.",
+                    "response": "Seu usuário foi validado com sucesso.",
+                    "button": "Continuar."
+                }, "connectionError": {
+                    "title": "Erro de rede.",
+                    "response": "Não foi possível se conectar ao servidor, qualquer dado que for gerado dentro do aplicativo ficará salvo e será enviado ao servidor assim que a conexão for restabelecida.",
+                    "button": "Tudo bem."
+                }, "invalidUser" : {
+                    "title": "Usuário inválido.",
+                    "response": "O usuário e/ou senha estão incorretos.\n\nVerifique se as credenciais foram inseridas corretamente.\nVocê poderá continuar utilizando o aplicativo. Todos os dados que forem gerados dentro do aplicativo ficarão salvos, mas somente quando você estabelecer a conexão com o servidor de forma correta os dados serão enviados.",
+                    "button": "Tudo bem."
+                }, "timedOut": {
+                    "title": "Servidor demorou para responder.",
+                    "response": "Não foi possível se conectar ao servidor externo,\ncontate seus administradores.",
+                    "button": "Tudo bem."
+                }, "unknown": {
+                    "title": "Erro não previsto.",
+                    "button": "Puts."
+                }
+            }
+        },
+        "config": {
+            "title": "Configurações",
+            "sub": "Insira os valores nos campos adequados",
+            "organization": "Organização",
+            "tenant": "Tenant",
+            "url": "Endereço do servidor",
+            "con": "Tipo de conexão",
+            "submit": "Concluído"
+        },
+        "list": {
+            "notDefined": "Não definido",
+            "filter": "Filtrar por dados",
+            "status": "Status",
+            "organization": "Organização",
+            "equipment": "Equipamento",
+            "department": "Departamento",
+            "scheduledStartDate": "Data de início",
+            "dueDate": "Data de Vencimento"
+        }
+    },
+    "en": {
+        "login": {
+            "title": "Log-in",
+            "sub": "Enter your credentials",
+            "user": "User",
+            "password": "Password",
+            "checkbox": "Remember Me",
+            "login": "Login",
+            "config": "Settings",
+            "warning": "Usuário e senha não podem estar em branco.",
+            "modal": {
+                "positive": {
+                    "title": "Welcome.",
+                    "response": "User successfully validated.",
+                    "button": "Continue"
+                }, "connectionError": {
+                    "title": "Connection Error.",
+                    "response": "Unable to connect to server, any data generated within this app will be saved and sent once connection to server is re-established.",
+                    "button": "Ok"
+                }, "invalidUser" : {
+                    "title": "Invalid User",
+                    "response": "User and/or password are incorrect.\n\nPlease check if all entered credentials were properly submitted.\nYou'll still be able to use the app. All data generated within this app will be saved, but only when you connect to server in a proper way your changes will take place.",
+                    "button": "Ok"
+                }, "timedOut": {
+                    "title": "Connection Timeout",
+                    "response": "Unable to connect with external server,\ncontact your administrators.",
+                    "button": "Ok"
+                }, "unknown": {
+                    "title": "Unknown Error.",
+                    "button": "Shite"
+                }
+            }
+        },
+        "config": {
+            "title": "Settings",
+            "sub": "Enter values in the appropriate fields",
+            "organization": "Organization",
+            "tenant": "Tenant",
+            "url": "Server Address",
+            "con": "Connection Type",
+            "submit": "Done"
+        },
+        "list": {
+            "notDefined": "Not Defined",
+            "filter": "Filter By Data",
+            "status": "Status",
+            "organization": "Organization",
+            "equipment": "Equipment",
+            "department": "Department",
+            "scheduledStartDate": "Scheduled Start",
+            "dueDate": "Due Date"
+        }
+    },
+    "es": {
+        "login": {
+            "title": "Iniciar sesión",
+            "sub": "Ingrese sus credenciales",
+            "user": "Usuario",
+            "password": "Contraseña",
+            "checkbox": "Recuérdame",
+            "login": "Iniciar",
+            "config": "Ajustes",
+            "warning": "Usuário e senha não podem estar em branco.",
+            "modal": {
+                "positive": {
+                    "title": "Bienvenido.",
+                    "response": "Su nombre de usuario ha sido validado con éxito.",
+                    "button": "Continuar."
+                }, "connectionError": {
+                    "title": "Error de conexión.",
+                    "response": "No se puede conectar al servidor, todos los datos generados dentro de la aplicación se guardarán y se enviarán al servidor una vez que se restablezca la conexión.",
+                    "button": "Todo bien."
+                }, "invalidUser" : {
+                    "title": "Usuario invalido.",
+                    "response": "El nombre de usuario y/o la contraseña son incorrectos.\n\nPor favor, compruebe que las credenciales se han introducido correctamente.\nPodrá seguir utilizando la aplicación. Todos los datos generados dentro de la aplicación se guardarán, pero solo cuando se conecte correctamente al servidor se enviarán los datos.",
+                    "button": "Todo bien."
+                }, "timedOut": {
+                    "title": "El servidor tardó en responder.",
+                    "response": "No se puede conectar con un servidor externo,\npóngase en contacto con sus administradores.",
+                    "button": "Todo bien."
+                }, "unknown": {
+                    "title": "Error imprevisto.",
+                    "button": "Puts."
+                }
+            }
+        },
+        "config": {
+            "title": "Ajustes",
+            "sub": "Ingrese valores en los campos apropiados",
+            "organization": "Organización",
+            "tenant": "Tenant",
+            "url": "Dirección del servidor",
+            "con": "Tipo de conección",
+            "submit": "Concluido"
+        },
+        "list": {
+            "notDefined": "No definido",
+            "filter": "Filtrar por datos",
+            "status": "Status",
+            "organization": "Organización",
+            "equipment": "Equipo",
+            "department": "Departamento",
+            "scheduledStartDate": "Fecha de inicio",
+            "dueDate": "Fecha de vencimiento"
+        }
+    }
+}
