@@ -6,7 +6,8 @@ import HideableTextField from '../UtilityComponents/HideableTextField';
 
 const CustomerDetails = (props) => {
     const { colors } = useTheme();
-    var item = props.item;
+    let item = props.item;
+    let labels = props.labels;
 
     if (item.customerServiceDetails.equipmentUsability == ""
         && item.customerServiceDetails.tempFixPromiseDate == ""
@@ -29,20 +30,20 @@ const CustomerDetails = (props) => {
         <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
             <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes de serviço ao cliente</Text>
 
-            <HideableTextField label="Capacidade de utilização do equipmento" data={item.customerServiceDetails.equipmentUsability} />
-            <HideableTextField label="Data potencial de conserto temporário" data={item.customerServiceDetails.tempFixPromiseDate} />
-            <HideableTextField label="Fornecedor" data={item.customerServiceDetails.supplierServiceCategoryCode} />
-            <HideableTextField label="Organização do fornecedor" data={item.customerServiceDetails.supplierServiceCategoryOrganization} />
-            <HideableTextField label="Categoria de serviço" data={item.customerServiceDetails.providerServiceCategoryCode} />
-            <HideableTextField label="Organização da Categoria de serviço" data={item.customerServiceDetails.providerServiceCategoryOrganization} />
-            <HideableTextField label="Endereço do trabalho" data={item.customerServiceDetails.workAddress} />
-            <HideableTextField label="Custo Estimado de mão de obra" data={item.customerServiceDetails.estimatedLaborCost} />
-            <HideableTextField label="Custo Estimado de material" data={item.customerServiceDetails.estimatedMaterialCost} />
-            <HideableTextField label="Custo Estimado diversos" data={item.customerServiceDetails.estimatedMiscellaneousCost} />
-            <HideableTextField label="Custo Estimado Totais" data={item.customerServiceDetails.estimatedTotalCost} />
-            <HideableTextField label="Data potencial de conserto permanente" data={item.customerServiceDetails.permanentFixPromisedDate} />
-            <HideableTextField label="Data de conclusão de conserto temporário" data={item.customerServiceDetails.temporaryFixDateCompleted} />
-            <HideableTextField label="Código de serviço" data={item.customerServiceDetails.serviceProblemCode} />
+            <HideableTextField show={false} label={labels.equipmentUsability} data={item.customerServiceDetails.equipmentUsability} />
+            <HideableTextField show={false} label={labels.tempFixPromiseDate} data={item.customerServiceDetails.tempFixPromiseDate} />
+            <HideableTextField show={false} label={labels.supplierServiceCategoryCode} data={item.customerServiceDetails.supplierServiceCategoryCode} />
+            <HideableTextField show={false} label={labels.supplierServiceCategoryOrganization} data={item.customerServiceDetails.supplierServiceCategoryOrganization} />
+            <HideableTextField show={false} label={labels.providerServiceCategoryCode} data={item.customerServiceDetails.providerServiceCategoryCode} />
+            <HideableTextField show={false} label={labels.providerServiceCategoryOrganization} data={item.customerServiceDetails.providerServiceCategoryOrganization} />
+            <HideableTextField show={false} label={labels.workAddress} data={item.customerServiceDetails.workAddress} />
+            <HideableTextField show={false} label={labels.estimatedLaborCost} data={item.customerServiceDetails.estimatedLaborCost} />
+            <HideableTextField show={false} label={labels.estimatedMaterialCost} data={item.customerServiceDetails.estimatedMaterialCost} />
+            <HideableTextField show={false} label={labels.estimatedMiscellaneousCost} data={item.customerServiceDetails.estimatedMiscellaneousCost} />
+            <HideableTextField show={false} label={labels.estimatedTotalCost} data={item.customerServiceDetails.estimatedTotalCost} />
+            <HideableTextField show={false} label={labels.permanentFixPromisedDate} data={item.customerServiceDetails.permanentFixPromisedDate} />
+            <HideableTextField show={false} label={labels.temporaryFixDateCompleted} data={item.customerServiceDetails.temporaryFixDateCompleted} />
+            <HideableTextField show={false} label={labels.serviceProblemCode} data={item.customerServiceDetails.serviceProblemCode} />
         </View>
     );
 }

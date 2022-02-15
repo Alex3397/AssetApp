@@ -8,10 +8,10 @@ const HideableCheckBox = (props) => {
 
     var value = String(props.data).includes("true");
     var label = props.label;
-    var show = props.show;
+    var show = props.show == undefined ? false : props.show;
     
     if (show == undefined) show = false;
-    if (label == "" && !value) return(<></>);
+    if (label == "" || label == undefined) return(<></>);
     if (!value && !show) return(<></>)
 
     return (

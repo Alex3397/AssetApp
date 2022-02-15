@@ -10,9 +10,7 @@
     "equipmentType": "",
     "multipleEquipments": "",
     "equipmentAlias": "",
-    "serialNumber": "",
     "equipmentManufacturer": "",
-    "model": "",
     "print": "",
     "locationCode": "",
     "locationDescription": "",
@@ -91,7 +89,6 @@
         "shift": "",
         "budget": "",
         "campaign": "",
-        "campaignStatus": "",
         "serviceRequestCode": ""
     },
     "compliance": {
@@ -171,7 +168,9 @@
         "minor": "",
         "preserveCalculatedPriority": "",
         "latitude": "",
-        "longitude": ""
+        "longitude": "",
+        "originatingJob": "",
+        "dueDate": ""
     },
     "customerServiceDetails": {
         "equipmentUsability": "",

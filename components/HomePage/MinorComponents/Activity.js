@@ -5,7 +5,8 @@ import HideableTextField from '../UtilityComponents/HideableTextField';
 
 const Activity = (props) => {
     const { colors } = useTheme();
-    var item = props.item;
+    let item = props.item;
+    let labels = props.labels;
 
     if (
         item.activity.activityCode == ""
@@ -33,23 +34,23 @@ const Activity = (props) => {
         <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
             <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Atividade</Text>
 
-            <HideableTextField label="Atividade" data={item.activity.activityCode} />
-            <HideableTextField label="Nível" data={item.activity.tradeCode} />
-            <HideableTextField label="Plano de tarefa" data={item.activity.taskCode} />
-            <HideableTextField label="Lista de materiais" data={item.activity.materialList} />
-            <HideableTextField label="Motivo do reparo" data={item.activity.repairReason} />
-            <HideableTextField label="Trabalho executado" data={item.activity.workAccomplished} />
-            <HideableTextField label="Falha da peça segundo técnico" data={item.activity.technicianPartFailure} />
-            <HideableTextField label="Fabricante" data={item.activity.manufacturerCode} />
-            <HideableTextField label="Data de Inicio" data={item.activity.activityStartDate} />
-            <HideableTextField label="Data de Término" data={item.activity.activityEndDate} />
-            <HideableTextField label="Horas Estimadas" data={item.activity.estimatedHours} />
-            <HideableTextField label="Horas Restantes" data={item.activity.hoursRemaining} />
-            <HideableTextField label="Pessoal Requerido" data={item.activity.persons} />
-            <HideableTextField label="Nível do Sistema" data={item.activity.systemLevel} />
-            <HideableTextField label="Nível de Montagem" data={item.activity.assemblyLevel} />
-            <HideableTextField label="Nível de Componente" data={item.activity.componentLevel} />
-            <HideableTextField label="Localização do Componente" data={item.activity.partLocation} />
+            <HideableTextField show={false} label={labels.activityCode} data={item.activity.activityCode} />
+            <HideableTextField show={false} label={labels.tradeCode} data={item.activity.tradeCode} />
+            <HideableTextField show={false} label={labels.taskCode} data={item.activity.taskCode} />
+            <HideableTextField show={false} label={labels.materialList} data={item.activity.materialList} />
+            <HideableTextField show={false} label={labels.repairReason} data={item.activity.repairReason} />
+            <HideableTextField show={false} label={labels.workAccomplished} data={item.activity.workAccomplished} />
+            <HideableTextField show={false} label={labels.technicianPartFailure} data={item.activity.technicianPartFailure} />
+            <HideableTextField show={false} label={labels.manufacturerCode} data={item.activity.manufacturerCode} />
+            <HideableTextField show={false} label={labels.activityStartDate} data={item.activity.activityStartDate} />
+            <HideableTextField show={false} label={labels.activityEndDate} data={item.activity.activityEndDate} />
+            <HideableTextField show={false} label={labels.estimatedHours} data={item.activity.estimatedHours} />
+            <HideableTextField show={false} label={labels.hoursRemaining} data={item.activity.hoursRemaining} />
+            <HideableTextField show={false} label={labels.persons} data={item.activity.persons} />
+            <HideableTextField show={false} label={labels.systemLevel} data={item.activity.systemLevel} />
+            <HideableTextField show={false} label={labels.assemblyLevel} data={item.activity.assemblyLevel} />
+            <HideableTextField show={false} label={labels.componentLevel} data={item.activity.componentLevel} />
+            <HideableTextField show={false} label={labels.partLocation} data={item.activity.partLocation} />
         </View>
     );
 }

@@ -7,22 +7,28 @@ import HideableCheckBox from './HideableCheckBox';
 const HideableLine = (props) => {
     const { colors } = useTheme();
 
-    var rightLabel = props.rightLabel;
-    var rightData = props.rightData;
-    var leftLabel = props.leftLabel;
-    var leftData = props.leftData;
-    var type = props.type;
-    var rightShow = props.rightShow;
-    var leftShow = props.leftShow;
+    let rightLabel = props.rightLabel;
+    let rightData = props.rightData;
+    let leftLabel = props.leftLabel;
+    let leftData = props.leftData;
+    let type = props.type;
+    let rightShow = props.rightShow == undefined ? false : props.rightShow;
+    let leftShow = props.leftShow == undefined ? false : props.leftShow;
 
-    var fullLength = String(rightLabel).length + String(rightData).length + String(leftLabel).length + String(leftData).length;
+    let fullLength = String(rightLabel).length + String(rightData).length + String(leftLabel).length + String(leftData).length;
 
-    if ((rightLabel == "" && rightData == "" && leftLabel == "" && leftData == "") && !show) {
+    if ((rightLabel == "" && rightData == "" && leftLabel == "" && leftData == "") && !rightShow && !leftShow) {
         return (<></>)
     } else if (type == undefined || type == "text" ) {
-        if (fullLength < 52) {
+        if (rightData == "") 
             return (
                 <>
+                    <HideableTextField style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "flex-end" }} label={leftLabel} data={leftData} show={leftShow} />
+                </>
+            )
+        else if (fullLength < 52) {
+            return (
+                <>  
                     <HideableTextField label={rightLabel} data={rightData} show={rightShow} />
                     <HideableTextField style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "flex-end", top: -22, marginBottom: -22 }} label={leftLabel} data={leftData} show={leftShow} />
                 </>

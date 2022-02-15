@@ -4,8 +4,8 @@ import { useTheme } from '@react-navigation/native';
 
 const HideableTittle = (props) => {
     const { colors } = useTheme();
-    
-    var title = "";
+    let title = "";
+    let show = props.show == undefined ? false : props.show;
 
     if (props.right == "" && props.left == "") {
         title = "";
@@ -17,7 +17,7 @@ const HideableTittle = (props) => {
         title = props.right + " - " + props.left;
     }
 
-    if (props.right == "" && props.left == "" && !props.show) {
+    if (props.right == "" && props.left == "" && !show) {
         return(<></>)
     } else {
         if (props.style == null) {

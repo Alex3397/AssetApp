@@ -26,17 +26,17 @@ export default function HomeScreen({ navigation }) {
 
     let search = []
 
-    const findWorkOrders = async (data) => {
+    const findWorkOrders = async (data, term) => {
         search = []
         data.forEach(element => {
-            if (String(element.equipment).toLowerCase().includes(String(searchTerm).toLowerCase())
-                || String(element.department).toLowerCase().includes(String(searchTerm).toLowerCase())
-                || String(element.workOrderCode).toLowerCase().includes(String(searchTerm).toLowerCase())
-                || String(element.scheduledStartDate).toLowerCase().includes(String(searchTerm).toLowerCase())
-                || String(element.organization).toLowerCase().includes(String(searchTerm).toLowerCase())
-                || String(element.workOrderStatusDescription).toLowerCase().includes(String(searchTerm).toLowerCase())
-                || String(element.description).toLowerCase().includes(String(searchTerm).toLowerCase())
-                || String(element.dueDate).toLowerCase().includes(String(searchTerm).toLowerCase())
+            if (String(element.equipment).toLowerCase().includes(String(term).toLowerCase())
+                || String(element.department).toLowerCase().includes(String(term).toLowerCase())
+                || String(element.workOrderCode).toLowerCase().includes(String(term).toLowerCase())
+                || String(element.scheduledStartDate).toLowerCase().includes(String(term).toLowerCase())
+                || String(element.organization).toLowerCase().includes(String(term).toLowerCase())
+                || String(element.workOrderStatusDescription).toLowerCase().includes(String(term).toLowerCase())
+                || String(element.description).toLowerCase().includes(String(term).toLowerCase())
+                || String(element.dueDate).toLowerCase().includes(String(term).toLowerCase())
             ) {
                 let found = {
                     id: element.id,
@@ -63,6 +63,10 @@ export default function HomeScreen({ navigation }) {
         Keyboard.dismiss();
         setModalVisible(false);
     }
+
+    Keyboard.addListener("keyboardDidHide",() => {
+        setModalVisible(false);
+    })
 
     const renderOverlay = (render) => {
         if (render) return (<Pressable onPress={() => focusOut()} style={{ position: "absolute", backgroundColor: "black", opacity: 0.5, width: "100%", height: "100%", top: 82 }} />);
@@ -103,12 +107,10 @@ export default function HomeScreen({ navigation }) {
                     setData(jsonData);
                     setSearchData(jsonData);
                     storage.saveObject('workOrderList', jsonData);
-                    console.log(jsonData)
                     return jsonData;
                 } else {
                     setData(workOrderList);
                     setSearchData(workOrderList);
-                    console.log(jsonData)
                     return workOrderList;
                 }
             }
@@ -161,9 +163,9 @@ export default function HomeScreen({ navigation }) {
     return (
         <>
             <View style={{ borderRadius: 20, padding: 12.5, backgroundColor: colors.card, marginTop: 30, alignContent: "center", alignItems: "flex-start" }}>
-                <TextInput style={{ color: colors.text, fontSize: 17, width: "100%" }} placeholder={language.list.filter} placeholderTextColor="gray" onChangeText={term => { setSearchTerm(term); findWorkOrders(respData) }} onSubmitEditing={() => { findWorkOrders(respData); focusOut() }} onFocus={() => focusIn()} returnKeyType="send" />
+                <TextInput style={{ color: colors.text, fontSize: 17, width: "100%" }} placeholder={language.list.filter} placeholderTextColor="gray" onChangeText={term => { setSearchTerm(term); findWorkOrders(respData, term) }} onSubmitEditing={() => { findWorkOrders(respData, searchTerm); focusOut() }} onFocus={() => focusIn()} returnKeyType="done" />
             </View>
-            <Pressable style={{ borderRadius: 25, padding: 2, width: 40, height: 40, backgroundColor: colors.background, position: "absolute", top: 36, right: 15 }} onPress={() => { findWorkOrders(respData); focusOut() }} >
+            <Pressable style={{ borderRadius: 25, padding: 2, width: 40, height: 40, backgroundColor: colors.background, position: "absolute", top: 36, right: 15 }} onPress={() => { findWorkOrders(respData, searchTerm); focusOut() }} >
                 <Icon name="search" style={{ color: colors.text, fontSize: 18, marginLeft: 2, padding: 8 }} color={colors.text} />
             </Pressable>
             <FlatList data={searchData} refreshControl={<RefreshControl progressViewOffset={-55} refreshing={refreshing} onRefresh={onRefresh} />} renderItem={({ item }) =>

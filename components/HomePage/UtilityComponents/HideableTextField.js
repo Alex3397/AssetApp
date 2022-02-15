@@ -4,8 +4,9 @@ import { useTheme } from '@react-navigation/native';
 
 const HideableTextField = (props) => {
     const { colors } = useTheme();
+    const show = props.show == undefined ? false : props.show;
 
-    if ((props.data == "" || props.data == "-" || props.data == " - ") && !props.show) {
+    if ((props.data == "" || props.data == "-" || props.data == " - ") && !show) {
         return(<></>)
     } else {
         if (props.style == null) {

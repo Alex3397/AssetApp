@@ -1,14 +1,14 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import HideableTextField from '../UtilityComponents/HideableTextField';
 import HideableTittle from '../UtilityComponents/HideableTittle';
 import HideableLine from '../UtilityComponents/HideableLine';
 
 
 const Equipment = (props) => {
     const { colors } = useTheme();
-    var item = props.item;
+    let item = props.item;
+    let labels = props.labels;
 
     if (item.equipmentCode == ""
         && item.equipmentDescription == ""
@@ -24,7 +24,7 @@ const Equipment = (props) => {
         return (<></>);
     }
 
-    var positionTitle = "";
+    let positionTitle = "";
 
     if (item.positionCode == "" && item.positionDescription == "") {
         positionTitle = "";
@@ -40,11 +40,10 @@ const Equipment = (props) => {
         <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, paddingTop: 10, borderRadius: 25 }}>
             <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center", marginBottom: 5 }}>Equipamento</Text>
 
-            <HideableTittle right={item.equipmentCode} left={item.equipmentDescription} show={false} />
+            <HideableTittle right={item.equipmentCode} left={item.equipmentDescription} />
             <HideableLine rightLabel="Tipo" rightData={item.equipmentType} leftLabel="Organização" leftData={item.equipmentOrganization} />
-            <HideableLine rightLabel="Posição" rightData={positionTitle} leftLabel="Alias" leftData={item.equipmentAlias} />
             <HideableLine rightLabel="Fabricante" rightData={item.equipmentManufacturer} leftLabel="Fornecedor" leftData={item.supplier} />
-            <HideableLine rightLabel="Número de série" rightData={item.serialNumber} leftLabel="Modelo" leftData={item.model} />
+            <HideableLine rightLabel="Posição" rightData={positionTitle} leftLabel="Alias" leftData={item.equipmentAlias} />
         </View>
     );
 }

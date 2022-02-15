@@ -8,7 +8,8 @@ import HideableCheckBox from '../UtilityComponents/HideableCheckBox';
 
 const ComplianceDetails = (props) => {
     const { colors } = useTheme();
-    var item = props.item
+    let item = props.item;
+    let labels = props.labels;
 
     if (
         item.compliance.aboveCeilingPermit == "false"
@@ -32,21 +33,21 @@ const ComplianceDetails = (props) => {
         <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
             <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes de Conformidade</Text>
 
-            <HideableCheckBox label="Licença de Obra Acima do Teto: " data={item.compliance.aboveCeilingPermit} />
-            <HideableCheckBox label="Segurança de Vida Provisória: " data={item.compliance.interimLifeSafety} />
-            <HideableCheckBox label="Controle de Infecção Provisório: " data={item.compliance.interimInfectionControl} />
-            <HideableCheckBox label="Avaliação de Riscos Pré-construção: " data={item.compliance.preConstructionRiskAssessment} />
-            <HideableCheckBox label="Plano de Aperfeiçoamento: " data={item.compliance.planImprovement} />
-            <HideableCheckBox label="Declaração de Condições: " data={item.compliance.statementOfCondition} />
-            <HideableCheckBox label="Programa de Manutenção Predial: " data={item.compliance.buildMaintenanceProgram} />
-            <HideableCheckBox label="Equipamento de Proteção Individual: " data={item.compliance.personalProtectiveEquipment} />
-            <HideableCheckBox label="Bloqueio/Etiquetagem: " data={item.compliance.lockout} />
-            <HideableCheckBox label="Autorização Foco de Incêndio: " data={item.compliance.burnPermit} />
-            <HideableCheckBox label="Espaço Confinado: " data={item.compliance.confinedSpace} />
-            <HideableCheckBox label="Segurança do Paciente: " data={item.compliance.patientSafety} />
-            <HideableCheckBox label="Aviso de Recall: " data={item.compliance.recallNotice} />
-            <HideableCheckBox label="SMDA: " data={item.compliance.smda} />
-            <HideableCheckBox label="Confidencialidade HIPAA: " data={item.compliance.hipaaConfidentiality} />
+            <HideableCheckBox show={false} label={labels.aboveCeilingPermit.concat(": ")} data={item.compliance.aboveCeilingPermit} />
+            <HideableCheckBox show={false} label={labels.interimLifeSafety.concat(": ")} data={item.compliance.interimLifeSafety} />
+            <HideableCheckBox show={false} label={labels.interimInfectionControl.concat(": ")} data={item.compliance.interimInfectionControl} />
+            <HideableCheckBox show={false} label={labels.preConstructionRiskAssessment.concat(": ")} data={item.compliance.preConstructionRiskAssessment} />
+            <HideableCheckBox show={false} label={labels.planImprovement.concat(": ")} data={item.compliance.planImprovement} />
+            <HideableCheckBox show={false} label={labels.statementOfCondition.concat(": ")} data={item.compliance.statementOfCondition} />
+            <HideableCheckBox show={false} label={labels.buildMaintenanceProgram.concat(": ")} data={item.compliance.buildMaintenanceProgram} />
+            <HideableCheckBox show={false} label={labels.personalProtectiveEquipment.concat(": ")} data={item.compliance.personalProtectiveEquipment} />
+            <HideableCheckBox show={false} label={labels.lockout.concat(": ")} data={item.compliance.lockout} />
+            <HideableCheckBox show={false} label={labels.burnPermit.concat(": ")} data={item.compliance.burnPermit} />
+            <HideableCheckBox show={false} label={labels.confinedSpace.concat(": ")} data={item.compliance.confinedSpace} />
+            <HideableCheckBox show={false} label={labels.patientSafety.concat(": ")} data={item.compliance.patientSafety} />
+            <HideableCheckBox show={false} label={labels.recallNotice.concat(": ")} data={item.compliance.recallNotice} />
+            <HideableCheckBox show={false} label={labels.smda.concat(": ")} data={item.compliance.smda} />
+            <HideableCheckBox show={false} label={labels.hipaaConfidentiality.concat(": ")} data={item.compliance.hipaaConfidentiality} />
         </View>
     );
 }

@@ -23,13 +23,13 @@ export default function HomeScreen({ navigation }) {
     const [item, setData] = useState(WorkOrderDetailsTemplate);
     const [called, setCalled] = useState(false);
     const [labels, setLabels] = useState(WorkOrderDetailsTemplate);
-    
+
     storage.getObject("labels").then((data) => { setLabels(data) });
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         getWorkOrderDetails(true).then(() => setRefreshing(false));
-    }, []);
+      }, []);
 
     (() => {
         if (item.status == 500) {
@@ -52,7 +52,7 @@ export default function HomeScreen({ navigation }) {
             fetch(url).then(response => response.json()).then((data) => { setData(data) });
 
             let labelUrl = host + ':8080/mobile/userDefinedFieldsLabels?token=' + token;
-            fetch(labelUrl).then(response => response.json()).then((data) => { setLabels(data); storage.saveObject("labels", data) });
+            fetch(labelUrl).then(response => response.json()).then((data) => { setLabels(data) ; storage.saveObject("labels",data)});
         } else {
             let workOrderData = storage.getObject(key);
             storage.getObject("labels").then((data) => { setLabels(data) });
@@ -69,18 +69,18 @@ export default function HomeScreen({ navigation }) {
 
     return (
         <>
-            <ScrollView style={{ marginTop: 28 }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+            <ScrollView style={{ marginTop: 28 }} refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> }>
                 <BasicData labels={labels} item={item} />
 
-                <Schedule labels={labels.schedule} item={item} />
-                <LinearReferenceDetails labels={labels.linearReferenceDetails} item={item} />
-                <Details labels={labels.details} item={item} />
-                <Activity labels={labels.activity} item={item} />
-                <CustomerDetails labels={labels.customerServiceDetails} item={item} />
-                <ProductionDetails labels={labels.productionDetails} item={item} />
-                <IncidentControl labels={labels.incidentControl} item={item} />
-                <ComplianceDetails labels={labels.compliance} item={item} />
-                <UserDefinedFields userLabels={labels} item={item} />
+                <Schedule labels={labels.schedule} item={item}/>
+                <LinearReferenceDetails labels={labels.linearReferenceDetails} item={item}/>
+                <Details labels={labels.details} item={item}/>
+                <Activity labels={labels.activity} item={item}/>
+                <CustomerDetails labels={labels.customerServiceDetails} item={item}/>
+                <ProductionDetails labels={labels.productionDetails} item={item}/>
+                <IncidentControl labels={labels.incidentControl} item={item}/>
+                <ComplianceDetails labels={labels.compliance} item={item}/>
+                <UserDefinedFields userLabels={labels} item={item}/>
 
                 <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
                     <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Assinatura Eletrônica: </Text>

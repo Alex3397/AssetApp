@@ -28,9 +28,9 @@ export default function HomeScreen({ navigation }) {
 
     let language = {};
 
-    if (Localization.locale.includes("pt-BR") && language != Locale["pt-BR"]) language=Locale["pt-BR"];
-    else if (Localization.locale.includes("es") && language != Locale.es) language=Locale.es;
-    else if (language != Locale.en) language=Locale.en;
+    if (Localization.locale.includes("pt-BR") && language != Locale["pt-BR"]) language = Locale["pt-BR"];
+    else if (Localization.locale.includes("es") && language != Locale.es) language = Locale.es;
+    else if (language != Locale.en) language = Locale.en;
 
     const passwordInput = useRef();
     const saveUserData = async (user, pass) => {
@@ -49,16 +49,16 @@ export default function HomeScreen({ navigation }) {
 
     const validate = async () => {
 
-        var organization = await storage.getArticle('organization');
-        var tenant = await storage.getArticle('tenant');
-        var host = await storage.getArticle('host');
+        let organization = await storage.getArticle('organization');
+        let tenant = await storage.getArticle('tenant');
+        let host = await storage.getArticle('host');
 
         if ((!user || !pass)) {
             setWarning(language.login.warning)
         } else if (organization != null && tenant != null && host != null) {
 
-            var xhr = new XMLHttpRequest();
-            var url = host + ':8080/validate';
+            let xhr = new XMLHttpRequest();
+            let url = host + ':8080/validate';
             xhr.open("POST", url);
 
             xhr.setRequestHeader("Accept", "*/*");
@@ -74,7 +74,7 @@ export default function HomeScreen({ navigation }) {
                         setModalTitle(language.login.modal.positive.title);
                         setResponse(language.login.modal.positive.response);
                         setButtonText(language.login.modal.positive.button);
-                        var token = xhr.responseText.replace("User validated.", "");
+                        let token = xhr.responseText.replace("User validated.", "");
                         storage.saveArticle('token', token);
                         getUserStatusAuth(host, token);
                     } else {
@@ -104,7 +104,7 @@ export default function HomeScreen({ navigation }) {
                 }
             };
 
-            var data = {
+            let data = {
                 userName: user,
                 password: pass,
                 organization: organization,
@@ -118,36 +118,44 @@ export default function HomeScreen({ navigation }) {
     }
 
     const getSavedVariables = async () => {
-        var organization = await storage.getArticle('organization');
-        var tenant = await storage.getArticle('tenant');
-        var host = await storage.getArticle('host');
-        var con = await storage.getArticle('con');
-        
+        let organization = await storage.getArticle('organization');
+        let tenant = await storage.getArticle('tenant');
+        let host = await storage.getArticle('host');
+        let con = await storage.getArticle('con');
+
         setOrg(organization);
         setTenant(tenant)
         setUrl(host.replace(/[^0-9.]/g, ''))
         setCon(con);
     }
 
+    const getLabels = async () => {
+        let host = await storage.getArticle('host');
+        let token = await storage.getArticle('token');
+
+        let labelUrl = host + ':8080/mobile/userDefinedFieldsLabels?token=' + token;
+        fetch(labelUrl).then(response => response.json()).then((data) => { storage.saveObject("labels", data) })
+    }
+
     (async () => {
         getSavedVariables()
 
-        var saveData = JSON.parse(await storage.getArticle('savedata'));
+        let saveData = JSON.parse(await storage.getArticle('savedata'));
         if (saveData != null) setSaveUserInfo(saveData);
 
         if (saveUserInfo) {
-            var username = await storage.getArticle('username');
-            var password = await storage.getArticle('password');
+            let username = await storage.getArticle('username');
+            let password = await storage.getArticle('password');
 
             if (username != null) setUser(username);
             if (password != null) setPass(password);
         }
-    }) ()
+    })()
 
     useEffect(() => {
         navigation.addListener('focus', () => {
             getSavedVariables();
-          });
+        });
     }, []);
 
     return (
@@ -158,7 +166,7 @@ export default function HomeScreen({ navigation }) {
                         <View style={{ margin: 20, backgroundColor: "white", borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
                             <Text style={{ marginBottom: 15, textAlign: "center", color: "black" }}>{modalTitle}</Text>
                             <Text style={{ marginBottom: 15, textAlign: "center", color: "black" }}>{response}</Text>
-                            <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3" }} onPress={() => { setModalVisible(false); navigation.navigate('HomePage') }} >
+                            <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3" }} onPress={() => { setModalVisible(false); getLabels(); navigation.navigate('HomePage'); }} >
                                 <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>{buttonText}</Text>
                             </Pressable>
                         </View>
@@ -188,7 +196,7 @@ export default function HomeScreen({ navigation }) {
                     <Pressable style={{ marginTop: 45, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 35, borderRadius: 16, elevation: 3, backgroundColor: colors.card }} onPress={() => { validate(); }} >
                         <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.text }}>{language.login.login}</Text>
                     </Pressable>
-                    <Pressable style={{ marginTop: 25, marginBottom: 25, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 35, borderRadius: 16, elevation: 3, backgroundColor: colors.card }} onPress={() => {getSavedVariables(); navigation.navigate('Settings',{savedOrganization,savedTenant,savedUrl,savedCon, language})}} >
+                    <Pressable style={{ marginTop: 25, marginBottom: 25, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 35, borderRadius: 16, elevation: 3, backgroundColor: colors.card }} onPress={() => { getSavedVariables(); navigation.navigate('Settings', { savedOrganization, savedTenant, savedUrl, savedCon, language }) }} >
                         <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.primary }}>{language.login.config}</Text>
                     </Pressable>
                 </View>
