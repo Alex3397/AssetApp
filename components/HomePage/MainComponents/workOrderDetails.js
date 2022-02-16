@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useTheme } from '@react-navigation/native';
 import { Text, View, RefreshControl, ScrollView } from "react-native";
 import Storage from '../../../classes/Storage/Storage';
 import * as WorkOrderDetailsTemplate from '../../../Templates/WorkOrderDetailsTemplate.json';
@@ -14,31 +13,29 @@ import Details from '../MinorComponents/Details';
 import LinearReferenceDetails from '../MinorComponents/LinearReferenceDetails';
 import Schedule from '../MinorComponents/Schedule';
 import BasicData from '../MinorComponents/BasicData';
+import * as FieldsToShow from '../../../Templates/FieldsToShow.json';
+import Sign from '../MinorComponents/Sign';
 
 export default function HomeScreen({ navigation }) {
     const storage = new Storage();
-    const { colors } = useTheme();
 
     const [refreshing, setRefreshing] = useState(false);
     const [item, setData] = useState(WorkOrderDetailsTemplate);
-    const [called, setCalled] = useState(false);
     const [labels, setLabels] = useState(WorkOrderDetailsTemplate);
-    
-    storage.getObject("labels").then((data) => { setLabels(data) });
+    const [show, setShow] = useState(FieldsToShow);
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         getWorkOrderDetails(true).then(() => setRefreshing(false));
     }, []);
 
-    (() => {
-        if (item.status == 500) {
-            item.status = "Recuperando dados";
-        }
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
-    )()
 
     async function getWorkOrderDetails(update) {
+        setRefreshing(true);
+        console.log("getting data")
         let networkState = await Network.getNetworkStateAsync();
         let selectedItem = await storage.getObject('selectedItem');
         let key = selectedItem.workOrderCode + " : " + selectedItem.organization;
@@ -48,44 +45,52 @@ export default function HomeScreen({ navigation }) {
             let host = await storage.getArticle('host');
             let token = await storage.getArticle('token');
 
+            console.log("getting workOrder")
             let url = host + ':8080/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + selectedItem.workOrderCode + '&organization=' + selectedItem.organization;
             fetch(url).then(response => response.json()).then((data) => { setData(data) });
+            console.log("got workOrder")
 
+            console.log("getting labels")
             let labelUrl = host + ':8080/mobile/userDefinedFieldsLabels?token=' + token;
             fetch(labelUrl).then(response => response.json()).then((data) => { setLabels(data); storage.saveObject("labels", data) });
+            console.log("got labels")
         } else {
             let workOrderData = storage.getObject(key);
             storage.getObject("labels").then((data) => { setLabels(data) });
             setData(workOrderData);
         }
+        setRefreshing(false);
     }
 
-    useEffect(async () => {
+    useEffect(() => {
         navigation.addListener('focus', () => {
-            if (!called) getWorkOrderDetails(false);
-            setCalled(true)
+            getWorkOrderDetails(false);
+            storage.getObject("showfields").then(data => { setShow(data); });
+            storage.getObject("labels").then((data) => { setLabels(data) });
+        });
+        navigation.addListener('blur', () => {
+            setData(WorkOrderDetailsTemplate);
+            setLabels(WorkOrderDetailsTemplate)
         });
     }, [])
 
     return (
         <>
             <ScrollView style={{ marginTop: 28 }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-                <BasicData labels={labels} item={item} />
 
-                <Schedule labels={labels.schedule} item={item} />
-                <LinearReferenceDetails labels={labels.linearReferenceDetails} item={item} />
-                <Details labels={labels.details} item={item} />
-                <Activity labels={labels.activity} item={item} />
-                <CustomerDetails labels={labels.customerServiceDetails} item={item} />
-                <ProductionDetails labels={labels.productionDetails} item={item} />
-                <IncidentControl labels={labels.incidentControl} item={item} />
-                <ComplianceDetails labels={labels.compliance} item={item} />
-                <UserDefinedFields userLabels={labels} item={item} />
+                <BasicData labels={labels} item={item} show={show} />
+                <Schedule labels={labels.schedule} item={item} show={show} />
+                <LinearReferenceDetails labels={labels.linearReferenceDetails} item={item} show={show} />
+                <Details labels={labels.details} item={item} show={show} />
+                <Activity labels={labels.activity} item={item} show={show} />
+                <CustomerDetails labels={labels.customerServiceDetails} item={item} show={show} />
+                <ProductionDetails labels={labels.productionDetails} item={item} show={show} />
+                <IncidentControl labels={labels.incidentControl} item={item} show={show} />
+                <ComplianceDetails labels={labels.compliance} item={item} show={show} />
+                <UserDefinedFields userLabels={labels} item={item} show={show.userDefinedFields} />
 
-                <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Assinatura Eletrônica: </Text>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 15, alignSelf: "center", fontStyle: "italic", fontFamily: "serif" }}>{item.esigner} : {item.esignDate} : {item.esignType}</Text>
-                </View>
+                <Sign item={item} show={show} />
+
             </ScrollView>
         </>
     );

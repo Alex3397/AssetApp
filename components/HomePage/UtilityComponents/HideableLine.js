@@ -17,16 +17,10 @@ const HideableLine = (props) => {
 
     let fullLength = String(rightLabel).length + String(rightData).length + String(leftLabel).length + String(leftData).length;
 
-    if ((rightLabel == "" && rightData == "" && leftLabel == "" && leftData == "") && !rightShow && !leftShow) {
+    if (!rightShow && !leftShow) {
         return (<></>)
     } else if (type == undefined || type == "text" ) {
-        if (rightData == "") 
-            return (
-                <>
-                    <HideableTextField style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "flex-end" }} label={leftLabel} data={leftData} show={leftShow} />
-                </>
-            )
-        else if (fullLength < 52) {
+        if (fullLength < 55) {
             return (
                 <>  
                     <HideableTextField label={rightLabel} data={rightData} show={rightShow} />
@@ -37,12 +31,12 @@ const HideableLine = (props) => {
             return(
                 <>
                     <HideableTextField label={rightLabel} data={rightData} show={rightShow} />
-                    <HideableTextField style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "flex-end"}} label={leftLabel} data={leftData} show={leftShow} />
+                    <HideableTextField label={leftLabel} data={leftData} show={leftShow} />
                 </>
             )
         }
     } else if (type == "checkbox") {
-        if (fullLength < 52) {
+        if (fullLength < 55) {
             return (
                 <>
                     <HideableCheckBox label={rightLabel} data={rightData} show={rightShow} />
@@ -53,7 +47,7 @@ const HideableLine = (props) => {
             return(
                 <>
                     <HideableCheckBox label={rightLabel} data={rightData} show={rightShow} />
-                    <HideableCheckBox viewStyle={{ alignSelf: "flex-end" }} label={leftLabel} data={leftData} show={leftShow} />
+                    <HideableCheckBox label={leftLabel} data={leftData} show={leftShow} />
                 </>
             )
         }

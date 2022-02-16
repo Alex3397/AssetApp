@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
 import { Button, View, SafeAreaView, Pressable } from 'react-native';
-import { ImageBackground, Image, StyleSheet, TextInput, Text, Modal } from "react-native";
+import { ImageBackground, Image, StyleSheet, TextInput, Text, Modal, Keyboard } from "react-native";
 import { useTheme } from '@react-navigation/native';
 import CheckBox from '../../HomePage/UtilityComponents/CheckBox';
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -16,7 +16,6 @@ export default function HomeScreen({ navigation }) {
     const [iconName, setIconName] = useState('eye');
     const [user, setUser] = useState('');
     const [pass, setPass] = useState('');
-    const [warning, setWarning] = useState('');
     const [response, setResponse] = useState('');
     const [modalTitle, setModalTitle] = useState('');
     const [buttonText, setButtonText] = useState('');
@@ -24,6 +23,7 @@ export default function HomeScreen({ navigation }) {
     const [savedTenant, setTenant] = useState('');
     const [savedUrl, setUrl] = useState('');
     const [savedCon, setCon] = useState('');
+    const [warning, setWarning] = useState('');
     const image = colors.background.toString() === 'rgb(1, 1, 1)' ? require('../../../images/folk-pattern-black.png') : require('../../../images/folk-pattern.png');
 
     let language = {};
@@ -44,7 +44,7 @@ export default function HomeScreen({ navigation }) {
 
     const getUserStatusAuth = async (host, token) => {
         let url = host + ':8080/validate/status?token=' + token;
-        fetch(url).then(response => response.json()).then((data) => { console.log(data); storage.saveObject("statusAuth", data); })
+        fetch(url).then(response => response.json()).then((data) => { storage.saveObject("statusAuth", data); })
     }
 
     const validate = async () => {
@@ -137,6 +137,14 @@ export default function HomeScreen({ navigation }) {
         fetch(labelUrl).then(response => response.json()).then((data) => { storage.saveObject("labels", data) })
     }
 
+    const getFieldsToShow = async () => {
+        let host = await storage.getArticle('host');
+        let token = await storage.getArticle('token');
+
+        let labelUrl = host + ':8080/mobile/fields2show?token=' + token;
+        fetch(labelUrl).then(response => response.json()).then((data) => { storage.saveObject("showfields", data) })
+    }
+
     (async () => {
         getSavedVariables()
 
@@ -152,11 +160,12 @@ export default function HomeScreen({ navigation }) {
         }
     })()
 
-    useEffect(() => {
+    useEffect(async () => {
         navigation.addListener('focus', () => {
             getSavedVariables();
+            Keyboard.removeAllListeners("keyboardDidHide");
         });
-    }, []);
+    }, [])
 
     return (
         <>
@@ -166,7 +175,7 @@ export default function HomeScreen({ navigation }) {
                         <View style={{ margin: 20, backgroundColor: "white", borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
                             <Text style={{ marginBottom: 15, textAlign: "center", color: "black" }}>{modalTitle}</Text>
                             <Text style={{ marginBottom: 15, textAlign: "center", color: "black" }}>{response}</Text>
-                            <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3" }} onPress={() => { setModalVisible(false); getLabels(); navigation.navigate('HomePage'); }} >
+                            <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3" }} onPress={() => { setModalVisible(false); getLabels(); getFieldsToShow(); navigation.navigate('HomePage'); }} >
                                 <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>{buttonText}</Text>
                             </Pressable>
                         </View>

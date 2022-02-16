@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
-import { ImageBackground, StyleSheet, Text, TextInput, View, Button, Animated, Pressable } from 'react-native';
+import { ImageBackground, StyleSheet, Text, TextInput, View, Button, Animated, Pressable, Keyboard } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import Storage from '../../../classes/Storage/Storage';
 import { ScrollView } from "react-native-gesture-handler";
@@ -85,6 +85,12 @@ export default function Settings({ navigation, route }) {
 
   const tenantInput = useRef();
   const urlInput = useRef();
+
+  useEffect(async () => {
+    navigation.addListener('focus', () => {
+      Keyboard.removeAllListeners("keyboardDidHide");
+    });
+  }, [])
 
   return (
     <>

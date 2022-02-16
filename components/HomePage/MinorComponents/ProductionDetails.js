@@ -5,18 +5,23 @@ import HideableTextField from '../UtilityComponents/HideableTextField';
 
 
 const ProductionDetails = (props) => {
+    console.log("ProductionDetails");
+
     const { colors } = useTheme();
     let item = props.item;
     let labels = props.labels;
+    let show = props.show;
 
-    if (item.productionDetails.productionRequestRevision == ""
-        && item.productionDetails.productionOrder == ""
-        && item.productionDetails.productionRequest == ""
-        && item.productionDetails.productionPriority == ""
-        && item.productionDetails.productionStartDate == ""
-        && item.productionDetails.accountingEntity == ""
-        && item.productionDetails.productionPriorityDescription == ""
-        && item.productionDetails.productionEndDate == "") {
+    if (
+        !show.productionRequest &&
+        !show.productionRequestRevision &&
+        !show.productionOrder &&
+        !show.productionPriority &&
+        !show.productionPriorityDescription &&
+        !show.productionStartDate &&
+        !show.productionEndDate &&
+        !show.accountingEntity
+        ) {
         return (<></>)
     }
 
@@ -24,14 +29,14 @@ const ProductionDetails = (props) => {
         <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
             <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes de Produção</Text>
 
-            <HideableTextField show={false} label={labels.productionRequest} data={item.productionDetails.productionRequest} />
-            <HideableTextField show={false} label={labels.productionRequestRevision} data={item.productionDetails.productionRequestRevision} />
-            <HideableTextField show={false} label={labels.productionOrder} data={item.productionDetails.productionOrder} />
-            <HideableTextField show={false} label={labels.productionPriority} data={item.productionDetails.productionPriority} />
-            <HideableTextField show={false} label={labels.productionPriorityDescription} data={item.productionDetails.productionPriorityDescription} />
-            <HideableTextField show={false} label={labels.productionStartDate} data={item.productionDetails.productionStartDate} />
-            <HideableTextField show={false} label={labels.productionEndDate} data={item.productionDetails.productionEndDate} />
-            <HideableTextField show={false} label={labels.accountingEntity} data={item.productionDetails.accountingEntity} />
+            <HideableTextField show={show.productionRequest} label={labels.productionRequest} data={item.productionDetails.productionRequest} />
+            <HideableTextField show={show.productionRequestRevision} label={labels.productionRequestRevision} data={item.productionDetails.productionRequestRevision} />
+            <HideableTextField show={show.productionOrder} label={labels.productionOrder} data={item.productionDetails.productionOrder} />
+            <HideableTextField show={show.productionPriority} label={labels.productionPriority} data={item.productionDetails.productionPriority} />
+            <HideableTextField show={show.productionPriorityDescription} label={labels.productionPriorityDescription} data={item.productionDetails.productionPriorityDescription} />
+            <HideableTextField show={show.productionStartDate} label={labels.productionStartDate} data={item.productionDetails.productionStartDate} />
+            <HideableTextField show={show.productionEndDate} label={labels.productionEndDate} data={item.productionDetails.productionEndDate} />
+            <HideableTextField show={show.accountingEntity} label={labels.accountingEntity} data={item.productionDetails.accountingEntity} />
         </View>
     );
 }

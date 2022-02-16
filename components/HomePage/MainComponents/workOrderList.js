@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTheme } from '@react-navigation/native';
 import { TextInput, Text, RefreshControl, Pressable, FlatList, View, Keyboard } from "react-native";
 import Storage from '../../../classes/Storage/Storage';
@@ -19,9 +19,11 @@ export default function HomeScreen({ navigation }) {
     const [refreshing, setRefreshing] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [respData, setData] = useState(JSON.parse('{}'));
+    const [originalData, setOriginalData] = useState(JSON.parse('{}'));
     const [searchData, setSearchData] = useState(JSON.parse('{}'));
     const [workOrderData, setWorkOrderData] = useState(JSON.parse('{}'));
     const [modalVisible, setModalVisible] = useState(false);
+    const searchInput = useRef();
     const storage = new Storage();
 
     let search = []
@@ -64,12 +66,35 @@ export default function HomeScreen({ navigation }) {
         setModalVisible(false);
     }
 
-    Keyboard.addListener("keyboardDidHide",() => {
-        setModalVisible(false);
-    })
-
     const renderOverlay = (render) => {
-        if (render) return (<Pressable onPress={() => focusOut()} style={{ position: "absolute", backgroundColor: "black", opacity: 0.5, width: "100%", height: "100%", top: 82 }} />);
+        if (render) return (<>
+        <Pressable onPress={() => focusOut()} style={{ position: "absolute", backgroundColor: "rgba(0, 0, 0, 0.5)", width: "100%", height: "100%", top: 82 }} >
+            <FlatList style={{ position: "absolute", backgroundColor: "rgba(0, 0, 0, 0)", width: "100%", top: 0 }} data={searchData} renderItem={({ item }) =>
+                <Pressable onPressIn={() => console.log("PressedIn")} style={{ padding: 8, backgroundColor: colors.background, zIndex: 1000 }} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(); navigation.navigate('Ordem de Serviço'); }}>
+                    <View style={{ backgroundColor: colors.card, padding: 12.5, borderRadius: 15, marginBottom: 5 }}>
+                        <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5 }}>
+                            <Text style={{ color: colors.text, fontSize: 17, alignSelf: "flex-start" }}>{item.workOrderCode + ' - ' + item.description}</Text>
+                        </View>
+                        <View style={{ marginTop: 2 }}>
+                            <View style={{ marginBottom: -5 }}>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.status}: {item.workOrderStatusDescription}</Text>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >{language.list.organization}: {item.organization}</Text>
+                            </View>
+                            <View style={{ marginBottom: -5 }}>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.equipment}: {item.equipment}</Text>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >{language.list.department}: {item.department}</Text>
+                            </View>
+                            <View style={{ marginBottom: -5 }}>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.scheduledStartDate}: {item.scheduledStartDate}</Text>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >{language.list.dueDate}: {item.dueDate}</Text>
+                            </View>
+                        </View>
+                    </View>
+                </Pressable>
+            } />
+            </Pressable>
+        </>
+        );
         else if (!render) return (<></>);
     }
 
@@ -78,6 +103,7 @@ export default function HomeScreen({ navigation }) {
         if (workOrderList != null && !update) {
             setData(workOrderList);
             setSearchData(workOrderList);
+            setOriginalData(workOrderList)
             return workOrderList;
         }
         let host = await storage.getArticle('host');
@@ -106,11 +132,13 @@ export default function HomeScreen({ navigation }) {
                 if (jsonData.status != 500) {
                     setData(jsonData);
                     setSearchData(jsonData);
+                    setOriginalData(jsonData);
                     storage.saveObject('workOrderList', jsonData);
                     return jsonData;
                 } else {
                     setData(workOrderList);
                     setSearchData(workOrderList);
+                    setOriginalData(workOrderList);
                     return workOrderList;
                 }
             }
@@ -140,20 +168,13 @@ export default function HomeScreen({ navigation }) {
     }
 
     useEffect(async () => {
+
         let networkState = await Network.getNetworkStateAsync();
         let date = await storage.getObject('today');
 
         if (networkState.isConnected && networkState.type.includes('WIFI') && new Date().getDate() != date) {
 
-            getWorkOrderList(true).then(async () => {
-                let workOrderList = await storage.getObject('workOrderList');
-                for (let i = 0; i < workOrderList.length; i++) {
-                    const element = workOrderList[i];
-                    getWorkOrder(element.workOrderCode, element.organization);
-                    await sleep(2000);
-                }
-            });
-
+            getWorkOrderList(true);
             storage.saveObject('today', new Date().getDate());
         } else {
             getWorkOrderList(false)
@@ -163,12 +184,12 @@ export default function HomeScreen({ navigation }) {
     return (
         <>
             <View style={{ borderRadius: 20, padding: 12.5, backgroundColor: colors.card, marginTop: 30, alignContent: "center", alignItems: "flex-start" }}>
-                <TextInput style={{ color: colors.text, fontSize: 17, width: "100%" }} placeholder={language.list.filter} placeholderTextColor="gray" onChangeText={term => { setSearchTerm(term); findWorkOrders(respData, term) }} onSubmitEditing={() => { findWorkOrders(respData, searchTerm); focusOut() }} onFocus={() => focusIn()} returnKeyType="done" />
+                <TextInput style={{ color: colors.text, fontSize: 17, width: "100%" }} placeholder={language.list.filter} placeholderTextColor="gray" onChangeText={term => { setSearchTerm(term); findWorkOrders(originalData, term) }} onSubmitEditing={() => { findWorkOrders(originalData, searchTerm); setData(searchData); focusOut() }} onFocus={() => focusIn()} ref={searchInput} returnKeyType="done" />
             </View>
-            <Pressable style={{ borderRadius: 25, padding: 2, width: 40, height: 40, backgroundColor: colors.background, position: "absolute", top: 36, right: 15 }} onPress={() => { findWorkOrders(respData, searchTerm); focusOut() }} >
+            <Pressable style={{ borderRadius: 25, padding: 2, width: 40, height: 40, backgroundColor: colors.background, position: "absolute", top: 36, right: 15 }} onPress={() => { findWorkOrders(originalData, searchTerm); setData(searchData); focusOut() }} >
                 <Icon name="search" style={{ color: colors.text, fontSize: 18, marginLeft: 2, padding: 8 }} color={colors.text} />
             </Pressable>
-            <FlatList data={searchData} refreshControl={<RefreshControl progressViewOffset={-55} refreshing={refreshing} onRefresh={onRefresh} />} renderItem={({ item }) =>
+            <FlatList data={respData} refreshControl={<RefreshControl progressViewOffset={-55} refreshing={refreshing} onRefresh={onRefresh} />} renderItem={({ item }) =>
                 <Pressable style={{ padding: 8, backgroundColor: colors.background }} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(); navigation.navigate('Ordem de Serviço'); }}>
                     <View style={{ backgroundColor: colors.card, padding: 12.5, borderRadius: 15, marginBottom: 5 }}>
                         <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5 }}>
