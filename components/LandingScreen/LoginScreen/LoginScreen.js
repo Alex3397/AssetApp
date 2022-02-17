@@ -10,7 +10,7 @@ import * as Locale from '../../../Localization/Localization.json';
 
 export default function HomeScreen({ navigation }) {
     const storage = new Storage();
-    const { colors } = useTheme();
+    const { colors, dark } = useTheme();
     const [modalVisible, setModalVisible] = useState(false);
     const [saveUserInfo, setSaveUserInfo] = useState(false);
     const [iconName, setIconName] = useState('eye');
@@ -24,7 +24,7 @@ export default function HomeScreen({ navigation }) {
     const [savedUrl, setUrl] = useState('');
     const [savedCon, setCon] = useState('');
     const [warning, setWarning] = useState('');
-    const image = colors.background.toString() === 'rgb(1, 1, 1)' ? require('../../../images/folk-pattern-black.png') : require('../../../images/folk-pattern.png');
+    const image = dark ? require('../../../images/folk-pattern-black.png') : require('../../../images/folk-pattern.png');
 
     let language = {};
 

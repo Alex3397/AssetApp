@@ -2,6 +2,7 @@ import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import HideableTextField from '../UtilityComponents/HideableTextField';
+import HideableLine from '../UtilityComponents/HideableLine';
 
 const Schedule = (props) => {
     console.log("Schedule");
@@ -34,20 +35,14 @@ const Schedule = (props) => {
         <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
             <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Programação</Text>
 
-            <HideableTextField show={show.reportedBy} label={labels.reportedBy} data={item.schedule.reportedBy} />
-            <HideableTextField show={show.reportedDate} label={labels.reportedDate} data={item.schedule.reportedDate} />
-            <HideableTextField show={show.assignedBy} label={labels.assignedBy} data={item.schedule.assignedBy} />
-            <HideableTextField show={show.assignedTo} label={labels.assignedTo} data={item.schedule.assignedTo} />
-            <HideableTextField show={show.programedStartDate} label={labels.programedStartDate} data={item.schedule.programedStartDate} />
-            <HideableTextField show={show.programedEndDate} label={labels.programedEndDate} data={item.schedule.programedEndDate} />
-            <HideableTextField show={show.solicitedStartDate} label={labels.solicitedStartDate} data={item.schedule.solicitedStartDate} />
-            <HideableTextField show={show.solicitedEndDate} label={labels.solicitedEndDate} data={item.schedule.solicitedEndDate} />
-            <HideableTextField show={show.startDate} label={labels.startDate} data={item.schedule.startDate} />
-            <HideableTextField show={show.endDate} label={labels.endDate} data={item.schedule.endDate} />
-            <HideableTextField show={show.shift} label={labels.shift} data={item.schedule.shift} />
-            <HideableTextField show={show.budget} label={labels.budget} data={item.schedule.budget} />
-            <HideableTextField show={show.campaign} label={labels.campaign} data={item.schedule.campaign} />
-            <HideableTextField show={show.serviceRequestCode} label={labels.serviceRequestCode} data={item.schedule.serviceRequestCode} />
+            <HideableLine leftLabel={labels.reportedDate} leftData={item.schedule.reportedDate} leftShow={show.reportedDate} rightLabel={labels.reportedBy} rightData={item.schedule.reportedBy} rightShow={show.reportedBy} />
+            <HideableLine leftLabel={labels.assignedBy} leftData={item.schedule.assignedBy} leftShow={show.assignedBy} rightLabel={labels.assignedTo} rightData={item.schedule.assignedTo} rightShow={show.assignedTo} />
+            <HideableLine leftLabel={labels.programedStartDate} leftData={item.schedule.programedStartDate} leftShow={show.programedStartDate} rightLabel={labels.programedEndDate} rightData={item.schedule.programedEndDate} rightShow={show.programedEndDate} />
+            <HideableLine leftLabel={labels.solicitedStartDate} leftData={item.schedule.solicitedStartDate} leftShow={show.solicitedStartDate} rightLabel={labels.solicitedEndDate} rightData={item.schedule.solicitedEndDate} rightShow={show.solicitedEndDate} />
+            <HideableLine leftLabel={labels.startDate} leftData={item.schedule.startDate} leftShow={show.startDate} rightLabel={labels.endDate} rightData={item.schedule.endDate} rightShow={show.endDate} />
+            <HideableLine leftLabel={labels.shift} leftData={item.schedule.shift} leftShow={show.shift} rightLabel={labels.budget} rightData={item.schedule.budget} rightShow={show.budget} />
+            <HideableLine leftLabel={labels.campaign} leftData={item.schedule.campaign} leftShow={show.campaign} rightLabel={labels.serviceRequestCode} rightData={item.schedule.serviceRequestCode} rightShow={show.serviceRequestCode} />
+
         </View>
     );
 }

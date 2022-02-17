@@ -12,7 +12,7 @@ const Stack = createStackNavigator();
 const DarkTheme = {
     dark: true,
     colors: {
-        background: "rgb(1, 1, 1)",
+        background: "rgb(0, 0, 0)",
         border: "rgb(39, 39, 41)",
         card: "rgb(25, 25, 25)",
         notification: "rgb(255, 69, 58)",

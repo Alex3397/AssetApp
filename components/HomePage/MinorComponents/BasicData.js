@@ -64,8 +64,8 @@ const BasicData = (props) => {
                 <HideableLine rightLabel={labels.coverageType} rightData={item.coverageType} leftLabel={labels.oemSite} leftData={item.oemSite} rightShow={show.coverageType} leftShow={show.oemSite} />
             </View>
 
-            <LooseCheckboxes show={show} labels={labels} item={item} />
             <Equipment show={show} labels={labels} item={item} />
+            <LooseCheckboxes show={show} labels={labels} item={item} />
         </View>
     );
 }

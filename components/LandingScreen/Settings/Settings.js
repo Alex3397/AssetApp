@@ -28,8 +28,8 @@ export default function Settings({ navigation, route }) {
   const [conLabel, setConLabel] = useState(language.config.con.concat(": HTTP"));
   const [con, setCon] = useState(savedCon)
   const [conBool, setConBool] = useState(false);
-  const { colors } = useTheme();
-  const image = colors.background.toString() === 'rgb(1, 1, 1)' ? require('../../../images/folk-pattern-black.png') : require('../../../images/folk-pattern.png');
+  const { colors, dark } = useTheme();
+  const image = dark ? require('../../../images/folk-pattern-black.png') : require('../../../images/folk-pattern.png');
 
 
   const saveData = async () => {

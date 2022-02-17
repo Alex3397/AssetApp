@@ -3,6 +3,7 @@ import { Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import HideableTextField from './HideableTextField';
 import HideableCheckBox from './HideableCheckBox';
+import PropTypes from "prop-types";
 
 const HideableLine = (props) => {
     const { colors } = useTheme();
@@ -19,16 +20,16 @@ const HideableLine = (props) => {
 
     if (!rightShow && !leftShow) {
         return (<></>)
-    } else if (type == undefined || type == "text" ) {
-        if (fullLength < 55) {
+    } else if (type == undefined || type == "text") {
+        if (fullLength < 52) {
             return (
-                <>  
+                <>
                     <HideableTextField label={rightLabel} data={rightData} show={rightShow} />
                     <HideableTextField style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "flex-end", top: -22, marginBottom: -22 }} label={leftLabel} data={leftData} show={leftShow} />
                 </>
             );
         } else {
-            return(
+            return (
                 <>
                     <HideableTextField label={rightLabel} data={rightData} show={rightShow} />
                     <HideableTextField label={leftLabel} data={leftData} show={leftShow} />
@@ -36,7 +37,7 @@ const HideableLine = (props) => {
             )
         }
     } else if (type == "checkbox") {
-        if (fullLength < 55) {
+        if (fullLength < 52) {
             return (
                 <>
                     <HideableCheckBox label={rightLabel} data={rightData} show={rightShow} />
@@ -44,7 +45,7 @@ const HideableLine = (props) => {
                 </>
             );
         } else {
-            return(
+            return (
                 <>
                     <HideableCheckBox label={rightLabel} data={rightData} show={rightShow} />
                     <HideableCheckBox label={leftLabel} data={leftData} show={leftShow} />
@@ -52,6 +53,16 @@ const HideableLine = (props) => {
             )
         }
     }
+}
+
+HideableLine.propTypes = {
+    rightLabel: PropTypes.any,
+    rightData: PropTypes.any,
+    leftLabel: PropTypes.any,
+    leftData: PropTypes.any,
+    rightShow: PropTypes.any,
+    leftShow: PropTypes.any,
+    type: PropTypes.any
 }
 
 export default HideableLine;
