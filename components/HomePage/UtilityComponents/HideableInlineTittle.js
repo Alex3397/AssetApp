@@ -1,11 +1,13 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import HideableTextField from './HideableTextField';
 
-const HideableTittle = (props) => {
+const HideableInlineTittle = (props) => {
     const { colors } = useTheme();
     let title = "";
     let show = props.show == undefined ? false : props.show;
+    let label = props.label;
 
     if (props.right == "" && props.left == "") {
         title = "";
@@ -14,7 +16,7 @@ const HideableTittle = (props) => {
     } else if (props.right != "" && props.left == "") {
         title = props.right;
     } else if (props.right != "" && props.left != "") {
-        title = props.right + " - " + props.left;
+        title = props.left + " - " + props.right;
     }
 
     if (props.right == "" && props.left == "" && !show) {
@@ -23,17 +25,17 @@ const HideableTittle = (props) => {
         if (props.style == null) {
             return (
                 <>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "center" }}>{title}</Text>
+                    <HideableTextField show={show} label={label} data={title} />
                 </>
             );
         } else {
             return (
                 <>
-                    <Text style={props.style}>{title}</Text>
+                    <HideableTextField show={show} style={props.style} label={label} data={title} />
                 </>
             );
         }
     }
 }
 
-export default HideableTittle;
+export default HideableInlineTittle;

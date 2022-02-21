@@ -2,6 +2,7 @@ import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import HideableTextField from '../UtilityComponents/HideableTextField';
+import HideableLine from '../UtilityComponents/HideableLine';
 
 
 const CustomerDetails = (props) => {
@@ -35,20 +36,13 @@ const CustomerDetails = (props) => {
         <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
             <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes de serviço ao cliente</Text>
 
-            <HideableTextField show={show.equipmentUsability} label={labels.equipmentUsability} data={item.customerServiceDetails.equipmentUsability} />
-            <HideableTextField show={show.tempFixPromiseDate} label={labels.tempFixPromiseDate} data={item.customerServiceDetails.tempFixPromiseDate} />
-            <HideableTextField show={show.supplierServiceCategoryCode} label={labels.supplierServiceCategoryCode} data={item.customerServiceDetails.supplierServiceCategoryCode} />
-            <HideableTextField show={show.supplierServiceCategoryOrganization} label={labels.supplierServiceCategoryOrganization} data={item.customerServiceDetails.supplierServiceCategoryOrganization} />
-            <HideableTextField show={show.providerServiceCategoryCode} label={labels.providerServiceCategoryCode} data={item.customerServiceDetails.providerServiceCategoryCode} />
-            <HideableTextField show={show.providerServiceCategoryOrganization} label={labels.providerServiceCategoryOrganization} data={item.customerServiceDetails.providerServiceCategoryOrganization} />
-            <HideableTextField show={show.workAddress} label={labels.workAddress} data={item.customerServiceDetails.workAddress} />
-            <HideableTextField show={show.estimatedLaborCost} label={labels.estimatedLaborCost} data={item.customerServiceDetails.estimatedLaborCost} />
-            <HideableTextField show={show.estimatedMaterialCost} label={labels.estimatedMaterialCost} data={item.customerServiceDetails.estimatedMaterialCost} />
-            <HideableTextField show={show.estimatedMiscellaneousCost} label={labels.estimatedMiscellaneousCost} data={item.customerServiceDetails.estimatedMiscellaneousCost} />
-            <HideableTextField show={show.estimatedTotalCost} label={labels.estimatedTotalCost} data={item.customerServiceDetails.estimatedTotalCost} />
-            <HideableTextField show={show.permanentFixPromisedDate} label={labels.permanentFixPromisedDate} data={item.customerServiceDetails.permanentFixPromisedDate} />
-            <HideableTextField show={show.temporaryFixDateCompleted} label={labels.temporaryFixDateCompleted} data={item.customerServiceDetails.temporaryFixDateCompleted} />
-            <HideableTextField show={show.serviceProblemCode} label={labels.serviceProblemCode} data={item.customerServiceDetails.serviceProblemCode} />
+            <HideableLine leftShow={show.equipmentUsability} rightShow={show.tempFixPromiseDate} leftLabel={labels.equipmentUsability} leftData={item.customerServiceDetails.equipmentUsability} rightLabel={labels.tempFixPromiseDate} rightData={item.customerServiceDetails.tempFixPromiseDate} />
+            <HideableLine leftShow={show.supplierServiceCategoryCode} rightShow={show.supplierServiceCategoryOrganization} leftLabel={labels.supplierServiceCategoryCode} leftData={item.customerServiceDetails.supplierServiceCategoryCode} rightLabel={labels.supplierServiceCategoryOrganization} rightData={item.customerServiceDetails.supplierServiceCategoryOrganization} />
+            <HideableLine leftShow={show.providerServiceCategoryCode} rightShow={show.providerServiceCategoryOrganization} leftLabel={labels.providerServiceCategoryCode} leftData={item.customerServiceDetails.providerServiceCategoryCode} rightLabel={labels.providerServiceCategoryOrganization} rightData={item.customerServiceDetails.providerServiceCategoryOrganization} />
+            <HideableLine leftShow={show.workAddress} rightShow={show.estimatedLaborCost} leftLabel={labels.workAddress} leftData={item.customerServiceDetails.workAddress} rightLabel={labels.estimatedLaborCost} rightData={item.customerServiceDetails.estimatedLaborCost} />
+            <HideableLine leftShow={show.estimatedMaterialCost} rightShow={show.estimatedMiscellaneousCost} leftLabel={labels.estimatedMaterialCost} leftData={item.customerServiceDetails.estimatedMaterialCost} rightLabel={labels.estimatedMiscellaneousCost} rightData={item.customerServiceDetails.estimatedMiscellaneousCost} />
+            <HideableLine leftShow={show.estimatedTotalCost} rightShow={show.permanentFixPromisedDate} leftLabel={labels.estimatedTotalCost} leftData={item.customerServiceDetails.estimatedTotalCost} rightLabel={labels.permanentFixPromisedDate} rightData={item.customerServiceDetails.permanentFixPromisedDate} />
+            <HideableLine leftShow={show.temporaryFixDateCompleted} rightShow={show.serviceProblemCode} leftLabel={labels.temporaryFixDateCompleted} leftData={item.customerServiceDetails.temporaryFixDateCompleted} rightLabel={labels.serviceProblemCode} rightData={item.customerServiceDetails.serviceProblemCode} />
         </View>
     );
 }

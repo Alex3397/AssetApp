@@ -74,7 +74,6 @@ const Details = (props) => {
                 <HideableTextField show={show.level1} label={labels.level1} data={item.details.level1} />
                 <HideableTextField show={show.callerName} label={labels.callerName} data={item.details.callerName} />
                 <HideableTextField show={show.rejectionReason} label={labels.rejectionReason} data={item.details.rejectionReason} />
-                <HideableCheckBox show={show.reOpened} label={labels.reOpened} data={item.details.reOpened} />
                 <HideableTextField show={show.customerContractCode} label={labels.customerContractCode} data={item.details.customerContractCode} />
                 <HideableTextField show={show.workPackage} label={labels.workPackage} data={item.details.workPackage} />
                 <HideableTextField show={show.alertCode} label={labels.alertCode} data={item.details.alertCode} />
@@ -94,10 +93,13 @@ const Details = (props) => {
                 <HideableTextField show={show.downTimeHours} label={labels.downTimeHours} data={item.details.downTimeHours} />
                 <HideableTextField show={show.originalWorkOrder} label={labels.originalWorkOrder} data={item.details.originalWorkOrder} />
                 <HideableTextField show={show.calculatedPriority} label={labels.calculatedPriority} data={item.details.calculatedPriority} />
-                <HideableCheckBox show={show.minor} label={labels.minor} data={item.details.minor} />
-                <HideableCheckBox show={show.preserveCalculatedPriority} label={labels.preserveCalculatedPriority} data={item.details.preserveCalculatedPriority} />
+                
                 <HideableTextField show={show.latitude} label={labels.latitude} data={item.details.latitude} />
                 <HideableTextField show={show.longitude} label={labels.longitude} data={item.details.longitude} />
+
+                <HideableCheckBox show={show.preserveCalculatedPriority} label={labels.preserveCalculatedPriority} data={item.details.preserveCalculatedPriority} />
+                <HideableCheckBox show={show.reOpened} label={labels.reOpened} data={item.details.reOpened} />
+                <HideableCheckBox show={show.minor} label={labels.minor} data={item.details.minor} />
             </View>
         );
 }

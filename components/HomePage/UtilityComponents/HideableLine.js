@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, useWindowDimensions } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import HideableTextField from './HideableTextField';
 import HideableCheckBox from './HideableCheckBox';
@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 
 const HideableLine = (props) => {
     const { colors } = useTheme();
+    const window = useWindowDimensions();
 
     let rightLabel = props.rightLabel;
     let rightData = props.rightData;
@@ -21,18 +22,18 @@ const HideableLine = (props) => {
     if (!rightShow && !leftShow) {
         return (<></>)
     } else if (type == undefined || type == "text") {
-        if (fullLength < 52) {
+        if (fullLength < 53) {
             return (
                 <>
-                    <HideableTextField label={rightLabel} data={rightData} show={rightShow} />
-                    <HideableTextField style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "flex-end", top: -22, marginBottom: -22 }} label={leftLabel} data={leftData} show={leftShow} />
+                    <HideableTextField label={leftLabel} data={leftData} show={leftShow} />
+                    <HideableTextField inline={true} label={rightLabel} data={rightData} show={rightShow} />
                 </>
             );
         } else {
             return (
                 <>
-                    <HideableTextField label={rightLabel} data={rightData} show={rightShow} />
                     <HideableTextField label={leftLabel} data={leftData} show={leftShow} />
+                    <HideableTextField label={rightLabel} data={rightData} show={rightShow} />
                 </>
             )
         }
@@ -40,15 +41,15 @@ const HideableLine = (props) => {
         if (fullLength < 52) {
             return (
                 <>
-                    <HideableCheckBox label={rightLabel} data={rightData} show={rightShow} />
-                    <HideableCheckBox viewStyle={{ alignSelf: "flex-end", top: -25, marginBottom: -25 }} label={leftLabel} data={leftData} show={leftShow} />
+                    <HideableCheckBox label={leftLabel} data={leftData} show={leftShow} />
+                    <HideableCheckBox viewStyle={{ alignSelf: "flex-end", top: -25, marginBottom: -25 }} label={rightLabel} data={rightData} show={rightShow} />
                 </>
             );
         } else {
             return (
                 <>
-                    <HideableCheckBox label={rightLabel} data={rightData} show={rightShow} />
                     <HideableCheckBox label={leftLabel} data={leftData} show={leftShow} />
+                    <HideableCheckBox label={rightLabel} data={rightData} show={rightShow} />
                 </>
             )
         }
