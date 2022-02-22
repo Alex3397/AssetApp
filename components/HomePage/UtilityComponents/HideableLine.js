@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, useWindowDimensions } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import HideableTextField from './HideableTextField';
@@ -8,6 +8,8 @@ import PropTypes from "prop-types";
 const HideableLine = (props) => {
     const { colors } = useTheme();
     const window = useWindowDimensions();
+    const [firstWidth, setFirstWidth] = useState();
+    const [secondWidth, setSecondWidthWidth] = useState();
 
     let rightLabel = props.rightLabel;
     let rightData = props.rightData;
@@ -16,24 +18,26 @@ const HideableLine = (props) => {
     let type = props.type;
     let rightShow = props.rightShow == undefined ? false : props.rightShow;
     let leftShow = props.leftShow == undefined ? false : props.leftShow;
+    let parentWidth = props.parentWidth;
 
     let fullLength = String(rightLabel).length + String(rightData).length + String(leftLabel).length + String(leftData).length;
+
 
     if (!rightShow && !leftShow) {
         return (<></>)
     } else if (type == undefined || type == "text") {
-        if (fullLength < 53) {
+        if (fullLength < 50) {
             return (
                 <>
-                    <HideableTextField label={leftLabel} data={leftData} show={leftShow} />
-                    <HideableTextField inline={true} label={rightLabel} data={rightData} show={rightShow} />
+                    <HideableTextField label={leftLabel} data={leftData} show={leftShow} parentWidth={parentWidth} />
+                    <HideableTextField inline={true} label={rightLabel} data={rightData} show={rightShow} parentWidth={parentWidth} />
                 </>
             );
         } else {
             return (
                 <>
-                    <HideableTextField label={leftLabel} data={leftData} show={leftShow} />
-                    <HideableTextField label={rightLabel} data={rightData} show={rightShow} />
+                    <HideableTextField label={leftLabel} data={leftData} show={leftShow} parentWidth={parentWidth} />
+                    <HideableTextField label={rightLabel} data={rightData} show={rightShow} parentWidth={parentWidth} />
                 </>
             )
         }
