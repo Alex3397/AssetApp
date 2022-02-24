@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, useWindowDimensions } from 'react-native';
+import { Text, useWindowDimensions, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import HideableTextField from './HideableTextField';
 import HideableCheckBox from './HideableCheckBox';
@@ -29,15 +29,19 @@ const HideableLine = (props) => {
         if (fullLength < 50) {
             return (
                 <>
-                    <HideableTextField label={leftLabel} data={leftData} show={leftShow} parentWidth={parentWidth} />
-                    <HideableTextField inline={true} label={rightLabel} data={rightData} show={rightShow} parentWidth={parentWidth} />
+                    <View >
+                        <HideableTextField label={leftLabel} data={leftData} show={leftShow} parentWidth={parentWidth} />
+                        <HideableTextField inline={true} label={rightLabel} data={rightData} show={rightShow} parentWidth={parentWidth} />
+                    </View>
                 </>
             );
         } else {
             return (
                 <>
-                    <HideableTextField label={leftLabel} data={leftData} show={leftShow} parentWidth={parentWidth} />
-                    <HideableTextField label={rightLabel} data={rightData} show={rightShow} parentWidth={parentWidth} />
+                    <View >
+                        <HideableTextField label={leftLabel} data={leftData} show={leftShow} parentWidth={parentWidth} />
+                        <HideableTextField label={rightLabel} data={rightData} show={rightShow} parentWidth={parentWidth} />
+                    </View>
                 </>
             )
         }

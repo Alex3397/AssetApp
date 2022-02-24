@@ -10,7 +10,7 @@ const Sign = (props) => {
     let item = props.item;
     let show = props.show;
 
-    if (show.sign) return(<></>)
+    if (!show.sign) return(<></>)
 
     return (
         <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>

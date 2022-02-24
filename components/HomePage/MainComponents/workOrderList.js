@@ -69,7 +69,7 @@ export default function HomeScreen({ navigation }) {
     const renderOverlay = (render) => {
         if (render) return (
             <>
-                <View style={{ position: "absolute", backgroundColor: "rgba(0, 0, 0, 0.5)", width: "100%", height: "92%", top: 82 }}>
+                <Pressable style={{ position: "absolute", backgroundColor: "rgba(0, 0, 0, 0.5)", width: "100%", height: "92%", top: 82 }} onPress={() => {focusOut()}} >
                     <FlatList keyboardShouldPersistTaps='handled' data={searchData} renderItem={({ item }) =>
                         <>
                             <Pressable style={{ padding: 8, backgroundColor: colors.background }} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(); navigation.navigate('Ordem de Serviço'); }}>
@@ -95,7 +95,7 @@ export default function HomeScreen({ navigation }) {
                             </Pressable>
                         </>
                     } />
-                </View>
+                </Pressable>
             </>
         );
         else if (!render) return (<></>);
