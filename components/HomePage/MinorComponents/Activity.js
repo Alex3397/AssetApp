@@ -42,7 +42,9 @@ const Activity = (props) => {
 
     return (
         <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }} onLayout={(event) => onLayout(event)} >
-            <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Atividade</Text>
+            <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5, width: "100%" }}>
+                <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Atividade</Text>
+            </View>
 
             <HideableLine parentWidth={parentWidth} leftShow={show.activityCode} rightShow={show.tradeCode} leftLabel={labels.activityCode} rightLabel={labels.tradeCode} leftData={item.activity.activityCode} rightData={item.activity.tradeCode} />
             <HideableLine parentWidth={parentWidth} leftShow={show.taskCode} rightShow={show.materialList} leftLabel={labels.taskCode} leftData={item.activity.taskCode} rightLabel={labels.materialList} rightData={item.activity.materialList} />

@@ -58,7 +58,9 @@ const Details = (props) => {
 
         return (
             <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-                <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes da OS</Text>
+                <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5, width: "100%" }}>
+                    <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes da OS</Text>
+                </View>
 
                 <HideableTextField show={show.classId} label={labels.classId} data={item.details.classId} />
                 <HideableTextField show={show.problemCode} label={labels.problemCode} data={item.details.problemCode} />

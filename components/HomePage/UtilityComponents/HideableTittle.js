@@ -18,21 +18,13 @@ const HideableTittle = (props) => {
     }
 
     if (props.right == "" && props.left == "" && !show) {
-        return(<></>)
+        return (<></>)
     } else {
-        if (props.style == null) {
-            return (
-                <>
-                    <Text style={{ padding: 2, color: colors.text, fontSize: 16, alignSelf: "center" }}>{title}</Text>
-                </>
-            );
-        } else {
-            return (
-                <>
-                    <Text style={props.style}>{title}</Text>
-                </>
-            );
-        }
+        return (
+            <>
+                <Text style={[props.style, { color: colors.text, fontSize: 16, alignSelf: "center" }]}>{title}</Text>
+            </>
+        );
     }
 }
 

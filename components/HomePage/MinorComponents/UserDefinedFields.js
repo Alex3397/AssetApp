@@ -14,6 +14,11 @@ const UserDefinedFields = (props) => {
     const [datePadding, setDatePadding] = useState(0);
     const [checkPadding, setCheckPadding] = useState(0);
     const [notePadding, setNotePadding] = useState(0);
+    const [parentWidth, setParentWidth] = useState();
+
+    function onLayout(event) {
+        setParentWidth(event.nativeEvent.layout.width);
+    }
 
     let labels = props.userLabels.userDefinedFields;
     let show = props.show;
@@ -229,150 +234,64 @@ const UserDefinedFields = (props) => {
     }
 
     return (
-        <View style={{ backgroundColor: colors.card, padding: 10, margin: 10, borderRadius: 25 }}>
-            <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Campos definidos pelo usuário</Text>
+        <View style={{ backgroundColor: colors.card, padding: 10, margin: 10, borderRadius: 25 }} onLayout={(event) => onLayout(event)} >
+            <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5, width: "100%" }}>
+                <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Campos definidos pelo usuário</Text>
+            </View>
 
             <View>
                 <View style={{ margin: charPadding }}>
-                    <HideableTextField show={show.udfChar01} label={labels.udfChar01} data={props.item.userDefinedFields.udfChar01} />
-                    <HideableTextField show={show.udfChar02} label={labels.udfChar02} data={props.item.userDefinedFields.udfChar02} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar03} label={labels.udfChar03} data={props.item.userDefinedFields.udfChar03} />
-                    <HideableTextField show={show.udfChar04} label={labels.udfChar04} data={props.item.userDefinedFields.udfChar04} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar05} label={labels.udfChar05} data={props.item.userDefinedFields.udfChar05} />
-                    <HideableTextField show={show.udfChar06} label={labels.udfChar06} data={props.item.userDefinedFields.udfChar06} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar07} label={labels.udfChar07} data={props.item.userDefinedFields.udfChar07} />
-                    <HideableTextField show={show.udfChar08} label={labels.udfChar08} data={props.item.userDefinedFields.udfChar08} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar09} label={labels.udfChar09} data={props.item.userDefinedFields.udfChar09} />
-                    <HideableTextField show={show.udfChar10} label={labels.udfChar10} data={props.item.userDefinedFields.udfChar10} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar11} label={labels.udfChar11} data={props.item.userDefinedFields.udfChar11} />
-                    <HideableTextField show={show.udfChar12} label={labels.udfChar12} data={props.item.userDefinedFields.udfChar12} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar13} label={labels.udfChar13} data={props.item.userDefinedFields.udfChar13} />
-                    <HideableTextField show={show.udfChar14} label={labels.udfChar14} data={props.item.userDefinedFields.udfChar14} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar15} label={labels.udfChar15} data={props.item.userDefinedFields.udfChar15} />
-                    <HideableTextField show={show.udfChar16} label={labels.udfChar16} data={props.item.userDefinedFields.udfChar16} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar17} label={labels.udfChar17} data={props.item.userDefinedFields.udfChar17} />
-                    <HideableTextField show={show.udfChar18} label={labels.udfChar18} data={props.item.userDefinedFields.udfChar18} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar19} label={labels.udfChar19} data={props.item.userDefinedFields.udfChar19} />
-                    <HideableTextField show={show.udfChar20} label={labels.udfChar20} data={props.item.userDefinedFields.udfChar20} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar21} label={labels.udfChar21} data={props.item.userDefinedFields.udfChar21} />
-                    <HideableTextField show={show.udfChar22} label={labels.udfChar22} data={props.item.userDefinedFields.udfChar22} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar23} label={labels.udfChar23} data={props.item.userDefinedFields.udfChar23} />
-                    <HideableTextField show={show.udfChar24} label={labels.udfChar24} data={props.item.userDefinedFields.udfChar24} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar25} label={labels.udfChar25} data={props.item.userDefinedFields.udfChar25} />
-                    <HideableTextField show={show.udfChar26} label={labels.udfChar26} data={props.item.userDefinedFields.udfChar26} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar27} label={labels.udfChar27} data={props.item.userDefinedFields.udfChar27} />
-                    <HideableTextField show={show.udfChar28} label={labels.udfChar28} data={props.item.userDefinedFields.udfChar28} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar29} label={labels.udfChar29} data={props.item.userDefinedFields.udfChar29} />
-                    <HideableTextField show={show.udfChar30} label={labels.udfChar30} data={props.item.userDefinedFields.udfChar30} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar31} label={labels.udfChar31} data={props.item.userDefinedFields.udfChar31} />
-                    <HideableTextField show={show.udfChar32} label={labels.udfChar32} data={props.item.userDefinedFields.udfChar32} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar33} label={labels.udfChar33} data={props.item.userDefinedFields.udfChar33} />
-                    <HideableTextField show={show.udfChar34} label={labels.udfChar34} data={props.item.userDefinedFields.udfChar34} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar35} label={labels.udfChar35} data={props.item.userDefinedFields.udfChar35} />
-                    <HideableTextField show={show.udfChar36} label={labels.udfChar36} data={props.item.userDefinedFields.udfChar36} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar37} label={labels.udfChar37} data={props.item.userDefinedFields.udfChar37} />
-                    <HideableTextField show={show.udfChar38} label={labels.udfChar38} data={props.item.userDefinedFields.udfChar38} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar39} label={labels.udfChar39} data={props.item.userDefinedFields.udfChar39} />
-                    <HideableTextField show={show.udfChar40} label={labels.udfChar40} data={props.item.userDefinedFields.udfChar40} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar41} label={labels.udfChar41} data={props.item.userDefinedFields.udfChar41} />
-                    <HideableTextField show={show.udfChar42} label={labels.udfChar42} data={props.item.userDefinedFields.udfChar42} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfChar43} label={labels.udfChar43} data={props.item.userDefinedFields.udfChar43} />
-                    <HideableTextField show={show.udfChar44} label={labels.udfChar44} data={props.item.userDefinedFields.udfChar44} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar02} rightData={props.item.userDefinedFields.udfChar02} leftLabel={labels.udfChar01} leftData={props.item.userDefinedFields.udfChar01} rightShow={show.udfChar02} leftShow={show.udfChar01} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar04} rightData={props.item.userDefinedFields.udfChar04} leftLabel={labels.udfChar03} leftData={props.item.userDefinedFields.udfChar03} rightShow={show.udfChar04} leftShow={show.udfChar03} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar06} rightData={props.item.userDefinedFields.udfChar06} leftLabel={labels.udfChar05} leftData={props.item.userDefinedFields.udfChar05} rightShow={show.udfChar06} leftShow={show.udfChar05} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar08} rightData={props.item.userDefinedFields.udfChar08} leftLabel={labels.udfChar07} leftData={props.item.userDefinedFields.udfChar07} rightShow={show.udfChar08} leftShow={show.udfChar07} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar10} rightData={props.item.userDefinedFields.udfChar10} leftLabel={labels.udfChar09} leftData={props.item.userDefinedFields.udfChar09} rightShow={show.udfChar10} leftShow={show.udfChar09} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar12} rightData={props.item.userDefinedFields.udfChar12} leftLabel={labels.udfChar11} leftData={props.item.userDefinedFields.udfChar11} rightShow={show.udfChar12} leftShow={show.udfChar11} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar14} rightData={props.item.userDefinedFields.udfChar14} leftLabel={labels.udfChar13} leftData={props.item.userDefinedFields.udfChar13} rightShow={show.udfChar14} leftShow={show.udfChar13} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar16} rightData={props.item.userDefinedFields.udfChar16} leftLabel={labels.udfChar15} leftData={props.item.userDefinedFields.udfChar15} rightShow={show.udfChar16} leftShow={show.udfChar15} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar18} rightData={props.item.userDefinedFields.udfChar18} leftLabel={labels.udfChar17} leftData={props.item.userDefinedFields.udfChar17} rightShow={show.udfChar18} leftShow={show.udfChar17} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar20} rightData={props.item.userDefinedFields.udfChar20} leftLabel={labels.udfChar19} leftData={props.item.userDefinedFields.udfChar19} rightShow={show.udfChar20} leftShow={show.udfChar19} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar22} rightData={props.item.userDefinedFields.udfChar22} leftLabel={labels.udfChar21} leftData={props.item.userDefinedFields.udfChar21} rightShow={show.udfChar22} leftShow={show.udfChar21} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar24} rightData={props.item.userDefinedFields.udfChar24} leftLabel={labels.udfChar23} leftData={props.item.userDefinedFields.udfChar23} rightShow={show.udfChar24} leftShow={show.udfChar23} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar26} rightData={props.item.userDefinedFields.udfChar26} leftLabel={labels.udfChar25} leftData={props.item.userDefinedFields.udfChar25} rightShow={show.udfChar26} leftShow={show.udfChar25} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar28} rightData={props.item.userDefinedFields.udfChar28} leftLabel={labels.udfChar27} leftData={props.item.userDefinedFields.udfChar27} rightShow={show.udfChar28} leftShow={show.udfChar27} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar30} rightData={props.item.userDefinedFields.udfChar30} leftLabel={labels.udfChar29} leftData={props.item.userDefinedFields.udfChar29} rightShow={show.udfChar30} leftShow={show.udfChar29} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar32} rightData={props.item.userDefinedFields.udfChar32} leftLabel={labels.udfChar31} leftData={props.item.userDefinedFields.udfChar31} rightShow={show.udfChar32} leftShow={show.udfChar31} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar34} rightData={props.item.userDefinedFields.udfChar34} leftLabel={labels.udfChar33} leftData={props.item.userDefinedFields.udfChar33} rightShow={show.udfChar34} leftShow={show.udfChar33} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar36} rightData={props.item.userDefinedFields.udfChar36} leftLabel={labels.udfChar35} leftData={props.item.userDefinedFields.udfChar35} rightShow={show.udfChar36} leftShow={show.udfChar35} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar38} rightData={props.item.userDefinedFields.udfChar38} leftLabel={labels.udfChar37} leftData={props.item.userDefinedFields.udfChar37} rightShow={show.udfChar38} leftShow={show.udfChar37} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar40} rightData={props.item.userDefinedFields.udfChar40} leftLabel={labels.udfChar39} leftData={props.item.userDefinedFields.udfChar39} rightShow={show.udfChar40} leftShow={show.udfChar39} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar42} rightData={props.item.userDefinedFields.udfChar42} leftLabel={labels.udfChar41} leftData={props.item.userDefinedFields.udfChar41} rightShow={show.udfChar42} leftShow={show.udfChar41} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChar44} rightData={props.item.userDefinedFields.udfChar44} leftLabel={labels.udfChar43} leftData={props.item.userDefinedFields.udfChar43} rightShow={show.udfChar44} leftShow={show.udfChar43} />
                     <HideableTextField show={show.udfChar45} label={labels.udfChar45} data={props.item.userDefinedFields.udfChar45} />
                 </View>
-
                 <View style={{ margin: numPadding }}>
-                    <HideableTextField show={show.udfNum1} label={labels.udfNum1} data={props.item.userDefinedFields.udfNum1} />
-                    <HideableTextField show={show.udfNum2} label={labels.udfNum2} data={props.item.userDefinedFields.udfNum2} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfNum3} label={labels.udfNum3} data={props.item.userDefinedFields.udfNum3} />
-                    <HideableTextField show={show.udfNum4} label={labels.udfNum4} data={props.item.userDefinedFields.udfNum4} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfNum5} label={labels.udfNum5} data={props.item.userDefinedFields.udfNum5} />
-                    <HideableTextField show={show.udfNum6} label={labels.udfNum6} data={props.item.userDefinedFields.udfNum6} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfNum7} label={labels.udfNum7} data={props.item.userDefinedFields.udfNum7} />
-                    <HideableTextField show={show.udfNum8} label={labels.udfNum8} data={props.item.userDefinedFields.udfNum8} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfNum9} label={labels.udfNum9} data={props.item.userDefinedFields.udfNum9} />
-                    <HideableTextField show={show.udfNum10} label={labels.udfNum10} data={props.item.userDefinedFields.udfNum10} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfNum2} rightData={props.item.userDefinedFields.udfNum2} leftLabel={labels.udfNum1} leftData={props.item.userDefinedFields.udfNum1} rightShow={show.udfNum2} leftShow={show.udfNum1} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfNum4} rightData={props.item.userDefinedFields.udfNum4} leftLabel={labels.udfNum3} leftData={props.item.userDefinedFields.udfNum3} rightShow={show.udfNum4} leftShow={show.udfNum3} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfNum6} rightData={props.item.userDefinedFields.udfNum6} leftLabel={labels.udfNum5} leftData={props.item.userDefinedFields.udfNum5} rightShow={show.udfNum6} leftShow={show.udfNum5} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfNum8} rightData={props.item.userDefinedFields.udfNum8} leftLabel={labels.udfNum7} leftData={props.item.userDefinedFields.udfNum7} rightShow={show.udfNum8} leftShow={show.udfNum7} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfNum10} rightData={props.item.userDefinedFields.udfNum10} leftLabel={labels.udfNum9} leftData={props.item.userDefinedFields.udfNum9} rightShow={show.udfNum10} leftShow={show.udfNum9} />
                 </View>
-
                 <View style={{ margin: datePadding }}>
-                    <HideableTextField show={show.udfDate1} label={labels.udfDate1} data={props.item.userDefinedFields.udfDate1} />
-                    <HideableTextField show={show.udfDate2} label={labels.udfDate2} data={props.item.userDefinedFields.udfDate2} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfDate3} label={labels.udfDate3} data={props.item.userDefinedFields.udfDate3} />
-                    <HideableTextField show={show.udfDate4} label={labels.udfDate4} data={props.item.userDefinedFields.udfDate4} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfDate5} label={labels.udfDate5} data={props.item.userDefinedFields.udfDate5} />
-                    <HideableTextField show={show.udfDate6} label={labels.udfDate6} data={props.item.userDefinedFields.udfDate6} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfDate7} label={labels.udfDate7} data={props.item.userDefinedFields.udfDate7} />
-                    <HideableTextField show={show.udfDate8} label={labels.udfDate8} data={props.item.userDefinedFields.udfDate8} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfDate9} label={labels.udfDate9} data={props.item.userDefinedFields.udfDate9} />
-                    <HideableTextField show={show.udfDate10} label={labels.udfDate10} data={props.item.userDefinedFields.udfDate10} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfDate2} rightData={props.item.userDefinedFields.udfDate2} leftLabel={labels.udfDate1} leftData={props.item.userDefinedFields.udfDate1} rightShow={show.udfDate2} leftShow={show.udfDate1} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfDate4} rightData={props.item.userDefinedFields.udfDate4} leftLabel={labels.udfDate3} leftData={props.item.userDefinedFields.udfDate3} rightShow={show.udfDate4} leftShow={show.udfDate3} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfDate6} rightData={props.item.userDefinedFields.udfDate6} leftLabel={labels.udfDate5} leftData={props.item.userDefinedFields.udfDate5} rightShow={show.udfDate6} leftShow={show.udfDate5} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfDate8} rightData={props.item.userDefinedFields.udfDate8} leftLabel={labels.udfDate7} leftData={props.item.userDefinedFields.udfDate7} rightShow={show.udfDate8} leftShow={show.udfDate7} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfDate10} rightData={props.item.userDefinedFields.udfDate10} leftLabel={labels.udfDate9} leftData={props.item.userDefinedFields.udfDate9} rightShow={show.udfDate10} leftShow={show.udfDate9} />
                 </View>
-
                 <View style={{ margin: checkPadding }}>
-                    <HideableCheckBox show={show.udfChkBox01} label={labels.udfChkBox01} data={props.item.userDefinedFields.udfChkBox01} />
-                    <HideableCheckBox show={show.udfChkBox02} label={labels.udfChkBox02} data={props.item.userDefinedFields.udfChkBox02} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableCheckBox show={show.udfChkBox03} label={labels.udfChkBox03} data={props.item.userDefinedFields.udfChkBox03} />
-                    <HideableCheckBox show={show.udfChkBox04} label={labels.udfChkBox04} data={props.item.userDefinedFields.udfChkBox04} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableCheckBox show={show.udfChkBox05} label={labels.udfChkBox05} data={props.item.userDefinedFields.udfChkBox05} />
-                    <HideableCheckBox show={show.udfChkBox06} label={labels.udfChkBox06} data={props.item.userDefinedFields.udfChkBox06} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableCheckBox show={show.udfChkBox07} label={labels.udfChkBox07} data={props.item.userDefinedFields.udfChkBox07} />
-                    <HideableCheckBox show={show.udfChkBox08} label={labels.udfChkBox08} data={props.item.userDefinedFields.udfChkBox08} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableCheckBox show={show.udfChkBox09} label={labels.udfChkBox09} data={props.item.userDefinedFields.udfChkBox09} />
-                    <HideableCheckBox show={show.udfChkBox10} label={labels.udfChkBox10} data={props.item.userDefinedFields.udfChkBox10} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChkBox02} rightData={props.item.userDefinedFields.udfChkBox02} leftLabel={labels.udfChkBox01} leftData={props.item.userDefinedFields.udfChkBox01} rightShow={show.udfChkBox02} leftShow={show.udfChkBox01} type="checkbox" />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChkBox04} rightData={props.item.userDefinedFields.udfChkBox04} leftLabel={labels.udfChkBox03} leftData={props.item.userDefinedFields.udfChkBox03} rightShow={show.udfChkBox04} leftShow={show.udfChkBox03} type="checkbox" />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChkBox06} rightData={props.item.userDefinedFields.udfChkBox06} leftLabel={labels.udfChkBox05} leftData={props.item.userDefinedFields.udfChkBox05} rightShow={show.udfChkBox06} leftShow={show.udfChkBox05} type="checkbox" />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChkBox08} rightData={props.item.userDefinedFields.udfChkBox08} leftLabel={labels.udfChkBox07} leftData={props.item.userDefinedFields.udfChkBox07} rightShow={show.udfChkBox08} leftShow={show.udfChkBox07} type="checkbox" />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfChkBox10} rightData={props.item.userDefinedFields.udfChkBox10} leftLabel={labels.udfChkBox09} leftData={props.item.userDefinedFields.udfChkBox09} rightShow={show.udfChkBox10} leftShow={show.udfChkBox09} type="checkbox" />
                 </View>
-
                 <View style={{ margin: notePadding }}>
-                    <HideableTextField show={show.udfNote01} label={labels.udfNote01} data={props.item.userDefinedFields.udfNote01} />
-                    <HideableTextField show={show.udfNote02} label={labels.udfNote02} data={props.item.userDefinedFields.udfNote02} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfNote03} label={labels.udfNote03} data={props.item.userDefinedFields.udfNote03} />
-                    <HideableTextField show={show.udfNote04} label={labels.udfNote04} data={props.item.userDefinedFields.udfNote04} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfNote05} label={labels.udfNote05} data={props.item.userDefinedFields.udfNote05} />
-                    <HideableTextField show={show.udfNote06} label={labels.udfNote06} data={props.item.userDefinedFields.udfNote06} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfNote07} label={labels.udfNote07} data={props.item.userDefinedFields.udfNote07} />
-                    <HideableTextField show={show.udfNote08} label={labels.udfNote08} data={props.item.userDefinedFields.udfNote08} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
-                    <HideableTextField show={show.udfNote09} label={labels.udfNote09} data={props.item.userDefinedFields.udfNote09} />
-                    <HideableTextField show={show.udfNote10} label={labels.udfNote10} data={props.item.userDefinedFields.udfNote10} />
-                    <HideableLine rightLabel={labels.status} rightData={item.status} leftLabel={labels.organization} leftData={item.organization} rightShow={show.workOrderStatus} leftShow={show.organization} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfNote02} rightData={props.item.userDefinedFields.udfNote02} leftLabel={labels.udfNote01} leftData={props.item.userDefinedFields.udfNote01} rightShow={show.udfNote02} leftShow={show.udfNote01} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfNote04} rightData={props.item.userDefinedFields.udfNote04} leftLabel={labels.udfNote03} leftData={props.item.userDefinedFields.udfNote03} rightShow={show.udfNote04} leftShow={show.udfNote03} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfNote06} rightData={props.item.userDefinedFields.udfNote06} leftLabel={labels.udfNote05} leftData={props.item.userDefinedFields.udfNote05} rightShow={show.udfNote06} leftShow={show.udfNote05} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfNote08} rightData={props.item.userDefinedFields.udfNote08} leftLabel={labels.udfNote07} leftData={props.item.userDefinedFields.udfNote07} rightShow={show.udfNote08} leftShow={show.udfNote07} />
+                    <HideableLine parentWidth={parentWidth} rightLabel={labels.udfNote10} rightData={props.item.userDefinedFields.udfNote10} leftLabel={labels.udfNote09} leftData={props.item.userDefinedFields.udfNote09} rightShow={show.udfNote10} leftShow={show.udfNote09} />
                 </View>
             </View>
         </View>

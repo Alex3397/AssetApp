@@ -33,7 +33,9 @@ const Schedule = (props) => {
 
     return (
         <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-            <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Programação</Text>
+            <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5, width: "100%" }}>
+                <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Programação</Text>
+            </View>
 
             <HideableLine leftLabel={labels.reportedDate} leftData={item.schedule.reportedDate} leftShow={show.reportedDate} rightLabel={labels.reportedBy} rightData={item.schedule.reportedBy} rightShow={show.reportedBy} />
             <HideableLine leftLabel={labels.assignedBy} leftData={item.schedule.assignedBy} leftShow={show.assignedBy} rightLabel={labels.assignedTo} rightData={item.schedule.assignedTo} rightShow={show.assignedTo} />

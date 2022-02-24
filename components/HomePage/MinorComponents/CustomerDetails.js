@@ -40,7 +40,9 @@ const CustomerDetails = (props) => {
 
     return (
         <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }} onLayout={(event) => onLayout(event)} >
-            <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes de serviço ao cliente</Text>
+            <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5, width: "100%" }}>
+                <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes de serviço ao cliente</Text>
+            </View>
 
             <HideableLine parentWidth={parentWidth} leftShow={show.equipmentUsability} rightShow={show.tempFixPromiseDate} leftLabel={labels.equipmentUsability} leftData={item.customerServiceDetails.equipmentUsability} rightLabel={labels.tempFixPromiseDate} rightData={item.customerServiceDetails.tempFixPromiseDate} />
             <HideableLine parentWidth={parentWidth} leftShow={show.supplierServiceCategoryCode} rightShow={show.supplierServiceCategoryOrganization} leftLabel={labels.supplierServiceCategoryCode} leftData={item.customerServiceDetails.supplierServiceCategoryCode} rightLabel={labels.supplierServiceCategoryOrganization} rightData={item.customerServiceDetails.supplierServiceCategoryOrganization} />

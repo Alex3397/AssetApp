@@ -2,44 +2,51 @@ import React, { useRef, useState } from 'react';
 import { Text, useWindowDimensions, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-class TextFieldComponent extends React.Component {
+const TextFieldComponent = (props) => {
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            forceWidth: false,
-            width: this.props.label.length * 6,
-            left: this.props.label.length * 6,
-            secondWidth: 50,
-            top: -20,
-            maxWidth: this.props.label.length * 12,
-        }
-    }
-
-    render() {
-        const colors = this.props.theme;
+        const [forceWidth, setForceWidth] = useState(false);
+        const [width, setWidth] = useState(props.label.length * 6);
+        const [left, setLeft] = useState(props.label.length * 6);
+        const [secondWidth, setSecondWidth] = useState(50);
+        const [top, setTop] = useState(-20);
+        const [maxWidth, setMaxWidth] = useState(props.label.length * 12);
+        const [height, setHeight] = useState(18);
+        const [heightSet, setHeightSet] = useState(false);
+        
+        const colors = props.theme;
         
         let style = {};
-        let totalWidth = (this.state.width + this.state.secondWidth);
-        const parentWidth = this.props.parentWidth;
+        let totalWidth = (width + secondWidth);
+        let letHeight = height;
 
-        if (this.props.inline) style = { alignSelf: "flex-end", marginBottom: -21.25, top: -21.25 }
+        const parentWidth = props.parentWidth;
+        const onLayout = (event) => {
+            if (!forceWidth) {
+                setWidth(event.nativeEvent.layout.width);
+                setLeft(event.nativeEvent.layout.width);
+            }
+            setHeight(event.nativeEvent.layout.height);
+        };
 
-        console.log("Parent Width: " + parentWidth);
-        console.log(this.props.label + " : " + this.props.data + " : " + totalWidth);
+        if (props.inline) style = { alignSelf: "flex-end", marginRight: 1, marginBottom: -21.25, top: -21.25 }
 
-        if (totalWidth+30 > parentWidth && !this.state.forceWidth) {
-            this.setState({ maxWidth: 180, forceWidth: true, top: -26, left: this.state.width/1.15 })
+        if (totalWidth+30 > parentWidth && !forceWidth) {
+            setMaxWidth(150);
+            setTop(-26);
+            setLeft(200);
+            setForceWidth(true);
+        }
+        if (letHeight != 18 && maxWidth == 150 && !heightSet) {
+            setTop(-(22 + (height/3)));
+            setHeightSet(true);
         }
 
         return (
-            <View style={[ this.props.style, style, { width: totalWidth, alignContent: "center" }]} onLayout={this.props.onLayout} >
-                <Text style={{ padding: 2, color: colors.text, fontSize: 16, maxWidth: this.state.maxWidth, textAlign: "center", alignSelf: "flex-start" }} onLayout={(event) => { if (!this.state.forceWidth) this.setState({ width: event.nativeEvent.layout.width, left: event.nativeEvent.layout.width }); }} >{this.props.label}: </Text>
-                <Text style={{ padding: 2, color: colors.text, top: this.state.top, marginBottom: -20, left: this.state.left, paddingLeft: 10, paddingRight: 10, backgroundColor: "#313131", alignSelf: "flex-start", textAlign: "center", textAlignVertical: "center", borderRadius: 15, minWidth: 30 }} onLayout={(event) => { this.setState({ secondWidth: event.nativeEvent.layout.width }); }} >{this.props.data}</Text>
+            <View style={[ props.style, style, { width: totalWidth, alignContent: "center" }]} onLayout={props.onLayout} >
+                <Text style={{ padding: 2, color: colors.text, fontSize: 16, maxWidth: maxWidth, textAlign: "center", alignSelf: "flex-start" }} onLayout={(event) => { onLayout(event) }} >{props.label}:</Text>
+                <Text style={{ padding: 2, color: colors.text, top: top, marginLeft: 5, marginBottom: -20, left: left, paddingLeft: 10, paddingRight: 10, backgroundColor: "#313131", alignSelf: "flex-start", textAlign: "center", textAlignVertical: "center", borderRadius: 15, minWidth: 30 }} onLayout={(event) => { setSecondWidth(event.nativeEvent.layout.width); }} >{props.data}</Text>
             </View>
         );
-    }
 }
 
 const HideableTextField = (props) => {

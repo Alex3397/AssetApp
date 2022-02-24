@@ -28,7 +28,9 @@ const ProductionDetails = (props) => {
 
     return (
         <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, borderRadius: 25 }}>
-            <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes de Produção</Text>
+            <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5, width: "100%" }}>
+                <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Detalhes de Produção</Text>
+            </View>
 
             <HideableLine leftShow={show.productionRequest} rightShow={show.productionRequestRevision} leftLabel={labels.productionRequest} leftData={item.productionDetails.productionRequest} rightLabel={labels.productionRequestRevision} rightData={item.productionDetails.productionRequestRevision} />
             <HideableLine leftShow={show.productionOrder} rightShow={show.accountingEntity} leftLabel={labels.productionOrder} leftData={item.productionDetails.productionOrder} rightLabel={labels.accountingEntity} rightData={item.productionDetails.accountingEntity} />

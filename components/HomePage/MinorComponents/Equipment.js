@@ -39,9 +39,11 @@ const Equipment = (props) => {
 
     return (
         <View style={{ backgroundColor: colors.card, padding: 15, margin: 10, paddingTop: 10, borderRadius: 25 }}>
-            <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center", marginBottom: 5 }}>Equipamento</Text>
+            <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5, width: "100%" }}>
+                <Text style={{ color: colors.text, fontSize: 18, alignSelf: "center"}}>Equipamento</Text>
+                <HideableTittle style={{ marginBottom: 5 }} right={item.equipmentCode} left={item.equipmentDescription} show={show.equipment} />
+            </View>
 
-            <HideableTittle right={item.equipmentCode} left={item.equipmentDescription} show={show.equipment} />
             <HideableLine rightLabel={labels.equipmentType} rightData={item.equipmentType} leftLabel={labels.equipmentOrganization} leftData={item.equipmentOrganization} rightShow={show.equipmentType} leftShow={show.equipmentOrganization} />
             <HideableLine rightLabel={labels.equipmentManufacturer} rightData={item.equipmentManufacturer} leftLabel={labels.supplier} leftData={item.supplier} rightShow={show.equipmentManufacturer} leftShow={show.supplier} />
             <HideableLine rightLabel={labels.positionCode} rightData={positionTitle} leftLabel={labels.equipmentAlias} leftData={item.equipmentAlias} rightShow={show.position} leftShow={show.equipmentAlias} />

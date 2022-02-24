@@ -1,5 +1,5 @@
 {
-  "name": "fuckinghatemobiledevelopment",
+  "name": "assetapp",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -40,7 +40,8 @@
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-transparent-status-and-navigation-bar": "^1.0.3",
     "react-native-web": "0.17.1",
-    "react-navigation": "^4.4.4"
+    "react-navigation": "^4.4.4",
+    "expo-updates": "~0.10.15"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
