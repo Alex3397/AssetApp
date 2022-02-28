@@ -23,6 +23,9 @@ export default function HomeScreen({ navigation }) {
     const [savedTenant, setTenant] = useState('');
     const [savedUrl, setUrl] = useState('');
     const [savedCon, setCon] = useState('');
+    const [savedCustomUrl, setCustomUrl] = useState('');
+    const [savedCustomBool, setCustomBool] = useState(false);
+    const [savedPort, setPort] = useState('');
     const [warning, setWarning] = useState('');
     const image = dark ? require('../../../images/folk-pattern-black.png') : require('../../../images/folk-pattern.png');
 
@@ -43,7 +46,7 @@ export default function HomeScreen({ navigation }) {
     }
 
     const getUserStatusAuth = async (host, token) => {
-        let url = host + ':8080/validate/status?token=' + token;
+        let url = host + '/validate/status?token=' + token;
         fetch(url).then(response => response.json()).then((data) => { storage.saveObject("statusAuth", data); })
     }
 
@@ -51,14 +54,14 @@ export default function HomeScreen({ navigation }) {
 
         let organization = await storage.getArticle('organization');
         let tenant = await storage.getArticle('tenant');
-        let host = await storage.getArticle('host');
+        let host = await storage.getArticle('usableHost');
 
         if ((!user || !pass)) {
             setWarning(language.login.warning)
         } else if (organization != null && tenant != null && host != null) {
 
             let xhr = new XMLHttpRequest();
-            let url = host + ':8080/validate';
+            let url = host + '/validate';
             xhr.open("POST", url);
 
             xhr.setRequestHeader("Accept", "*/*");
@@ -122,26 +125,32 @@ export default function HomeScreen({ navigation }) {
         let tenant = await storage.getArticle('tenant');
         let host = await storage.getArticle('host');
         let con = await storage.getArticle('con');
+        let custBool = await storage.getObject('customBool');
+        let custUrl = await storage.getArticle('customUrl');
+        let port = await storage.getArticle('port');
 
         setOrg(organization);
         setTenant(tenant)
         setUrl(host.replace(/[^0-9.]/g, ''))
         setCon(con);
+        setCustomBool(custBool);
+        setCustomUrl(custUrl);
+        setPort(port);
     }
 
     const getLabels = async () => {
-        let host = await storage.getArticle('host');
+        let host = await storage.getArticle('usableHost');
         let token = await storage.getArticle('token');
 
-        let labelUrl = host + ':8080/mobile/userDefinedFieldsLabels?token=' + token;
+        let labelUrl = host + '/mobile/userDefinedFieldsLabels?token=' + token;
         fetch(labelUrl).then(response => response.json()).then((data) => { storage.saveObject("labels", data) })
     }
 
     const getFieldsToShow = async () => {
-        let host = await storage.getArticle('host');
+        let host = await storage.getArticle('usableHost');
         let token = await storage.getArticle('token');
 
-        let labelUrl = host + ':8080/mobile/fields2show?token=' + token;
+        let labelUrl = host + '/mobile/fields2show?token=' + token;
         fetch(labelUrl).then(response => response.json()).then((data) => { storage.saveObject("showfields", data) })
     }
 
@@ -205,7 +214,7 @@ export default function HomeScreen({ navigation }) {
                     <Pressable style={{ marginTop: 45, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 35, borderRadius: 16, elevation: 3, backgroundColor: colors.card }} onPress={() => { validate(); }} >
                         <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.text }}>{language.login.login}</Text>
                     </Pressable>
-                    <Pressable style={{ marginTop: 25, marginBottom: 25, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 35, borderRadius: 16, elevation: 3, backgroundColor: colors.card }} onPress={() => { getSavedVariables(); navigation.navigate('Settings', { savedOrganization, savedTenant, savedUrl, savedCon, language }) }} >
+                    <Pressable style={{ marginTop: 25, marginBottom: 25, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 35, borderRadius: 16, elevation: 3, backgroundColor: colors.card }} onPress={() => { getSavedVariables(); navigation.navigate('Settings', { savedOrganization, savedTenant, savedUrl, savedCon, language, savedCustomBool, savedCustomUrl, savedPort }) }} >
                         <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.primary }}>{language.login.config}</Text>
                     </Pressable>
                 </View>

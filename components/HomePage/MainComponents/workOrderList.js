@@ -109,11 +109,11 @@ export default function HomeScreen({ navigation }) {
             setOriginalData(workOrderList)
             return workOrderList;
         }
-        let host = await storage.getArticle('host');
+        let host = await storage.getArticle('usableHost');
         let token = await storage.getArticle('token');
 
         let xhr = new XMLHttpRequest();
-        let url = host + ':8080/mobile/workOrderGrid?token=' + token;
+        let url = host + '/mobile/workOrderGrid?token=' + token;
         xhr.open("GET", url);
 
         xhr.onreadystatechange = function () {
@@ -162,10 +162,10 @@ export default function HomeScreen({ navigation }) {
     async function getWorkOrder(woCode, woOrganization) {
         let key = woCode + " : " + woOrganization;
 
-        let host = await storage.getArticle('host');
+        let host = await storage.getArticle('usableHost');
         let token = await storage.getArticle('token');
 
-        let url = host + ':8080/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + woCode + '&organization=' + woOrganization;
+        let url = host + '/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + woCode + '&organization=' + woOrganization;
         fetch(url).then(response => response.json()).then((data) => { setWorkOrderData(data) })
         storage.saveObject(key, workOrderData);
     }

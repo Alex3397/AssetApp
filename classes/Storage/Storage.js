@@ -22,7 +22,7 @@ export default class Storage {
 
     async saveObject(key, value) {
         try {
-            await AsyncStorage.setItem('@'.concat(key), JSON.stringify(value));
+            await AsyncStorage.setItem('@'.concat(key), JSON.stringify(value)).then(console.log('Saved ' + value + ' using ' + key));
         } catch (e) {
             console.log(e);
         }

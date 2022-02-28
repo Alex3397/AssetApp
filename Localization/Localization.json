@@ -39,6 +39,7 @@
             "tenant": "Tenant",
             "url": "Endereço do servidor",
             "con": "Tipo de conexão",
+            "customUrl": "URL personalizada",
             "submit": "Concluído"
         },
         "list": {
@@ -92,6 +93,7 @@
             "tenant": "Tenant",
             "url": "Server Address",
             "con": "Connection Type",
+            "customUrl": "Custom URL",
             "submit": "Done"
         },
         "list": {
@@ -145,6 +147,7 @@
             "tenant": "Tenant",
             "url": "Dirección del servidor",
             "con": "Tipo de conección",
+            "customUrl": "Custom URL",
             "submit": "Concluido"
         },
         "list": {

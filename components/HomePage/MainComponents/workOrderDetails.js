@@ -35,23 +35,22 @@ export default function HomeScreen({ navigation }) {
 
     async function getWorkOrderDetails(update) {
         setRefreshing(true);
-        console.log("getting data")
         let networkState = await Network.getNetworkStateAsync();
         let selectedItem = await storage.getObject('selectedItem');
         let key = selectedItem.workOrderCode + " : " + selectedItem.organization;
 
         if ((networkState.isConnected && networkState.type.includes('WIFI')) || (networkState.isConnected && update)) {
 
-            let host = await storage.getArticle('host');
+            let host = await storage.getArticle('usableHost');
             let token = await storage.getArticle('token');
 
             console.log("getting workOrder")
-            let url = host + ':8080/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + selectedItem.workOrderCode + '&organization=' + selectedItem.organization;
+            let url = host + '/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + selectedItem.workOrderCode + '&organization=' + selectedItem.organization;
             fetch(url).then(response => response.json()).then((data) => { setData(data) });
             console.log("got workOrder")
 
             console.log("getting labels")
-            let labelUrl = host + ':8080/mobile/userDefinedFieldsLabels?token=' + token;
+            let labelUrl = host + '/mobile/userDefinedFieldsLabels?token=' + token;
             fetch(labelUrl).then(response => response.json()).then((data) => { setLabels(data); storage.saveObject("labels", data) });
             console.log("got labels")
         } else {
