@@ -8,7 +8,7 @@ const Schedule = (props) => {
     console.log("Schedule");
     
     const { colors } = useTheme();
-    let item = props.item;
+    let item = props.item.schedule;
     let labels = props.labels;
     let show = props.show;
 
@@ -37,13 +37,13 @@ const Schedule = (props) => {
                 <Text style={{ padding: 2, color: colors.text, fontSize: 18, alignSelf: "center" }}>Programação</Text>
             </View>
 
-            <HideableLine leftLabel={labels.reportedDate} leftData={item.schedule.reportedDate} leftShow={show.reportedDate} rightLabel={labels.reportedBy} rightData={item.schedule.reportedBy} rightShow={show.reportedBy} />
-            <HideableLine leftLabel={labels.assignedBy} leftData={item.schedule.assignedBy} leftShow={show.assignedBy} rightLabel={labels.assignedTo} rightData={item.schedule.assignedTo} rightShow={show.assignedTo} />
-            <HideableLine leftLabel={labels.programedStartDate} leftData={item.schedule.programedStartDate} leftShow={show.programedStartDate} rightLabel={labels.programedEndDate} rightData={item.schedule.programedEndDate} rightShow={show.programedEndDate} />
-            <HideableLine leftLabel={labels.solicitedStartDate} leftData={item.schedule.solicitedStartDate} leftShow={show.solicitedStartDate} rightLabel={labels.solicitedEndDate} rightData={item.schedule.solicitedEndDate} rightShow={show.solicitedEndDate} />
-            <HideableLine leftLabel={labels.startDate} leftData={item.schedule.startDate} leftShow={show.startDate} rightLabel={labels.endDate} rightData={item.schedule.endDate} rightShow={show.endDate} />
-            <HideableLine leftLabel={labels.shift} leftData={item.schedule.shift} leftShow={show.shift} rightLabel={labels.budget} rightData={item.schedule.budget} rightShow={show.budget} />
-            <HideableLine leftLabel={labels.campaign} leftData={item.schedule.campaign} leftShow={show.campaign} rightLabel={labels.serviceRequestCode} rightData={item.schedule.serviceRequestCode} rightShow={show.serviceRequestCode} />
+            <HideableLine leftLabel={labels.reportedDate} leftData={item.reportedDate} leftShow={show.reportedDate} rightLabel={labels.reportedBy} rightData={item.reportedBy} rightShow={show.reportedBy} />
+            <HideableLine leftLabel={labels.assignedBy} leftData={item.assignedBy} leftShow={show.assignedBy} rightLabel={labels.assignedTo} rightData={item.assignedTo} rightShow={show.assignedTo} />
+            <HideableLine leftLabel={labels.programedStartDate} leftData={item.programedStartDate} leftShow={show.programedStartDate} rightLabel={labels.programedEndDate} rightData={item.programedEndDate} rightShow={show.programedEndDate} />
+            <HideableLine leftLabel={labels.solicitedStartDate} leftData={item.solicitedStartDate} leftShow={show.solicitedStartDate} rightLabel={labels.solicitedEndDate} rightData={item.solicitedEndDate} rightShow={show.solicitedEndDate} />
+            <HideableLine leftLabel={labels.startDate} leftData={item.startDate} leftShow={show.startDate} rightLabel={labels.endDate} rightData={item.endDate} rightShow={show.endDate} />
+            <HideableLine leftLabel={labels.shift} leftData={item.shift} leftShow={show.shift} rightLabel={labels.budget} rightData={item.budget} rightShow={show.budget} />
+            <HideableLine leftLabel={labels.campaign} leftData={item.campaign} leftShow={show.campaign} rightLabel={labels.serviceRequestCode} rightData={item.serviceRequestCode} rightShow={show.serviceRequestCode} />
 
         </View>
     );

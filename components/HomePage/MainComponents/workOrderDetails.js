@@ -40,30 +40,24 @@ export default function HomeScreen({ navigation }) {
         let key = selectedItem.workOrderCode + " : " + selectedItem.organization;
 
         if ((networkState.isConnected && networkState.type.includes('WIFI')) || (networkState.isConnected && update)) {
-
             let host = await storage.getArticle('usableHost');
             let token = await storage.getArticle('token');
 
-            console.log("getting workOrder")
-            let url = host + '/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + selectedItem.workOrderCode + '&organization=' + selectedItem.organization;
-            fetch(url).then(response => response.json()).then((data) => { setData(data) });
-            console.log("got workOrder")
-
-            console.log("getting labels")
             let labelUrl = host + '/mobile/userDefinedFieldsLabels?token=' + token;
             fetch(labelUrl).then(response => response.json()).then((data) => { setLabels(data); storage.saveObject("labels", data) });
-            console.log("got labels")
+
+            let url = host + '/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + selectedItem.workOrderCode + '&organization=' + selectedItem.organization;
+            fetch(url).then(response => response.json()).then((data) => { setData(data); storage.saveObject(key, data); });
         } else {
-            let workOrderData = storage.getObject(key);
+            storage.getObject(key).then((data) => {setData(data);});
             storage.getObject("labels").then((data) => { setLabels(data) });
-            setData(workOrderData);
         }
         setRefreshing(false);
     }
 
     useEffect(() => {
         navigation.addListener('focus', () => {
-            getWorkOrderDetails(false);
+            getWorkOrderDetails(true);
             storage.getObject("showfields").then(data => { setShow(data); });
             storage.getObject("labels").then((data) => { setLabels(data) });
         });
