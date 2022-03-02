@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "FuckingHateMobileDevelopment",
-    "slug": "FuckingHateMobileDevelopment",
+    "name": "AssetApp",
+    "slug": "AssetApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,7 +28,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.alex3997.FuckingHateMobileDevelopment"
+      "package": "com.alex3997.AssetApp"
     },
     "androidStatusBar": {
       "translucent": true

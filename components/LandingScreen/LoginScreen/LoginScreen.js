@@ -129,13 +129,13 @@ export default function HomeScreen({ navigation }) {
         let custUrl = await storage.getArticle('customUrl');
         let port = await storage.getArticle('port');
 
-        setOrg(organization);
-        setTenant(tenant)
-        setUrl(host.replace(/[^0-9.]/g, ''))
-        setCon(con);
-        setCustomBool(custBool);
-        setCustomUrl(custUrl);
-        setPort(port);
+        setOrg(organization ==  null ? "" : organization );
+        setTenant(tenant ==  null ? "" : tenant);
+        setUrl(host ==  null ? "" : host.replace(/[^0-9.]/g, ''));
+        setCon(con ==  null ? "" : con);
+        setCustomBool(custBool ==  null ? "" : custBool);
+        setCustomUrl(custUrl ==  null ? "" : custUrl);
+        setPort(port ==  null ? "" : port);
     }
 
     const getLabels = async () => {
