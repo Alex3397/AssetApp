@@ -27,7 +27,7 @@ export default function HomeScreen({ navigation }) {
     const [savedCustomBool, setCustomBool] = useState(false);
     const [savedPort, setPort] = useState('');
     const [warning, setWarning] = useState('');
-    const image = dark ? require('../../../images/folk-pattern-black.png') : require('../../../images/folk-pattern.png');
+    const image = dark ? require('../../../assets/images/folk-pattern-black.jpg') : require('../../../assets/images/folk-pattern.jpg');
 
     let language = {};
 
@@ -129,13 +129,13 @@ export default function HomeScreen({ navigation }) {
         let custUrl = await storage.getArticle('customUrl');
         let port = await storage.getArticle('port');
 
-        setOrg(organization);
-        setTenant(tenant)
-        setUrl(host.replace(/[^0-9.]/g, ''))
-        setCon(con);
-        setCustomBool(custBool);
-        setCustomUrl(custUrl);
-        setPort(port);
+        setOrg(organization ==  null ? "" : organization );
+        setTenant(tenant ==  null ? "" : tenant);
+        setUrl(host ==  null ? "" : host.replace(/[^0-9.]/g, ''));
+        setCon(con ==  null ? "" : con);
+        setCustomBool(custBool ==  null ? "" : custBool);
+        setCustomUrl(custUrl ==  null ? "" : custUrl);
+        setPort(port ==  null ? "" : port);
     }
 
     const getLabels = async () => {

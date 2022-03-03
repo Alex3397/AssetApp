@@ -33,7 +33,7 @@ export default function Settings({ navigation, route }) {
   const [port, setPort] = useState(savedPort == null ? "" : savedPort);
 
   const { colors, dark } = useTheme();
-  const image = dark ? require('../../../images/folk-pattern-black.png') : require('../../../images/folk-pattern.png');
+  const image = dark ? require('../../../assets/images/folk-pattern-black.jpg') : require('../../../assets/images/folk-pattern.jpg');
 
   (() => {
     if (con == "") {
