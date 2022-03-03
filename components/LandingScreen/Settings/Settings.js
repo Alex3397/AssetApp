@@ -88,7 +88,7 @@ export default function Settings({ navigation, route }) {
     });
     navigation.addListener('blur', () => {
       saveData();
-  });
+    });
   }, [])
 
   const saveData = async () => {
@@ -102,7 +102,14 @@ export default function Settings({ navigation, route }) {
     }
     else {
       let customUrl = await storage.getArticle("customUrl");
-      storage.saveArticle('usableHost', customUrl);
+
+      if (customUrl == null) {
+        let host = await storage.getArticle("host");
+        let port = await storage.getArticle("port");
+        storage.saveArticle('usableHost', host.concat(':').concat(port));
+      } else {
+        storage.saveArticle('usableHost', customUrl);
+      }
     }
   }
 
@@ -128,13 +135,13 @@ export default function Settings({ navigation, route }) {
             <View>
               <TextInput autoCapitalize="characters" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder={language.config.organization} defaultValue={org} placeholderTextColor={colors.text} onChangeText={org => { setOrg(org); storage.saveArticle('organization', org); }} onSubmitEditing={() => { tenantInput.current.focus(); }} returnKeyType="next" />
               <TextInput autoCapitalize="characters" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder={language.config.tenant} defaultValue={tenant} placeholderTextColor={colors.text} onChangeText={tenant => { setTenant(tenant); storage.saveArticle('tenant', tenant); }} ref={tenantInput} onSubmitEditing={() => { urlInput.current.focus(); }} returnKeyType="next" />
-              <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder={language.config.url} defaultValue={url.replace(/[^0-9.]/g, '')} value={url} placeholderTextColor={colors.text} onChangeText={input => { setUrl(input.replace(/[^0-9.]/g, '')); storage.saveArticle('host', con.concat(input.replace(/[^0-9.]/g, '')) ); }} ref={urlInput} onSubmitEditing={() => { portInput.current.focus(); }} returnKeyType="send" />
+              <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder={language.config.url} defaultValue={url.replace(/[^0-9.]/g, '')} value={url} placeholderTextColor={colors.text} onChangeText={input => { setUrl(input.replace(/[^0-9.]/g, '')); storage.saveArticle('host', con.concat(input.replace(/[^0-9.]/g, ''))); }} ref={urlInput} onSubmitEditing={() => { portInput.current.focus(); }} returnKeyType="send" />
               <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder="Port" defaultValue={port.replace(/[^0-9.]/g, '')} value={port} placeholderTextColor={colors.text} onChangeText={input => { setPort(input.replace(/[^0-9]/g, '')); storage.saveArticle('port', input.replace(/[^0-9]/g, '')); }} ref={portInput} onSubmitEditing={() => { navigation.navigate('Login'); saveData(); }} returnKeyType="next" />
               <CheckBox label={conLabel} labelSide="left" labelStyle={{ color: colors.text }} value={conBool} onChange={() => { setConBool(!conBool) }} />
               <CheckBox viewStyle={{ alignSelf: "flex-end", top: -25, marginBottom: -25 }} label={language.config.customUrl} labelSide="left" labelStyle={{ color: colors.text }} value={customBool} onChange={() => { setCustomBool(!customBool); storage.saveObject("customBool", !customBool); if (!customBool) animateUp(); else animateDown(); }} />
 
               <View style={{ marginTop: 150 }}>
-                <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder="https://example.com" defaultValue={customUrl} placeholderTextColor="gray" onChangeText={customUrl => { setCustomUrl(customUrl); storage.saveArticle("customUrl", customUrl) }} ref={urlInput} onSubmitEditing={() => { navigation.navigate('Login'); saveData(); }} returnKeyType="send" />
+                <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder="https://example.com" defaultValue={customUrl} value={customUrl} placeholderTextColor="gray" onChangeText={customUrl => { setCustomUrl(customUrl.endsWith("/") ? customUrl.replace(/.$/,"") : customUrl); storage.saveArticle("customUrl",customUrl.endsWith("/") ? customUrl.replace(/.$/,"") : customUrl) }} ref={urlInput} onSubmitEditing={() => { navigation.navigate('Login'); saveData(); }} returnKeyType="send" />
               </View>
 
             </View>
