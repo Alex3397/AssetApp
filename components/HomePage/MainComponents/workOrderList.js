@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTheme } from '@react-navigation/native';
-import { TextInput, Text, RefreshControl, Pressable, FlatList, View, Keyboard } from "react-native";
+import { TextInput, Text, RefreshControl, Pressable, FlatList, View, Keyboard, Modal } from "react-native";
 import Storage from '../../../classes/Storage/Storage';
 import * as Network from 'expo-network';
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -39,6 +39,10 @@ export default function HomeScreen({ navigation }) {
     const [searchData, setSearchData] = useState(JSON.parse('{}'));
     const [workOrderData, setWorkOrderData] = useState(JSON.parse('{}'));
     const [modalVisible, setModalVisible] = useState(false);
+    const [errorModalVisible, setErrorModalVisible] = useState(false);
+    const [response, setResponse] = useState('');
+    const [modalTitle, setModalTitle] = useState('');
+    const [buttonText, setButtonText] = useState('');
     const searchInput = useRef();
     const storage = new Storage();
 
@@ -134,6 +138,14 @@ export default function HomeScreen({ navigation }) {
         let token = await storage.getArticle('token');
 
         let xhr = new XMLHttpRequest();
+        xhr.timeout = 15000;
+        xhr.ontimeout = () => {
+            xhr.abort;
+            setErrorModalVisible(true);
+            setModalTitle(language.login.modal.timedOut.title);
+            setResponse(language.login.modal.timedOut.response);
+            setButtonText(language.login.modal.timedOut.button);
+        }
         let url = host + '/mobile/workOrderGrid?token=' + token + '&dataspy=' + dataspy;
         xhr.open("GET", url);
 
@@ -153,19 +165,25 @@ export default function HomeScreen({ navigation }) {
                     }
                     jsonData[index] = element;
                 }
-                if (jsonData.status != 500) {
+                if (jsonData.status == 200) {
                     setData(jsonData);
                     setSearchData(jsonData);
                     setOriginalData(jsonData);
                     storage.saveObject(key, jsonData);
                     setRefreshing(false);
                     return jsonData;
-                } else {
+                } else if (workOrderList != null) {
                     setData(workOrderList);
                     setSearchData(workOrderList);
                     setOriginalData(workOrderList);
                     setRefreshing(false);
                     return workOrderList;
+                } else {
+                    console.log("connection error")
+                    setErrorModalVisible(true);
+                    setModalTitle(language.login.modal.connectionError.title);
+                    setResponse(language.login.modal.connectionError.response);
+                    setButtonText(language.login.modal.connectionError.button);
                 }
             }
         };
@@ -230,6 +248,18 @@ export default function HomeScreen({ navigation }) {
                     <Icon name="search" style={{ color: colors.text, fontSize: 18, marginLeft: 2, padding: 8 }} color={colors.text} />
                 </Pressable>
             </View>
+
+            <Modal animationType="fade" statusBarTranslucent={true} transparent={true} visible={errorModalVisible}>
+                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 25 }}>
+                    <View style={{ margin: 20, backgroundColor: "white", borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
+                        <Text style={{ marginBottom: 15, textAlign: "center", color: "black" }}>{modalTitle}</Text>
+                        <Text style={{ marginBottom: 15, textAlign: "center", color: "black" }}>{response}</Text>
+                        <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3" }} onPress={() => { setErrorModalVisible(false); }} >
+                            <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>{buttonText}</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
 
             <FlatList data={respData} refreshControl={<RefreshControl progressViewOffset={-55} refreshing={refreshing} onRefresh={onRefresh} />} renderItem={({ item }) =>
                 <Pressable style={{ padding: 8, backgroundColor: colors.background }} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(item.workOrderCode, item.description); let selectedItem = item; navigation.navigate('Ordem de Serviço', { selectedItem }); }}>
