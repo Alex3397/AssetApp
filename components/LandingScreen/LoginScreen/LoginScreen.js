@@ -154,25 +154,30 @@ export default function HomeScreen({ navigation }) {
         fetch(labelUrl).then(response => response.json()).then((data) => { storage.saveObject("showfields", data) })
     }
 
+    const getDataspies = async () => {
+        let host = await storage.getArticle('usableHost');
+        let token = await storage.getArticle('token');
+
+        let labelUrl = host + '/mobile/dataSpies?token=' + token;
+        fetch(labelUrl).then(response => response.json()).then((data) => { storage.saveObject("dataspies", data) })
+    }
+
     (async () => {
         getSavedVariables()
 
         let saveData = JSON.parse(await storage.getArticle('savedata'));
         if (saveData != null) setSaveUserInfo(saveData);
-
-        if (saveUserInfo) {
-            let username = await storage.getArticle('username');
-            let password = await storage.getArticle('password');
-
-            if (username != null) setUser(username);
-            if (password != null) setPass(password);
-        }
     })()
 
     useEffect(async () => {
+        storage.getObject('savedata').then((saveUserInfo) => {
+            if (saveUserInfo) {
+                storage.getArticle('username').then((username) => {if (username != null) setUser(username);});
+                storage.getArticle('password').then((password) => {if (password != null) setPass(password);});
+            }
+        })
         navigation.addListener('focus', () => {
             getSavedVariables();
-            Keyboard.removeAllListeners("keyboardDidHide");
         });
     }, [])
 
@@ -184,7 +189,7 @@ export default function HomeScreen({ navigation }) {
                         <View style={{ margin: 20, backgroundColor: "white", borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
                             <Text style={{ marginBottom: 15, textAlign: "center", color: "black" }}>{modalTitle}</Text>
                             <Text style={{ marginBottom: 15, textAlign: "center", color: "black" }}>{response}</Text>
-                            <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3" }} onPress={() => { setModalVisible(false); getLabels(); getFieldsToShow(); navigation.navigate('HomePage'); }} >
+                            <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3" }} onPress={() => { setModalVisible(false); getLabels(); getFieldsToShow(); getDataspies(); navigation.navigate('HomePage'); }} >
                                 <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>{buttonText}</Text>
                             </Pressable>
                         </View>
@@ -199,7 +204,7 @@ export default function HomeScreen({ navigation }) {
                         <Text style={{ color: colors.text, fontFamily: 'serif' }}>{language.login.sub}</Text>
                     </View>
 
-                    <TextInput autoCapitalize='characters' style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 80, marginBottom: 20 }} placeholder={language.login.user} placeholderTextColor={colors.text} onChangeText={user => { setUser(user); saveUserData(user, pass); }} onSubmitEditing={() => { passwordInput.current.focus(); }} returnKeyType="next" defaultValue={user} />
+                    <TextInput autoCapitalize='characters' style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 80, marginBottom: 20 }} placeholder={language.login.user} placeholderTextColor={colors.text} onChangeText={user => { setUser(user); saveUserData(user, pass); }} onSubmitEditing={() => { passwordInput.current.focus(); }} defaultValue={user} returnKeyType="next" />
                     <View>
                         <TextInput autoCapitalize='none' secureTextEntry={iconName == 'eye' ? true : false} style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 20, marginBottom: 5 }} placeholder={language.login.password} placeholderTextColor={colors.text} onChangeText={pass => { setPass(pass); saveUserData(user, pass); }} ref={passwordInput} returnKeyType="send" onSubmitEditing={() => { validate() }} defaultValue={pass} />
 
@@ -209,7 +214,7 @@ export default function HomeScreen({ navigation }) {
                     </View>
 
                     <Text style={{ color: 'red', fontSize: 12, alignSelf: 'center' }}>{warning}</Text>
-                    <CheckBox label={language.login.checkbox} labelSide="right" labelStyle={{ color: colors.text }} value={saveUserInfo} onChange={() => { setSaveUserInfo(!saveUserInfo); storage.saveArticle('savedata', JSON.stringify(!saveUserInfo)); saveUserInfo ? saveUserData(user, pass) : saveUserData('', '') }} />
+                    <CheckBox label={language.login.checkbox} labelSide="right" labelStyle={{ color: colors.text }} value={saveUserInfo} onChange={() => { setSaveUserInfo(!saveUserInfo); storage.saveObject('savedata', !saveUserInfo); saveUserInfo ? saveUserData(user, pass) : saveUserData('', '') }} />
 
                     <Pressable style={{ marginTop: 45, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 35, borderRadius: 16, elevation: 3, backgroundColor: colors.card }} onPress={() => { validate(); }} >
                         <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.text }}>{language.login.login}</Text>

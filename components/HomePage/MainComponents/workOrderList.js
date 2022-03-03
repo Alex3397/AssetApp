@@ -6,6 +6,7 @@ import * as Network from 'expo-network';
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as Localization from 'expo-localization';
 import * as Locale from '../../../Localization/Localization.json';
+import SelectDropdown from 'react-native-select-dropdown';
 
 export default function HomeScreen({ navigation }) {
     let language = {};
@@ -16,8 +17,23 @@ export default function HomeScreen({ navigation }) {
 
     const { colors } = useTheme();
 
+    const countries = [
+        {
+            "id": 108128,
+            "name": "Cópia de Todas as ordens de se"
+        },
+        {
+            "id": 94,
+            "name": "Minhas ordens de serviço abertas"
+        },
+        {
+            "id": 2005,
+            "name": "Todas as ordens de serviço"
+        }
+    ];
     const [refreshing, setRefreshing] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const [dataspy, setDataspy] = useState("");
     const [respData, setData] = useState(JSON.parse('{}'));
     const [originalData, setOriginalData] = useState(JSON.parse('{}'));
     const [searchData, setSearchData] = useState(JSON.parse('{}'));
@@ -69,26 +85,26 @@ export default function HomeScreen({ navigation }) {
     const renderOverlay = (render) => {
         if (render) return (
             <>
-                <Pressable style={{ position: "absolute", backgroundColor: "rgba(0, 0, 0, 0.5)", width: "100%", height: "92%", top: 82 }} onPress={() => {focusOut()}} >
+                <Pressable style={{ position: "absolute", backgroundColor: "rgba(0, 0, 0, 0.5)", width: "100%", height: "92%", top: 82 }} onPress={() => { focusOut() }} >
                     <FlatList keyboardShouldPersistTaps='handled' data={searchData} renderItem={({ item }) =>
                         <>
-                            <Pressable style={{ padding: 8, backgroundColor: colors.background }} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(); navigation.navigate('Ordem de Serviço'); }}>
+                            <Pressable style={{ padding: 8, backgroundColor: colors.background }} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(item.workOrderCode, item.description); let selectedItem = item; navigation.navigate('Ordem de Serviço', { selectedItem }); }}>
                                 <View style={{ backgroundColor: colors.card, padding: 12.5, borderRadius: 15, marginBottom: 5 }}>
                                     <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5 }}>
                                         <Text style={{ color: colors.text, fontSize: 17, alignSelf: "flex-start" }}>{item.workOrderCode + ' - ' + item.description}</Text>
                                     </View>
                                     <View style={{ marginTop: 2 }}>
-                                        <View style={{ marginBottom: -5 }}>
+                                        <View style={{ marginBottom: -5, marginBottom: 8 }}>
                                             <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.status}: {item.workOrderStatusDescription}</Text>
-                                            <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >{language.list.organization}: {item.organization}</Text>
+                                            <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -15, marginBottom: -15 }} >{language.list.organization}: {item.organization}</Text>
                                         </View>
-                                        <View style={{ marginBottom: -5 }}>
+                                        <View style={{ marginBottom: -5, marginBottom: 8 }}>
                                             <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.equipment}: {item.equipment}</Text>
-                                            <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >{language.list.department}: {item.department}</Text>
+                                            <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -15, marginBottom: -15 }} >{language.list.department}: {item.department}</Text>
                                         </View>
-                                        <View style={{ marginBottom: -5 }}>
+                                        <View style={{ marginBottom: -5, marginBottom: 8 }}>
                                             <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.scheduledStartDate}: {item.scheduledStartDate}</Text>
-                                            <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >{language.list.dueDate}: {item.dueDate}</Text>
+                                            <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -15, marginBottom: -15 }} >{language.list.dueDate}: {item.dueDate}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -101,19 +117,24 @@ export default function HomeScreen({ navigation }) {
         else if (!render) return (<></>);
     }
 
-    async function getWorkOrderList(update) {
-        let workOrderList = await storage.getObject('workOrderList');
+    async function getWorkOrderList(update, id) {
+        setRefreshing(true);
+        let dataSpy = dataspy;
+        if (id != null && id != undefined) dataSpy = id;
+        let key = 'workOrderList:' + dataSpy;
+        let workOrderList = await storage.getObject(key);
         if (workOrderList != null && !update) {
             setData(workOrderList);
             setSearchData(workOrderList);
             setOriginalData(workOrderList)
+            setRefreshing(false);
             return workOrderList;
         }
         let host = await storage.getArticle('usableHost');
         let token = await storage.getArticle('token');
 
         let xhr = new XMLHttpRequest();
-        let url = host + '/mobile/workOrderGrid?token=' + token;
+        let url = host + '/mobile/workOrderGrid?token=' + token + '&dataspy=' + dataspy;
         xhr.open("GET", url);
 
         xhr.onreadystatechange = function () {
@@ -136,12 +157,14 @@ export default function HomeScreen({ navigation }) {
                     setData(jsonData);
                     setSearchData(jsonData);
                     setOriginalData(jsonData);
-                    storage.saveObject('workOrderList', jsonData);
+                    storage.saveObject(key, jsonData);
+                    setRefreshing(false);
                     return jsonData;
                 } else {
                     setData(workOrderList);
                     setSearchData(workOrderList);
                     setOriginalData(workOrderList);
+                    setRefreshing(false);
                     return workOrderList;
                 }
             }
@@ -166,7 +189,7 @@ export default function HomeScreen({ navigation }) {
         let token = await storage.getArticle('token');
 
         let url = host + '/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + woCode + '&organization=' + woOrganization;
-        fetch(url).then(response => response.json()).then((data) => { setWorkOrderData(data) })
+        fetch(url).then(response => response.json()).then((data) => { setWorkOrderData(data); })
         storage.saveObject(key, workOrderData);
     }
 
@@ -176,7 +199,6 @@ export default function HomeScreen({ navigation }) {
         let date = await storage.getObject('today');
 
         if (networkState.isConnected && networkState.type.includes('WIFI') && new Date().getDate() != date) {
-
             getWorkOrderList(true);
             storage.saveObject('today', new Date().getDate());
         } else {
@@ -189,32 +211,50 @@ export default function HomeScreen({ navigation }) {
             <View style={{ borderRadius: 20, padding: 12.5, backgroundColor: colors.card, marginTop: 30, alignContent: "center", alignItems: "flex-start" }}>
                 <TextInput style={{ color: colors.text, fontSize: 17, width: "100%" }} placeholder={language.list.filter} placeholderTextColor="gray" onChangeText={term => { setSearchTerm(term); findWorkOrders(originalData, term) }} onSubmitEditing={() => { findWorkOrders(originalData, searchTerm); setData(searchData); focusOut() }} onFocus={() => { findWorkOrders(originalData, searchTerm); focusIn() }} ref={searchInput} returnKeyType="done" />
             </View>
-            <Pressable style={{ borderRadius: 25, padding: 2, width: 40, height: 40, backgroundColor: colors.background, position: "absolute", top: 36, right: 15 }} onPress={() => { findWorkOrders(originalData, searchTerm); setData(searchData); focusOut() }} >
-                <Icon name="search" style={{ color: colors.text, fontSize: 18, marginLeft: 2, padding: 8 }} color={colors.text} />
-            </Pressable>
+
+            <View style={{ borderRadius: 25, position: "absolute", top: 36, right: 25 }}>
+                <SelectDropdown
+                    data={countries}
+                    defaultButtonText="Dataspy"
+                    dropdownBackgroundColor={colors.card}
+                    dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
+                    rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }}
+                    rowTextStyle={{ color: colors.text, fontSize: 14 }}
+                    buttonStyle={{ backgroundColor: colors.card, borderLeftWidth: 1, borderLeftColor: colors.border, height: 40 }}
+                    buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "left", fontSize: 14 }}
+                    onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(false, selectedItem.id); }}
+                    buttonTextAfterSelection={(selectedItem) => { return selectedItem.name }}
+                    rowTextForSelection={(item) => { return item.name }}
+                />
+                <Pressable style={{ borderRadius: 25, padding: 2, width: 40, height: 40, backgroundColor: colors.background, top: -40, right: -185 }} onPress={() => { getWorkOrderList(true); focusOut() }} >
+                    <Icon name="search" style={{ color: colors.text, fontSize: 18, marginLeft: 2, padding: 8 }} color={colors.text} />
+                </Pressable>
+            </View>
+
             <FlatList data={respData} refreshControl={<RefreshControl progressViewOffset={-55} refreshing={refreshing} onRefresh={onRefresh} />} renderItem={({ item }) =>
-                <Pressable style={{ padding: 8, backgroundColor: colors.background }} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(item.workOrderCode, item.description); navigation.navigate('Ordem de Serviço'); }}>
-                    <View style={[{ backgroundColor: colors.card, padding: 12.5, borderRadius: 15, marginBottom: 5  }, item.style]}>
+                <Pressable style={{ padding: 8, backgroundColor: colors.background }} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(item.workOrderCode, item.description); let selectedItem = item; navigation.navigate('Ordem de Serviço', { selectedItem }); }}>
+                    <View style={[{ backgroundColor: colors.card, padding: 12.5, borderRadius: 15, marginBottom: 5 }, item.style]}>
                         <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5 }}>
                             <Text style={{ color: colors.text, fontSize: 17, alignSelf: "flex-start" }}>{item.workOrderCode + ' - ' + item.description}</Text>
                         </View>
                         <View style={{ marginTop: 2 }}>
-                            <View style={{ marginBottom: -5 }}>
+                            <View style={{ marginBottom: -5, marginBottom: 8 }}>
                                 <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.status}: {item.workOrderStatusDescription}</Text>
-                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >{language.list.organization}: {item.organization}</Text>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -15, marginBottom: -15 }} >{language.list.organization}: {item.organization}</Text>
                             </View>
-                            <View style={{ marginBottom: -5 }}>
+                            <View style={{ marginBottom: -5, marginBottom: 8 }}>
                                 <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.equipment}: {item.equipment}</Text>
-                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >{language.list.department}: {item.department}</Text>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -15, marginBottom: -15 }} >{language.list.department}: {item.department}</Text>
                             </View>
-                            <View style={{ marginBottom: -5 }}>
+                            <View style={{ marginBottom: -5, marginBottom: 8 }}>
                                 <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.scheduledStartDate}: {item.scheduledStartDate}</Text>
-                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -13 }} >{language.list.dueDate}: {item.dueDate}</Text>
+                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -15, marginBottom: -15 }} >{language.list.dueDate}: {item.dueDate}</Text>
                             </View>
                         </View>
                     </View>
                 </Pressable>
             } />
+
             {renderOverlay(modalVisible)}
         </>
     );

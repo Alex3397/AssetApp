@@ -16,8 +16,12 @@ import BasicData from '../MinorComponents/BasicData';
 import * as FieldsToShow from '../../../Templates/FieldsToShow.json';
 import Sign from '../MinorComponents/Sign';
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, route }) {
     const storage = new Storage();
+
+    const { selectedItem } = route.params;
+
+    console.log(selectedItem);
 
     const [refreshing, setRefreshing] = useState(false);
     const [item, setData] = useState(WorkOrderDetailsTemplate);
@@ -26,17 +30,16 @@ export default function HomeScreen({ navigation }) {
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        getWorkOrderDetails(true).then(() => setRefreshing(false));
+        getWorkOrderDetails(true, selectedItem).then(() => setRefreshing(false));
     }, []);
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    async function getWorkOrderDetails(update) {
+    async function getWorkOrderDetails(update, selectedItem) {
         setRefreshing(true);
         let networkState = await Network.getNetworkStateAsync();
-        let selectedItem = await storage.getObject('selectedItem');
         let key = selectedItem.workOrderCode + " : " + selectedItem.organization;
 
         if ((networkState.isConnected && networkState.type.includes('WIFI')) || (networkState.isConnected && update)) {
@@ -47,9 +50,11 @@ export default function HomeScreen({ navigation }) {
             fetch(labelUrl).then(response => response.json()).then((data) => { setLabels(data); storage.saveObject("labels", data) });
 
             let url = host + '/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + selectedItem.workOrderCode + '&organization=' + selectedItem.organization;
-            fetch(url).then(response => response.json()).then((data) => { setData(data); storage.saveObject(key, data); });
+            if (!url.includes("undefined")) {
+                fetch(url).then(response => response.json()).then((data) => { setData(data); storage.saveObject(key, data); });
+            }
         } else {
-            storage.getObject(key).then((data) => {setData(data);});
+            storage.getObject(key).then((data) => { setData(data); });
             storage.getObject("labels").then((data) => { setLabels(data) });
         }
         setRefreshing(false);
@@ -57,7 +62,7 @@ export default function HomeScreen({ navigation }) {
 
     useEffect(() => {
         navigation.addListener('focus', () => {
-            getWorkOrderDetails(true);
+            getWorkOrderDetails(true, selectedItem);
             storage.getObject("showfields").then(data => { setShow(data); });
             storage.getObject("labels").then((data) => { setLabels(data) });
         });
