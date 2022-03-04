@@ -17,20 +17,7 @@ export default function HomeScreen({ navigation }) {
 
     const { colors } = useTheme();
 
-    const countries = [
-        {
-            "id": 108128,
-            "name": "Cópia de Todas as ordens de se"
-        },
-        {
-            "id": 94,
-            "name": "Minhas ordens de serviço abertas"
-        },
-        {
-            "id": 2005,
-            "name": "Todas as ordens de serviço"
-        }
-    ];
+    const [dataspies, setDataspies] = useState({});
     const [refreshing, setRefreshing] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [dataspy, setDataspy] = useState("");
@@ -138,13 +125,14 @@ export default function HomeScreen({ navigation }) {
         let token = await storage.getArticle('token');
 
         let xhr = new XMLHttpRequest();
-        xhr.timeout = 15000;
+        xhr.timeout = 120000;
         xhr.ontimeout = () => {
             xhr.abort;
             setErrorModalVisible(true);
             setModalTitle(language.login.modal.timedOut.title);
             setResponse(language.login.modal.timedOut.response);
             setButtonText(language.login.modal.timedOut.button);
+            setRefreshing(false);
         }
         let url = host + '/mobile/workOrderGrid?token=' + token + '&dataspy=' + dataspy;
         xhr.open("GET", url);
@@ -179,11 +167,11 @@ export default function HomeScreen({ navigation }) {
                     setRefreshing(false);
                     return workOrderList;
                 } else {
-                    console.log("connection error")
                     setErrorModalVisible(true);
                     setModalTitle(language.login.modal.connectionError.title);
                     setResponse(language.login.modal.connectionError.response);
                     setButtonText(language.login.modal.connectionError.button);
+                    setRefreshing(false);
                 }
             }
         };
@@ -197,7 +185,7 @@ export default function HomeScreen({ navigation }) {
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        getWorkOrderList(true).then(() => setRefreshing(false));
+        getWorkOrderList(true, dataspy).then(() => setRefreshing(false));
     }, []);
 
     async function getWorkOrder(woCode, woOrganization) {
@@ -215,6 +203,9 @@ export default function HomeScreen({ navigation }) {
 
         let networkState = await Network.getNetworkStateAsync();
         let date = await storage.getObject('today');
+        let dataspies = await storage.getObject('dataspies');
+
+        setDataspies(dataspies);
 
         if (networkState.isConnected && networkState.type.includes('WIFI') && new Date().getDate() != date) {
             getWorkOrderList(true);
@@ -222,6 +213,7 @@ export default function HomeScreen({ navigation }) {
         } else {
             getWorkOrderList(false)
         }
+        
     }, [])
 
     return (
@@ -232,7 +224,7 @@ export default function HomeScreen({ navigation }) {
 
             <View style={{ borderRadius: 25, position: "absolute", top: 36, right: 25 }}>
                 <SelectDropdown
-                    data={countries}
+                    data={dataspies}
                     defaultButtonText="Dataspy"
                     dropdownBackgroundColor={colors.card}
                     dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
