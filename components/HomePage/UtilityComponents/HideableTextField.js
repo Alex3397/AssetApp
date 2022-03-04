@@ -44,7 +44,7 @@ const TextFieldComponent = (props) => {
         return (
             <View style={[ props.style, style, { width: totalWidth, alignContent: "center" }]} onLayout={props.onLayout} >
                 <Text style={{ padding: 2, color: colors.text, fontSize: 16, maxWidth: maxWidth, textAlign: "center", alignSelf: "flex-start" }} onLayout={(event) => { onLayout(event) }} >{props.label}:</Text>
-                <Text style={{ padding: 2, color: colors.text, top: top, marginLeft: 5, marginBottom: -20, left: left, paddingLeft: 10, paddingRight: 10, backgroundColor: "#313131", alignSelf: "flex-start", textAlign: "center", textAlignVertical: "center", borderRadius: 15, minWidth: 30 }} onLayout={(event) => { setSecondWidth(event.nativeEvent.layout.width); }} >{props.data}</Text>
+                <Text style={{ padding: 2, color: colors.text, top: top, marginLeft: 5, marginBottom: -20, left: left, paddingLeft: 10, paddingRight: 10, backgroundColor: colors.bubble, alignSelf: "flex-start", textAlign: "center", textAlignVertical: "center", borderRadius: 15, minWidth: 30 }} onLayout={(event) => { setSecondWidth(event.nativeEvent.layout.width); }} >{props.data}</Text>
             </View>
         );
 }

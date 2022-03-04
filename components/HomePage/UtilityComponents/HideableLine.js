@@ -6,11 +6,6 @@ import HideableCheckBox from './HideableCheckBox';
 import PropTypes from "prop-types";
 
 const HideableLine = (props) => {
-    const { colors } = useTheme();
-    const window = useWindowDimensions();
-    const [firstWidth, setFirstWidth] = useState();
-    const [secondWidth, setSecondWidthWidth] = useState();
-
     let rightLabel = props.rightLabel;
     let rightData = props.rightData;
     let leftLabel = props.leftLabel;

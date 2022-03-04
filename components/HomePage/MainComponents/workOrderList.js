@@ -4,6 +4,7 @@ import { TextInput, Text, RefreshControl, Pressable, FlatList, View, Keyboard, M
 import Storage from '../../../classes/Storage/Storage';
 import * as Network from 'expo-network';
 import Icon from "react-native-vector-icons/FontAwesome";
+import AntIcon from "react-native-vector-icons/AntDesign";
 import * as Localization from 'expo-localization';
 import * as Locale from '../../../Localization/Localization.json';
 import SelectDropdown from 'react-native-select-dropdown';
@@ -21,12 +22,12 @@ export default function HomeScreen({ navigation }) {
     const [refreshing, setRefreshing] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [dataspy, setDataspy] = useState("");
-    const [respData, setData] = useState(JSON.parse('{}'));
-    const [originalData, setOriginalData] = useState(JSON.parse('{}'));
-    const [searchData, setSearchData] = useState(JSON.parse('{}'));
-    const [workOrderData, setWorkOrderData] = useState(JSON.parse('{}'));
+    const [respData, setData] = useState(JSON.parse('{ "currentDataspy": { "id": "", "name": "" }, "workOrderList": [] }'));
+    const [originalData, setOriginalData] = useState(JSON.parse('{ "currentDataspy": { "id": "", "name": "" }, "workOrderList": [] }'));
+    const [searchData, setSearchData] = useState(JSON.parse('{ "currentDataspy": { "id": "", "name": "" }, "workOrderList": [] }'));
     const [modalVisible, setModalVisible] = useState(false);
     const [errorModalVisible, setErrorModalVisible] = useState(false);
+    const [createModalVisible, setCreatereateModalVisible] = useState(false);
     const [response, setResponse] = useState('');
     const [modalTitle, setModalTitle] = useState('');
     const [buttonText, setButtonText] = useState('');
@@ -108,19 +109,25 @@ export default function HomeScreen({ navigation }) {
         else if (!render) return (<></>);
     }
 
-    async function getWorkOrderList(update, id) {
+    async function  getWorkOrderList(update, id) {
+        console.log("Dataspy: " + id);
         setRefreshing(true);
+
+        let networkState = await Network.getNetworkStateAsync();
+        let workOrderList = await storage.getObject(key);
         let dataSpy = dataspy;
+
         if (id != null && id != undefined) dataSpy = id;
         let key = 'workOrderList:' + dataSpy;
-        let workOrderList = await storage.getObject(key);
-        if (workOrderList != null && !update) {
+        
+        if (!networkState.isConnected && !update && workOrderList != null && workOrderList != undefined) {
             setData(workOrderList);
             setSearchData(workOrderList);
             setOriginalData(workOrderList)
             setRefreshing(false);
             return workOrderList;
         }
+
         let host = await storage.getArticle('usableHost');
         let token = await storage.getArticle('token');
 
@@ -134,7 +141,8 @@ export default function HomeScreen({ navigation }) {
             setButtonText(language.login.modal.timedOut.button);
             setRefreshing(false);
         }
-        let url = host + '/mobile/workOrderGrid?token=' + token + '&dataspy=' + dataspy;
+
+        let url = host + '/mobile/workOrderGrid?token=' + token + '&dataspy=' + dataSpy;
         xhr.open("GET", url);
 
         xhr.onreadystatechange = function () {
@@ -153,7 +161,7 @@ export default function HomeScreen({ navigation }) {
                     }
                     jsonData[index] = element;
                 }
-                if (jsonData.status == 200) {
+                if (xhr.status == 200) {
                     setData(jsonData);
                     setSearchData(jsonData);
                     setOriginalData(jsonData);
@@ -169,7 +177,7 @@ export default function HomeScreen({ navigation }) {
                 } else {
                     setErrorModalVisible(true);
                     setModalTitle(language.login.modal.connectionError.title);
-                    setResponse(language.login.modal.connectionError.response);
+                    setResponse(jsonData);
                     setButtonText(language.login.modal.connectionError.button);
                     setRefreshing(false);
                 }
@@ -195,8 +203,7 @@ export default function HomeScreen({ navigation }) {
         let token = await storage.getArticle('token');
 
         let url = host + '/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + woCode + '&organization=' + woOrganization;
-        fetch(url).then(response => response.json()).then((data) => { setWorkOrderData(data); })
-        storage.saveObject(key, workOrderData);
+        fetch(url).then(response => response.json()).then((data) => { storage.saveObject(key, data); })
     }
 
     useEffect(async () => {
@@ -211,7 +218,7 @@ export default function HomeScreen({ navigation }) {
             getWorkOrderList(true);
             storage.saveObject('today', new Date().getDate());
         } else {
-            getWorkOrderList(false)
+            getWorkOrderList(false);
         }
         
     }, [])
@@ -219,20 +226,20 @@ export default function HomeScreen({ navigation }) {
     return (
         <>
             <View style={{ borderRadius: 20, padding: 12.5, backgroundColor: colors.card, marginTop: 30, alignContent: "center", alignItems: "flex-start" }}>
-                <TextInput style={{ color: colors.text, fontSize: 17, width: "100%" }} placeholder={language.list.filter} placeholderTextColor="gray" onChangeText={term => { setSearchTerm(term); findWorkOrders(originalData, term) }} onSubmitEditing={() => { findWorkOrders(originalData, searchTerm); setData(searchData); focusOut() }} onFocus={() => { findWorkOrders(originalData, searchTerm); focusIn() }} ref={searchInput} returnKeyType="done" />
+                <TextInput style={{ color: colors.text, fontSize: 17, width: "100%" }} placeholder={language.list.filter} placeholderTextColor="gray" onChangeText={term => { setSearchTerm(term); findWorkOrders(originalData.workOrderList, term) }} onSubmitEditing={() => { findWorkOrders(originalData.workOrderList, searchTerm); setData(searchData); focusOut() }} onFocus={() => { findWorkOrders(originalData.workOrderList, searchTerm); focusIn() }} ref={searchInput} returnKeyType="done" />
             </View>
 
             <View style={{ borderRadius: 25, position: "absolute", top: 36, right: 25 }}>
                 <SelectDropdown
                     data={dataspies}
-                    defaultButtonText="Dataspy"
+                    defaultButtonText={originalData.currentDataspy.name == undefined ? "" : originalData.currentDataspy.name}
                     dropdownBackgroundColor={colors.card}
                     dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
                     rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }}
                     rowTextStyle={{ color: colors.text, fontSize: 14 }}
                     buttonStyle={{ backgroundColor: colors.card, borderLeftWidth: 1, borderLeftColor: colors.border, height: 40 }}
                     buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "left", fontSize: 14 }}
-                    onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(false, selectedItem.id); }}
+                    onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(true, selectedItem.id); }}
                     buttonTextAfterSelection={(selectedItem) => { return selectedItem.name }}
                     rowTextForSelection={(item) => { return item.name }}
                 />
@@ -253,7 +260,7 @@ export default function HomeScreen({ navigation }) {
                 </View>
             </Modal>
 
-            <FlatList data={respData} refreshControl={<RefreshControl progressViewOffset={-55} refreshing={refreshing} onRefresh={onRefresh} />} renderItem={({ item }) =>
+            <FlatList data={respData.workOrderList} refreshControl={<RefreshControl progressViewOffset={-55} refreshing={refreshing} onRefresh={onRefresh} />} renderItem={({ item }) =>
                 <Pressable style={{ padding: 8, backgroundColor: colors.background }} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(item.workOrderCode, item.description); let selectedItem = item; navigation.navigate('Ordem de Serviço', { selectedItem }); }}>
                     <View style={[{ backgroundColor: colors.card, padding: 12.5, borderRadius: 15, marginBottom: 5 }, item.style]}>
                         <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5 }}>
@@ -276,6 +283,34 @@ export default function HomeScreen({ navigation }) {
                     </View>
                 </Pressable>
             } />
+            <Pressable style={{ borderRadius: 25, padding: 2, width: 45, height: 45, backgroundColor: colors.complementary4, borderColor: colors.inverted, borderWidth: 1, alignSelf: "center", alignItems: "center", justifyContent: "center", position: "absolute", bottom: 15 }} onPress={() => { setCreatereateModalVisible(true); }} >
+                <AntIcon name="plus" style={{ color: colors.background, fontSize: 30}} />
+            </Pressable>
+
+            <Modal animationType="slide" statusBarTranslucent={true} transparent={true} visible={createModalVisible}>
+                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 25 }}>
+                    <View style={{ margin: 20, backgroundColor: colors.card, borderColor: colors.inverted, borderWidth: 1, borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
+                        <Text style={{ marginBottom: 15, textAlign: "center", color: colors.text }}>New Work Order</Text>
+                        <View>
+                            <Text style={{ textAlign: "center", color: colors.text }}>Descrição: </Text>
+                            <TextInput style={{ width: 150, backgroundColor: colors.bubble, borderRadius: 15, margin: 2, padding: 2, paddingRight: 10, paddingLeft: 10 }} />
+                            <Text style={{ textAlign: "center", color: colors.text }}>Equipamento: </Text>
+                            <TextInput style={{ width: 150, backgroundColor: colors.bubble, borderRadius: 15, margin: 2, padding: 2, paddingRight: 10, paddingLeft: 10 }} />
+                            <Text style={{ textAlign: "center", color: colors.text }}>Status: </Text>
+                            <TextInput style={{ width: 150, backgroundColor: colors.bubble, borderRadius: 15, margin: 2, padding: 2, paddingRight: 10, paddingLeft: 10 }} />
+                            <Text style={{ textAlign: "center", color: colors.text }}>Organização: </Text>
+                            <TextInput style={{ width: 150, backgroundColor: colors.bubble, borderRadius: 15, margin: 2, padding: 2, paddingRight: 10, paddingLeft: 10 }} />
+                            <Text style={{ textAlign: "center", color: colors.text }}>Tipo: </Text>
+                            <TextInput style={{ width: 150, backgroundColor: colors.bubble, borderRadius: 15, margin: 2, padding: 2, paddingRight: 10, paddingLeft: 10 }} />
+                            <Text style={{ textAlign: "center", color: colors.text }}>Departamento: </Text>
+                            <TextInput style={{ width: 150, backgroundColor: colors.bubble, borderRadius: 15, margin: 2, padding: 2, paddingRight: 10, paddingLeft: 10 }} />
+                        </View>
+                        <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3" }} onPress={() => { setCreatereateModalVisible(false); }} >
+                            <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>Create</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
 
             {renderOverlay(modalVisible)}
         </>
