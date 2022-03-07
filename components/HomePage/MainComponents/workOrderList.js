@@ -31,6 +31,7 @@ export default function HomeScreen({ navigation }) {
     const [response, setResponse] = useState('');
     const [modalTitle, setModalTitle] = useState('');
     const [buttonText, setButtonText] = useState('');
+    const [assets, setAssets] = useState({});
     const searchInput = useRef();
     const storage = new Storage();
 
@@ -109,7 +110,7 @@ export default function HomeScreen({ navigation }) {
         else if (!render) return (<></>);
     }
 
-    async function  getWorkOrderList(update, id) {
+    async function getWorkOrderList(update, id) {
         console.log("Dataspy: " + id);
         setRefreshing(true);
 
@@ -119,7 +120,7 @@ export default function HomeScreen({ navigation }) {
 
         if (id != null && id != undefined) dataSpy = id;
         let key = 'workOrderList:' + dataSpy;
-        
+
         if (!networkState.isConnected && !update && workOrderList != null && workOrderList != undefined) {
             setData(workOrderList);
             setSearchData(workOrderList);
@@ -206,6 +207,14 @@ export default function HomeScreen({ navigation }) {
         fetch(url).then(response => response.json()).then((data) => { storage.saveObject(key, data); })
     }
 
+    const getAssets = async () => {
+        let host = await storage.getArticle('usableHost');
+        let token = await storage.getArticle('token');
+
+        let url = host + '/mobile/equipments?token=' + token;
+        fetch(url).then(response => response.json()).then((data) => { storage.saveObject("assets", data); setAssets(data); })
+    }
+
     useEffect(async () => {
 
         let networkState = await Network.getNetworkStateAsync();
@@ -220,7 +229,9 @@ export default function HomeScreen({ navigation }) {
         } else {
             getWorkOrderList(false);
         }
-        
+
+        getAssets()
+
     }, [])
 
     return (
@@ -284,29 +295,90 @@ export default function HomeScreen({ navigation }) {
                 </Pressable>
             } />
             <Pressable style={{ borderRadius: 25, padding: 2, width: 45, height: 45, backgroundColor: colors.complementary4, borderColor: colors.inverted, borderWidth: 1, alignSelf: "center", alignItems: "center", justifyContent: "center", position: "absolute", bottom: 15 }} onPress={() => { setCreatereateModalVisible(true); }} >
-                <AntIcon name="plus" style={{ color: colors.background, fontSize: 30}} />
+                <AntIcon name="plus" style={{ color: colors.background, fontSize: 30 }} />
             </Pressable>
 
-            <Modal animationType="slide" statusBarTranslucent={true} transparent={true} visible={createModalVisible}>
+            <Modal animationType="slide" statusBarTranslucent={true} transparent={true} visible={createModalVisible} onRequestClose={() => {setCreatereateModalVisible(false)}}>
                 <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 25 }}>
                     <View style={{ margin: 20, backgroundColor: colors.card, borderColor: colors.inverted, borderWidth: 1, borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
-                        <Text style={{ marginBottom: 15, textAlign: "center", color: colors.text }}>New Work Order</Text>
+                        <Text style={{ marginBottom: 15, textAlign: "center", color: colors.text, fontSize: 22 }}>Nova Ordem de Serviço</Text>
                         <View>
-                            <Text style={{ textAlign: "center", color: colors.text }}>Descrição: </Text>
-                            <TextInput style={{ width: 150, backgroundColor: colors.bubble, borderRadius: 15, margin: 2, padding: 2, paddingRight: 10, paddingLeft: 10 }} />
-                            <Text style={{ textAlign: "center", color: colors.text }}>Equipamento: </Text>
-                            <TextInput style={{ width: 150, backgroundColor: colors.bubble, borderRadius: 15, margin: 2, padding: 2, paddingRight: 10, paddingLeft: 10 }} />
-                            <Text style={{ textAlign: "center", color: colors.text }}>Status: </Text>
-                            <TextInput style={{ width: 150, backgroundColor: colors.bubble, borderRadius: 15, margin: 2, padding: 2, paddingRight: 10, paddingLeft: 10 }} />
-                            <Text style={{ textAlign: "center", color: colors.text }}>Organização: </Text>
-                            <TextInput style={{ width: 150, backgroundColor: colors.bubble, borderRadius: 15, margin: 2, padding: 2, paddingRight: 10, paddingLeft: 10 }} />
-                            <Text style={{ textAlign: "center", color: colors.text }}>Tipo: </Text>
-                            <TextInput style={{ width: 150, backgroundColor: colors.bubble, borderRadius: 15, margin: 2, padding: 2, paddingRight: 10, paddingLeft: 10 }} />
-                            <Text style={{ textAlign: "center", color: colors.text }}>Departamento: </Text>
-                            <TextInput style={{ width: 150, backgroundColor: colors.bubble, borderRadius: 15, margin: 2, padding: 2, paddingRight: 10, paddingLeft: 10 }} />
+                            <Text style={{ textAlign: "center", color: colors.text, fontSize: 16 }}>Descrição: </Text>
+                            <TextInput style={{ backgroundColor: colors.bubble, borderRadius: 15, margin: 2, padding: 2, paddingRight: 10, paddingLeft: 10 }} />
+                            <Text style={{ textAlign: "center", color: colors.text, marginTop: 15, fontSize: 16 }}>Status: </Text>
+                            <SelectDropdown
+                                data={assets}
+                                defaultButtonText={originalData.currentDataspy.name == undefined ? "" : originalData.currentDataspy.name}
+                                dropdownBackgroundColor={colors.card}
+                                dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
+                                rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }}
+                                rowTextStyle={{ color: colors.text, fontSize: 14 }}
+                                buttonStyle={{ backgroundColor: colors.card, borderWidth: 5, borderColor: colors.border, height: 40, borderRadius: 15 }}
+                                buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "left", fontSize: 14 }}
+                                onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(true, selectedItem.id); }}
+                                buttonTextAfterSelection={(selectedItem) => { return selectedItem.name }}
+                                rowTextForSelection={(item) => { return item.name }}
+                            />
+                            <Text style={{ textAlign: "center", color: colors.text, fontSize: 16, marginTop: 15 }}>Organização: </Text>
+                            <SelectDropdown
+                                data={assets}
+                                defaultButtonText={originalData.currentDataspy.name == undefined ? "" : originalData.currentDataspy.name}
+                                dropdownBackgroundColor={colors.card}
+                                dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
+                                rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }}
+                                rowTextStyle={{ color: colors.text, fontSize: 14 }}
+                                buttonStyle={{ backgroundColor: colors.card, borderWidth: 5, borderColor: colors.border, height: 40, borderRadius: 15 }}
+                                buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "left", fontSize: 14 }}
+                                onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(true, selectedItem.id); }}
+                                buttonTextAfterSelection={(selectedItem) => { return selectedItem.name }}
+                                rowTextForSelection={(item) => { return item.name }}
+                            />
+                            <Text style={{ textAlign: "center", color: colors.text, fontSize: 16, marginTop: 15 }}>Tipo: </Text>
+                            <SelectDropdown
+                                data={assets}
+                                defaultButtonText={originalData.currentDataspy.name == undefined ? "" : originalData.currentDataspy.name}
+                                dropdownBackgroundColor={colors.card}
+                                dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
+                                rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }}
+                                rowTextStyle={{ color: colors.text, fontSize: 14 }}
+                                buttonStyle={{ backgroundColor: colors.card, borderWidth: 5, borderColor: colors.border, height: 40, borderRadius: 15 }}
+                                buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "left", fontSize: 14 }}
+                                onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(true, selectedItem.id); }}
+                                buttonTextAfterSelection={(selectedItem) => { return selectedItem.name }}
+                                rowTextForSelection={(item) => { return item.name }}
+                            />
+                            <Text style={{ textAlign: "center", color: colors.text, fontSize: 16, marginTop: 15 }}>Departamento: </Text>
+                            <SelectDropdown
+                                data={assets}
+                                defaultButtonText={originalData.currentDataspy.name == undefined ? "" : originalData.currentDataspy.name}
+                                dropdownBackgroundColor={colors.card}
+                                dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
+                                rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }}
+                                rowTextStyle={{ color: colors.text, fontSize: 14 }}
+                                buttonStyle={{ backgroundColor: colors.card, borderWidth: 5, borderColor: colors.border, height: 40, borderRadius: 15 }}
+                                buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "left", fontSize: 14 }}
+                                onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(true, selectedItem.id); }}
+                                buttonTextAfterSelection={(selectedItem) => { return selectedItem.name }}
+                                rowTextForSelection={(item) => { return item.name }}
+                            />
+                            <Text style={{ textAlign: "center", color: colors.text, fontSize: 16, marginTop: 15 }}>Equipamento: </Text>
+                            <SelectDropdown
+                                data={assets}
+                                defaultButtonText={originalData.currentDataspy.name == undefined ? "" : originalData.currentDataspy.name}
+                                dropdownBackgroundColor={colors.card}
+                                dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
+                                rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }}
+                                rowTextStyle={{ color: colors.text, fontSize: 14 }}
+                                buttonStyle={{ backgroundColor: colors.card, borderWidth: 5, borderColor: colors.border, height: 40, borderRadius: 15 }}
+                                buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "left", fontSize: 14 }}
+                                onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(true, selectedItem.id); }}
+                                buttonTextAfterSelection={(selectedItem) => { return selectedItem.name }}
+                                rowTextForSelection={(item) => { return item.name }}
+                            />
+
                         </View>
-                        <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3" }} onPress={() => { setCreatereateModalVisible(false); }} >
-                            <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>Create</Text>
+                        <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3", marginTop: 30 }} onPress={() => { setCreatereateModalVisible(false); }} >
+                            <Text style={{ color: "white", fontWeight: "bold", textAlign: "center", fontSize: 16 }}>Create</Text>
                         </Pressable>
                     </View>
                 </View>
