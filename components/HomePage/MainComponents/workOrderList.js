@@ -8,6 +8,8 @@ import AntIcon from "react-native-vector-icons/AntDesign";
 import * as Localization from 'expo-localization';
 import * as Locale from '../../../Localization/Localization.json';
 import SelectDropdown from 'react-native-select-dropdown';
+import CreateWorkOrderModal from '../WOLSubComponents/CreateWorkOrderModal';
+import WorkOrderListItem from '../WOLSubComponents/WorkOrderListItem';
 
 export default function HomeScreen({ navigation }) {
     let language = {};
@@ -31,7 +33,11 @@ export default function HomeScreen({ navigation }) {
     const [response, setResponse] = useState('');
     const [modalTitle, setModalTitle] = useState('');
     const [buttonText, setButtonText] = useState('');
-    const [assets, setAssets] = useState({});
+    const [assets, setAssets] = useState([{ code: "", organization: "", description: "", status: "", department: "" }]);
+    const [status, setStatus] = useState([{ code: "", organization: "", description: "", status: "", department: "" }]);
+    const [organizations, setOrganizations] = useState([{ code: "", organization: "", description: "", status: "", department: "" }]);
+    const [types, setTypes] = useState([{ code: "", organization: "", description: "", status: "", department: "" }]);
+    const [departments, setDepartments] = useState([{ code: "", organization: "", description: "", status: "", department: "" }]);
     const searchInput = useRef();
     const storage = new Storage();
 
@@ -66,48 +72,9 @@ export default function HomeScreen({ navigation }) {
         setSearchData(search)
     }
 
-    const focusIn = () => {
-        setModalVisible(true);
-    }
-
     const focusOut = () => {
         Keyboard.dismiss();
         setModalVisible(false);
-    }
-
-    const renderOverlay = (render) => {
-        if (render) return (
-            <>
-                <Pressable style={{ position: "absolute", backgroundColor: "rgba(0, 0, 0, 0.5)", width: "100%", height: "92%", top: 82 }} onPress={() => { focusOut() }} >
-                    <FlatList keyboardShouldPersistTaps='handled' data={searchData} renderItem={({ item }) =>
-                        <>
-                            <Pressable style={{ padding: 8, backgroundColor: colors.background }} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(item.workOrderCode, item.description); let selectedItem = item; navigation.navigate('Ordem de Serviço', { selectedItem }); }}>
-                                <View style={{ backgroundColor: colors.card, padding: 12.5, borderRadius: 15, marginBottom: 5 }}>
-                                    <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5 }}>
-                                        <Text style={{ color: colors.text, fontSize: 17, alignSelf: "flex-start" }}>{item.workOrderCode + ' - ' + item.description}</Text>
-                                    </View>
-                                    <View style={{ marginTop: 2 }}>
-                                        <View style={{ marginBottom: -5, marginBottom: 8 }}>
-                                            <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.status}: {item.workOrderStatusDescription}</Text>
-                                            <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -15, marginBottom: -15 }} >{language.list.organization}: {item.organization}</Text>
-                                        </View>
-                                        <View style={{ marginBottom: -5, marginBottom: 8 }}>
-                                            <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.equipment}: {item.equipment}</Text>
-                                            <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -15, marginBottom: -15 }} >{language.list.department}: {item.department}</Text>
-                                        </View>
-                                        <View style={{ marginBottom: -5, marginBottom: 8 }}>
-                                            <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.scheduledStartDate}: {item.scheduledStartDate}</Text>
-                                            <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -15, marginBottom: -15 }} >{language.list.dueDate}: {item.dueDate}</Text>
-                                        </View>
-                                    </View>
-                                </View>
-                            </Pressable>
-                        </>
-                    } />
-                </Pressable>
-            </>
-        );
-        else if (!render) return (<></>);
     }
 
     async function getWorkOrderList(update, id) {
@@ -207,14 +174,6 @@ export default function HomeScreen({ navigation }) {
         fetch(url).then(response => response.json()).then((data) => { storage.saveObject(key, data); })
     }
 
-    const getAssets = async () => {
-        let host = await storage.getArticle('usableHost');
-        let token = await storage.getArticle('token');
-
-        let url = host + '/mobile/equipments?token=' + token;
-        fetch(url).then(response => response.json()).then((data) => { storage.saveObject("assets", data); setAssets(data); })
-    }
-
     useEffect(async () => {
 
         let networkState = await Network.getNetworkStateAsync();
@@ -230,30 +189,31 @@ export default function HomeScreen({ navigation }) {
             getWorkOrderList(false);
         }
 
-        getAssets()
-
     }, [])
+
+    const renderOverlay = (render) => {
+        if (render) return (
+            <>
+                <Pressable style={{ position: "absolute", backgroundColor: "rgba(0, 0, 0, 0.5)", width: "100%", height: "92%", top: 82 }} onPress={() => { focusOut() }} >
+                    <FlatList keyboardShouldPersistTaps='handled' data={searchData} renderItem={({ item }) =>
+                        <>
+                            <WorkOrderListItem item={item} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(item.workOrderCode, item.description); let selectedItem = item; navigation.navigate('Ordem de Serviço', { selectedItem }); }} />
+                        </>
+                    } />
+                </Pressable>
+            </>
+        );
+        else if (!render) return (<></>);
+    }
 
     return (
         <>
             <View style={{ borderRadius: 20, padding: 12.5, backgroundColor: colors.card, marginTop: 30, alignContent: "center", alignItems: "flex-start" }}>
-                <TextInput style={{ color: colors.text, fontSize: 17, width: "100%" }} placeholder={language.list.filter} placeholderTextColor="gray" onChangeText={term => { setSearchTerm(term); findWorkOrders(originalData.workOrderList, term) }} onSubmitEditing={() => { findWorkOrders(originalData.workOrderList, searchTerm); setData(searchData); focusOut() }} onFocus={() => { findWorkOrders(originalData.workOrderList, searchTerm); focusIn() }} ref={searchInput} returnKeyType="done" />
+                <TextInput style={{ color: colors.text, fontSize: 17, width: "100%" }} placeholder={language.list.filter} placeholderTextColor="gray" onChangeText={term => { setSearchTerm(term); findWorkOrders(originalData.workOrderList, term) }} onSubmitEditing={() => { findWorkOrders(originalData.workOrderList, searchTerm); setData(searchData); focusOut() }} onFocus={() => { findWorkOrders(originalData.workOrderList, searchTerm); setModalVisible(true); }} ref={searchInput} returnKeyType="done" />
             </View>
 
             <View style={{ borderRadius: 25, position: "absolute", top: 36, right: 25 }}>
-                <SelectDropdown
-                    data={dataspies}
-                    defaultButtonText={originalData.currentDataspy.name == undefined ? "" : originalData.currentDataspy.name}
-                    dropdownBackgroundColor={colors.card}
-                    dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
-                    rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }}
-                    rowTextStyle={{ color: colors.text, fontSize: 14 }}
-                    buttonStyle={{ backgroundColor: colors.card, borderLeftWidth: 1, borderLeftColor: colors.border, height: 40 }}
-                    buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "left", fontSize: 14 }}
-                    onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(true, selectedItem.id); }}
-                    buttonTextAfterSelection={(selectedItem) => { return selectedItem.name }}
-                    rowTextForSelection={(item) => { return item.name }}
-                />
+                <SelectDropdown data={dataspies} defaultButtonText={originalData.currentDataspy.name == undefined ? "" : originalData.currentDataspy.name} dropdownBackgroundColor={colors.card} dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }} rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }} rowTextStyle={{ color: colors.text, fontSize: 14 }} buttonStyle={{ backgroundColor: colors.card, borderLeftWidth: 1, borderLeftColor: colors.border, height: 40 }} buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "left", fontSize: 14 }} onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(true, selectedItem.id); }} buttonTextAfterSelection={(selectedItem) => { return selectedItem.name }} rowTextForSelection={(item) => { return item.name }} />
                 <Pressable style={{ borderRadius: 25, padding: 2, width: 40, height: 40, backgroundColor: colors.background, top: -40, right: -185 }} onPress={() => { getWorkOrderList(true); focusOut() }} >
                     <Icon name="search" style={{ color: colors.text, fontSize: 18, marginLeft: 2, padding: 8 }} color={colors.text} />
                 </Pressable>
@@ -272,118 +232,14 @@ export default function HomeScreen({ navigation }) {
             </Modal>
 
             <FlatList data={respData.workOrderList} refreshControl={<RefreshControl progressViewOffset={-55} refreshing={refreshing} onRefresh={onRefresh} />} renderItem={({ item }) =>
-                <Pressable style={{ padding: 8, backgroundColor: colors.background }} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(item.workOrderCode, item.description); let selectedItem = item; navigation.navigate('Ordem de Serviço', { selectedItem }); }}>
-                    <View style={[{ backgroundColor: colors.card, padding: 12.5, borderRadius: 15, marginBottom: 5 }, item.style]}>
-                        <View style={{ borderBottomColor: colors.text, borderBottomWidth: 0.2, marginBottom: 5 }}>
-                            <Text style={{ color: colors.text, fontSize: 17, alignSelf: "flex-start" }}>{item.workOrderCode + ' - ' + item.description}</Text>
-                        </View>
-                        <View style={{ marginTop: 2 }}>
-                            <View style={{ marginBottom: -5, marginBottom: 8 }}>
-                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.status}: {item.workOrderStatusDescription}</Text>
-                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -15, marginBottom: -15 }} >{language.list.organization}: {item.organization}</Text>
-                            </View>
-                            <View style={{ marginBottom: -5, marginBottom: 8 }}>
-                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.equipment}: {item.equipment}</Text>
-                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -15, marginBottom: -15 }} >{language.list.department}: {item.department}</Text>
-                            </View>
-                            <View style={{ marginBottom: -5, marginBottom: 8 }}>
-                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-start" }} >{language.list.scheduledStartDate}: {item.scheduledStartDate}</Text>
-                                <Text style={{ color: colors.text, fontSize: 13, alignSelf: "flex-end", top: -15, marginBottom: -15 }} >{language.list.dueDate}: {item.dueDate}</Text>
-                            </View>
-                        </View>
-                    </View>
-                </Pressable>
+                <WorkOrderListItem item={item} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(item.workOrderCode, item.description); let selectedItem = item; navigation.navigate('Ordem de Serviço', { selectedItem }); }} />
             } />
+
             <Pressable style={{ borderRadius: 25, padding: 2, width: 45, height: 45, backgroundColor: colors.complementary4, borderColor: colors.inverted, borderWidth: 1, alignSelf: "center", alignItems: "center", justifyContent: "center", position: "absolute", bottom: 15 }} onPress={() => { setCreatereateModalVisible(true); }} >
                 <AntIcon name="plus" style={{ color: colors.background, fontSize: 30 }} />
             </Pressable>
 
-            <Modal animationType="slide" statusBarTranslucent={true} transparent={true} visible={createModalVisible} onRequestClose={() => {setCreatereateModalVisible(false)}}>
-                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 25 }}>
-                    <View style={{ margin: 20, backgroundColor: colors.card, borderColor: colors.inverted, borderWidth: 1, borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
-                        <Text style={{ marginBottom: 15, textAlign: "center", color: colors.text, fontSize: 22 }}>Nova Ordem de Serviço</Text>
-                        <View>
-                            <Text style={{ textAlign: "center", color: colors.text, fontSize: 16 }}>Descrição: </Text>
-                            <TextInput style={{ backgroundColor: colors.bubble, borderRadius: 15, margin: 2, padding: 2, paddingRight: 10, paddingLeft: 10 }} />
-                            <Text style={{ textAlign: "center", color: colors.text, marginTop: 15, fontSize: 16 }}>Status: </Text>
-                            <SelectDropdown
-                                data={assets}
-                                defaultButtonText={originalData.currentDataspy.name == undefined ? "" : originalData.currentDataspy.name}
-                                dropdownBackgroundColor={colors.card}
-                                dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
-                                rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }}
-                                rowTextStyle={{ color: colors.text, fontSize: 14 }}
-                                buttonStyle={{ backgroundColor: colors.card, borderWidth: 5, borderColor: colors.border, height: 40, borderRadius: 15 }}
-                                buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "left", fontSize: 14 }}
-                                onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(true, selectedItem.id); }}
-                                buttonTextAfterSelection={(selectedItem) => { return selectedItem.name }}
-                                rowTextForSelection={(item) => { return item.name }}
-                            />
-                            <Text style={{ textAlign: "center", color: colors.text, fontSize: 16, marginTop: 15 }}>Organização: </Text>
-                            <SelectDropdown
-                                data={assets}
-                                defaultButtonText={originalData.currentDataspy.name == undefined ? "" : originalData.currentDataspy.name}
-                                dropdownBackgroundColor={colors.card}
-                                dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
-                                rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }}
-                                rowTextStyle={{ color: colors.text, fontSize: 14 }}
-                                buttonStyle={{ backgroundColor: colors.card, borderWidth: 5, borderColor: colors.border, height: 40, borderRadius: 15 }}
-                                buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "left", fontSize: 14 }}
-                                onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(true, selectedItem.id); }}
-                                buttonTextAfterSelection={(selectedItem) => { return selectedItem.name }}
-                                rowTextForSelection={(item) => { return item.name }}
-                            />
-                            <Text style={{ textAlign: "center", color: colors.text, fontSize: 16, marginTop: 15 }}>Tipo: </Text>
-                            <SelectDropdown
-                                data={assets}
-                                defaultButtonText={originalData.currentDataspy.name == undefined ? "" : originalData.currentDataspy.name}
-                                dropdownBackgroundColor={colors.card}
-                                dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
-                                rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }}
-                                rowTextStyle={{ color: colors.text, fontSize: 14 }}
-                                buttonStyle={{ backgroundColor: colors.card, borderWidth: 5, borderColor: colors.border, height: 40, borderRadius: 15 }}
-                                buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "left", fontSize: 14 }}
-                                onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(true, selectedItem.id); }}
-                                buttonTextAfterSelection={(selectedItem) => { return selectedItem.name }}
-                                rowTextForSelection={(item) => { return item.name }}
-                            />
-                            <Text style={{ textAlign: "center", color: colors.text, fontSize: 16, marginTop: 15 }}>Departamento: </Text>
-                            <SelectDropdown
-                                data={assets}
-                                defaultButtonText={originalData.currentDataspy.name == undefined ? "" : originalData.currentDataspy.name}
-                                dropdownBackgroundColor={colors.card}
-                                dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
-                                rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }}
-                                rowTextStyle={{ color: colors.text, fontSize: 14 }}
-                                buttonStyle={{ backgroundColor: colors.card, borderWidth: 5, borderColor: colors.border, height: 40, borderRadius: 15 }}
-                                buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "left", fontSize: 14 }}
-                                onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(true, selectedItem.id); }}
-                                buttonTextAfterSelection={(selectedItem) => { return selectedItem.name }}
-                                rowTextForSelection={(item) => { return item.name }}
-                            />
-                            <Text style={{ textAlign: "center", color: colors.text, fontSize: 16, marginTop: 15 }}>Equipamento: </Text>
-                            <SelectDropdown
-                                data={assets}
-                                defaultButtonText={originalData.currentDataspy.name == undefined ? "" : originalData.currentDataspy.name}
-                                dropdownBackgroundColor={colors.card}
-                                dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
-                                rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }}
-                                rowTextStyle={{ color: colors.text, fontSize: 14 }}
-                                buttonStyle={{ backgroundColor: colors.card, borderWidth: 5, borderColor: colors.border, height: 40, borderRadius: 15 }}
-                                buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "left", fontSize: 14 }}
-                                onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(true, selectedItem.id); }}
-                                buttonTextAfterSelection={(selectedItem) => { return selectedItem.name }}
-                                rowTextForSelection={(item) => { return item.name }}
-                            />
-
-                        </View>
-                        <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3", marginTop: 30 }} onPress={() => { setCreatereateModalVisible(false); }} >
-                            <Text style={{ color: "white", fontWeight: "bold", textAlign: "center", fontSize: 16 }}>Create</Text>
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal>
-
+            <CreateWorkOrderModal status={status} organizations={organizations} assets={assets} departments={departments} types={types} visible={createModalVisible} onRequestClose={() => { setCreatereateModalVisible(false) }} />
             {renderOverlay(modalVisible)}
         </>
     );

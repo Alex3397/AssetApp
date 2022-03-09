@@ -138,28 +138,31 @@ export default function HomeScreen({ navigation }) {
         setPort(port ==  null ? "" : port);
     }
 
-    const getLabels = async () => {
+    const getData = async () => {
         let host = await storage.getArticle('usableHost');
         let token = await storage.getArticle('token');
 
-        let labelUrl = host + '/mobile/userDefinedFieldsLabels?token=' + token;
-        fetch(labelUrl).then(response => response.json()).then((data) => { storage.saveObject("labels", data) })
-    }
-
-    const getFieldsToShow = async () => {
-        let host = await storage.getArticle('usableHost');
-        let token = await storage.getArticle('token');
-
-        let labelUrl = host + '/mobile/fields2show?token=' + token;
-        fetch(labelUrl).then(response => response.json()).then((data) => { storage.saveObject("showfields", data) })
-    }
-
-    const getDataspies = async () => {
-        let host = await storage.getArticle('usableHost');
-        let token = await storage.getArticle('token');
-
-        let labelUrl = host + '/mobile/dataSpies?token=' + token;
-        fetch(labelUrl).then(response => response.json()).then((data) => { storage.saveObject("dataspies", data) })
+        fetch(host + '/mobile/userDefinedFieldsLabels?token=' + token).then(response => response.json()).then((data) => { storage.saveObject("labels", data) })
+        fetch(host + '/mobile/fields2show?token=' + token).then(response => response.json()).then((data) => { storage.saveObject("showfields", data) })
+        fetch(host + '/mobile/dataSpies?token=' + token).then(response => response.json()).then((data) => { storage.saveObject("dataspies", data) })
+        
+        fetch(host + '/mobile/equipments?token=' + token + "&position=0").then(response => response.json()).then((data) => { 
+            console.log("EQUIPMENTS");
+            console.log(data.assetList[data.assetList.length-1].id);
+            while (data.assetList[data.assetList.length-1].id < data.records) {
+                console.log("Retriving equipments data using position: " + data.assetList[data.assetList.length-1].id);
+                //fetch(host + '/mobile/equipments?token=' + token + "&position=" + (data.assetList[data.assetList.length-1].id + 1)).then(response => response.json()).then((array) => { data.concat(array) })
+            }
+            storage.saveObject("equipments", data) 
+        })
+        fetch(host + '/mobile/positions?token=' + token + "&position=0").then(response => response.json()).then((data) => {
+            console.log("POSITIONS")
+            storage.saveObject("positions", data) 
+        })
+        fetch(host + '/mobile/systems?token=' + token + "&position=0").then(response => response.json()).then((data) => { 
+            console.log("SYSTEMS")
+            storage.saveObject("systems", data) 
+        })
     }
 
     (async () => {
@@ -189,7 +192,7 @@ export default function HomeScreen({ navigation }) {
                         <View style={{ margin: 20, backgroundColor: "white", borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
                             <Text style={{ marginBottom: 15, textAlign: "center", color: "black" }}>{modalTitle}</Text>
                             <Text style={{ marginBottom: 15, textAlign: "center", color: "black" }}>{response}</Text>
-                            <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3" }} onPress={() => { setModalVisible(false); getLabels(); getFieldsToShow(); getDataspies(); navigation.navigate('HomePage'); }} >
+                            <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3" }} onPress={ async () => { setModalVisible(false); getData(); navigation.navigate('HomePage'); }} >
                                 <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>{buttonText}</Text>
                             </Pressable>
                         </View>
