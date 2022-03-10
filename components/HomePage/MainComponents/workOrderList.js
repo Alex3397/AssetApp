@@ -34,10 +34,13 @@ export default function HomeScreen({ navigation }) {
     const [modalTitle, setModalTitle] = useState('');
     const [buttonText, setButtonText] = useState('');
     const [assets, setAssets] = useState([{ code: "", organization: "", description: "", status: "", department: "" }]);
+    const [positions, setPositions] = useState([{ code: "", organization: "", description: "", status: "", department: "" }]);
+    const [systems, setSystems] = useState([{ code: "", organization: "", description: "", status: "", department: "" }]);
     const [status, setStatus] = useState([{ code: "", organization: "", description: "", status: "", department: "" }]);
     const [organizations, setOrganizations] = useState([{ code: "", organization: "", description: "", status: "", department: "" }]);
     const [types, setTypes] = useState([{ code: "", organization: "", description: "", status: "", department: "" }]);
     const [departments, setDepartments] = useState([{ code: "", organization: "", description: "", status: "", department: "" }]);
+    const [userGroup, setUserGroup] = useState('');
     const searchInput = useRef();
     const storage = new Storage();
 
@@ -232,14 +235,14 @@ export default function HomeScreen({ navigation }) {
             </Modal>
 
             <FlatList data={respData.workOrderList} refreshControl={<RefreshControl progressViewOffset={-55} refreshing={refreshing} onRefresh={onRefresh} />} renderItem={({ item }) =>
-                <WorkOrderListItem item={item} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(item.workOrderCode, item.description); let selectedItem = item; navigation.navigate('Ordem de Serviço', { selectedItem }); }} />
+                <WorkOrderListItem item={item} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(item.workOrderCode, item.organization); let selectedItem = item; navigation.navigate('Ordem de Serviço', { selectedItem }); }} />
             } />
 
-            <Pressable style={{ borderRadius: 25, padding: 2, width: 45, height: 45, backgroundColor: colors.complementary4, borderColor: colors.inverted, borderWidth: 1, alignSelf: "center", alignItems: "center", justifyContent: "center", position: "absolute", bottom: 15 }} onPress={() => { setCreatereateModalVisible(true); }} >
+            <Pressable style={{ borderRadius: 25, padding: 2, width: 45, height: 45, backgroundColor: colors.complementary4, borderColor: colors.inverted, borderWidth: 1, alignSelf: "center", alignItems: "center", justifyContent: "center", position: "absolute", bottom: 15 }} onPress={() => { setCreatereateModalVisible(true); storage.getObject('assets').then((assets) => setAssets(assets)); storage.getObject('positions').then((positions) => {setPositions(positions)}); storage.getObject('systems').then((systems) => {setSystems(systems)}); storage.getObject('organizations').then((organizations) => {setOrganizations(organizations)}); storage.getObject('departments').then((departments) => {setDepartments(departments)}); storage.getObject('statusAuth').then((status) => {setStatus(status)}); storage.getArticle('organization').then((userGroup) => {setUserGroup(userGroup)}); }} >
                 <AntIcon name="plus" style={{ color: colors.background, fontSize: 30 }} />
             </Pressable>
 
-            <CreateWorkOrderModal status={status} organizations={organizations} assets={assets} departments={departments} types={types} visible={createModalVisible} onRequestClose={() => { setCreatereateModalVisible(false) }} />
+            <CreateWorkOrderModal status={status} userGroup={userGroup} organizations={organizations} assets={assets} positions={positions} systems={systems} departments={departments} types={types} visible={createModalVisible} onRequestClose={() => { setCreatereateModalVisible(false) }} />
             {renderOverlay(modalVisible)}
         </>
     );

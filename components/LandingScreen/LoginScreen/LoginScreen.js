@@ -7,6 +7,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import Storage from '../../../classes/Storage/Storage';
 import * as Localization from 'expo-localization';
 import * as Locale from '../../../Localization/Localization.json';
+import * as Network from 'expo-network';
 
 export default function HomeScreen({ navigation }) {
     const storage = new Storage();
@@ -34,6 +35,10 @@ export default function HomeScreen({ navigation }) {
     if (Localization.locale.includes("pt-BR") && language != Locale["pt-BR"]) language = Locale["pt-BR"];
     else if (Localization.locale.includes("es") && language != Locale.es) language = Locale.es;
     else if (language != Locale.en) language = Locale.en;
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     const passwordInput = useRef();
     const saveUserData = async (user, pass) => {
@@ -79,7 +84,6 @@ export default function HomeScreen({ navigation }) {
                         setButtonText(language.login.modal.positive.button);
                         let token = xhr.responseText.replace("User validated.", "");
                         storage.saveArticle('token', token);
-                        getUserStatusAuth(host, token);
                     } else {
                         if (xhr.status == 0) {
                             setModalTitle(language.login.modal.connectionError.title);
@@ -129,40 +133,84 @@ export default function HomeScreen({ navigation }) {
         let custUrl = await storage.getArticle('customUrl');
         let port = await storage.getArticle('port');
 
-        setOrg(organization ==  null ? "" : organization );
-        setTenant(tenant ==  null ? "" : tenant);
-        setUrl(host ==  null ? "" : host.replace(/[^0-9.]/g, ''));
-        setCon(con ==  null ? "" : con);
-        setCustomBool(custBool ==  null ? "" : custBool);
-        setCustomUrl(custUrl ==  null ? "" : custUrl);
-        setPort(port ==  null ? "" : port);
+        setOrg(organization == null ? "" : organization);
+        setTenant(tenant == null ? "" : tenant);
+        setUrl(host == null ? "" : host.replace(/[^0-9.]/g, ''));
+        setCon(con == null ? "" : con);
+        setCustomBool(custBool == null ? "" : custBool);
+        setCustomUrl(custUrl == null ? "" : custUrl);
+        setPort(port == null ? "" : port);
+    }
+
+    const getFuckingData = async (url, times, list, storage) => {
+        for (let index = 1; index <= times; index++) {
+
+            console.log("fetching data with position: " + index + "01");
+
+            let newUrl = url.replace('&position=0',"&position=" + index + "01");
+            fetch(newUrl).then((response) => response.json()).then((newData) => { 
+                list = list.concat(newData.list);
+                list.sort(function (a, b) { return a.id - b.id; });
+                if (url.includes("equipments")) storage.saveObject('assets', list);
+                if (url.includes("positions")) storage.saveObject('positions', list);
+                if (url.includes("systems")) storage.saveObject('systems', list);
+                if (url.includes("organizations")) storage.saveObject('organizations', list);
+                if (url.includes("departments")) storage.saveObject('departments', list);
+            });
+
+            await sleep(5000);
+        }
+
+    };
+
+    const getDataFromUrl = async (url) => {
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+
+        xhr.setRequestHeader("Accept", "*/*");
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState == 4) {
+                let data = JSON.parse(xhr.response);
+                let list = data.list;
+                let times = Math.floor(data.records / 100);
+
+                if (url.includes("equipments")) storage.saveObject('assets', list);
+                if (url.includes("positions")) storage.saveObject('positions', list);
+                if (url.includes("systems")) storage.saveObject('systems', list);
+                if (url.includes("organizations")) storage.saveObject('organizations', list);
+                if (url.includes("departments")) storage.saveObject('departments', list);
+
+                getFuckingData(url, times, list, storage);
+            }
+        }
+
+        xhr.send();
     }
 
     const getData = async () => {
-        let host = await storage.getArticle('usableHost');
-        let token = await storage.getArticle('token');
+        let networkState = await Network.getNetworkStateAsync();
+        let lastUpdated = await storage.getObject("lastUpdated");
+        if ( lastUpdated != new Date().getDate() && networkState.isConnected) {
 
-        fetch(host + '/mobile/userDefinedFieldsLabels?token=' + token).then(response => response.json()).then((data) => { storage.saveObject("labels", data) })
-        fetch(host + '/mobile/fields2show?token=' + token).then(response => response.json()).then((data) => { storage.saveObject("showfields", data) })
-        fetch(host + '/mobile/dataSpies?token=' + token).then(response => response.json()).then((data) => { storage.saveObject("dataspies", data) })
-        
-        fetch(host + '/mobile/equipments?token=' + token + "&position=0").then(response => response.json()).then((data) => { 
-            console.log("EQUIPMENTS");
-            console.log(data.assetList[data.assetList.length-1].id);
-            while (data.assetList[data.assetList.length-1].id < data.records) {
-                console.log("Retriving equipments data using position: " + data.assetList[data.assetList.length-1].id);
-                //fetch(host + '/mobile/equipments?token=' + token + "&position=" + (data.assetList[data.assetList.length-1].id + 1)).then(response => response.json()).then((array) => { data.concat(array) })
-            }
-            storage.saveObject("equipments", data) 
-        })
-        fetch(host + '/mobile/positions?token=' + token + "&position=0").then(response => response.json()).then((data) => {
-            console.log("POSITIONS")
-            storage.saveObject("positions", data) 
-        })
-        fetch(host + '/mobile/systems?token=' + token + "&position=0").then(response => response.json()).then((data) => { 
-            console.log("SYSTEMS")
-            storage.saveObject("systems", data) 
-        })
+            let host = await storage.getArticle('usableHost');
+            let token = await storage.getArticle('token');
+
+            getUserStatusAuth(host, token);
+    
+            fetch(host + '/mobile/userDefinedFieldsLabels?token=' + token).then(response => response.json()).then((data) => { storage.saveObject("labels", data) });
+            fetch(host + '/mobile/fields2show?token=' + token).then(response => response.json()).then((data) => { storage.saveObject("showfields", data) });
+            fetch(host + '/mobile/dataSpies?token=' + token).then(response => response.json()).then((data) => { storage.saveObject("dataspies", data) });
+    
+            getDataFromUrl(host + '/mobile/equipments?token=' + token + "&position=0");
+            getDataFromUrl(host + '/mobile/positions?token=' + token + "&position=0");
+            getDataFromUrl(host + '/mobile/systems?token=' + token + "&position=0");
+            
+            getDataFromUrl(host + '/mobile/organizations?token=' + token + "&position=0");
+            getDataFromUrl(host + '/mobile/departments?token=' + token + "&position=0");
+    
+            storage.saveObject("lastUpdated", new Date().getDate());
+        }
     }
 
     (async () => {
@@ -175,8 +223,8 @@ export default function HomeScreen({ navigation }) {
     useEffect(async () => {
         storage.getObject('savedata').then((saveUserInfo) => {
             if (saveUserInfo) {
-                storage.getArticle('username').then((username) => {if (username != null) setUser(username);});
-                storage.getArticle('password').then((password) => {if (password != null) setPass(password);});
+                storage.getArticle('username').then((username) => { if (username != null) setUser(username); });
+                storage.getArticle('password').then((password) => { if (password != null) setPass(password); });
             }
         })
         navigation.addListener('focus', () => {
@@ -192,7 +240,7 @@ export default function HomeScreen({ navigation }) {
                         <View style={{ margin: 20, backgroundColor: "white", borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
                             <Text style={{ marginBottom: 15, textAlign: "center", color: "black" }}>{modalTitle}</Text>
                             <Text style={{ marginBottom: 15, textAlign: "center", color: "black" }}>{response}</Text>
-                            <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3" }} onPress={ async () => { setModalVisible(false); getData(); navigation.navigate('HomePage'); }} >
+                            <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3" }} onPress={async () => { setModalVisible(false); getData(); navigation.navigate('HomePage'); }} >
                                 <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>{buttonText}</Text>
                             </Pressable>
                         </View>
