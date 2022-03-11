@@ -28,6 +28,7 @@ export default function HomeScreen({ navigation }) {
     const [savedCustomBool, setCustomBool] = useState(false);
     const [savedPort, setPort] = useState('');
     const [warning, setWarning] = useState('');
+    const [connected, setConnected] = useState(false);
     const image = dark ? require('../../../assets/images/folk-pattern-black.jpg') : require('../../../assets/images/folk-pattern.jpg');
 
     let language = {};
@@ -84,6 +85,7 @@ export default function HomeScreen({ navigation }) {
                         setButtonText(language.login.modal.positive.button);
                         let token = xhr.responseText.replace("User validated.", "");
                         storage.saveArticle('token', token);
+                        setConnected(true);
                     } else {
                         if (xhr.status == 0) {
                             setModalTitle(language.login.modal.connectionError.title);
@@ -191,7 +193,7 @@ export default function HomeScreen({ navigation }) {
     const getData = async () => {
         let networkState = await Network.getNetworkStateAsync();
         let lastUpdated = await storage.getObject("lastUpdated");
-        if ( lastUpdated != new Date().getDate() && networkState.isConnected) {
+        if ( lastUpdated != new Date().getDate() && networkState.isConnected && connected) {
 
             let host = await storage.getArticle('usableHost');
             let token = await storage.getArticle('token');

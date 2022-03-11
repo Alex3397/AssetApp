@@ -192,6 +192,8 @@ export default function HomeScreen({ navigation }) {
             getWorkOrderList(false);
         }
 
+        storage.getArticle('organization').then((userGroup) => {setUserGroup(userGroup)});
+
     }, [])
 
     const renderOverlay = (render) => {
@@ -242,7 +244,7 @@ export default function HomeScreen({ navigation }) {
                 <AntIcon name="plus" style={{ color: colors.background, fontSize: 30 }} />
             </Pressable>
 
-            <CreateWorkOrderModal status={status} userGroup={userGroup} organizations={organizations} assets={assets} positions={positions} systems={systems} departments={departments} types={types} visible={createModalVisible} onRequestClose={() => { setCreatereateModalVisible(false) }} />
+            <CreateWorkOrderModal status={status} userGroup={userGroup} organizations={organizations} assets={assets} positions={positions} systems={systems} departments={departments} types={types} visible={createModalVisible} onRequestClose={() => { setCreatereateModalVisible(false) }} onCreateWorkOrder={(requestObject) => { requestObject.id = respData.workOrderList.length; respData.workOrderList.push(requestObject); setData(respData); requestObject.id = originalData.workOrderList.length; originalData.workOrderList.push(requestObject); setOriginalData(originalData); }}  />
             {renderOverlay(modalVisible)}
         </>
     );

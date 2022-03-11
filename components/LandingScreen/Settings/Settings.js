@@ -8,6 +8,8 @@ import { set } from "react-native-reanimated";
 import CheckBox from "../../HomePage/UtilityComponents/CheckBox";
 import * as Localization from 'expo-localization';
 import * as Locale from '../../../Localization/Localization.json';
+import * as Network from 'expo-network';
+
 
 export default function Settings({ navigation, route }) {
   let language = {};
@@ -113,6 +115,10 @@ export default function Settings({ navigation, route }) {
     }
   }
 
+  const syncAppData = async () => {
+    storage.saveObject("lastUpdated", new Date());
+  }
+
   return (
     <>
       <ImageBackground
@@ -131,6 +137,10 @@ export default function Settings({ navigation, route }) {
             <Text style={{ color: colors.text, fontSize: 14, fontFamily: 'serif' }}>{language.config.sub}</Text>
           </View>
 
+          <Pressable style={{ alignSelf: "flex-end", marginTop: 12, marginRight: 15, marginBottom: -50, paddingVertical: 12, paddingHorizontal: 30, borderRadius: 15, elevation: 3, backgroundColor: colors.card }} onPress={() => { syncAppData(); }} >
+            <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.text }}>Soft Reset</Text>
+          </Pressable>
+
           <ScrollView style={{ marginTop: 60 }}>
             <View>
               <TextInput autoCapitalize="characters" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder={language.config.organization} defaultValue={org} placeholderTextColor={colors.text} onChangeText={org => { setOrg(org); storage.saveArticle('organization', org); }} onSubmitEditing={() => { tenantInput.current.focus(); }} returnKeyType="next" />
@@ -141,7 +151,7 @@ export default function Settings({ navigation, route }) {
               <CheckBox viewStyle={{ alignSelf: "flex-end", top: -25, marginBottom: -25 }} label={language.config.customUrl} labelSide="left" labelStyle={{ color: colors.text }} value={customBool} onChange={() => { setCustomBool(!customBool); storage.saveObject("customBool", !customBool); if (!customBool) animateUp(); else animateDown(); }} />
 
               <View style={{ marginTop: 150 }}>
-                <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder="https://example.com" defaultValue={customUrl} value={customUrl} placeholderTextColor="gray" onChangeText={customUrl => { setCustomUrl(customUrl.endsWith("/") ? customUrl.replace(/.$/,"") : customUrl); storage.saveArticle("customUrl",customUrl.endsWith("/") ? customUrl.replace(/.$/,"") : customUrl) }} ref={urlInput} onSubmitEditing={() => { navigation.navigate('Login'); saveData(); }} returnKeyType="send" />
+                <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder="https://example.com" defaultValue={customUrl} value={customUrl} placeholderTextColor="gray" onChangeText={customUrl => { setCustomUrl(customUrl.endsWith("/") ? customUrl.replace(/.$/, "") : customUrl); storage.saveArticle("customUrl", customUrl.endsWith("/") ? customUrl.replace(/.$/, "") : customUrl) }} ref={urlInput} onSubmitEditing={() => { navigation.navigate('Login'); saveData(); }} returnKeyType="send" />
               </View>
 
             </View>
