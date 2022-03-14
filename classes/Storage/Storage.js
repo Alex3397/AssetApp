@@ -37,6 +37,7 @@ export default class Storage {
     };
 
     async removeArticle(key) {
+        console.log("Removing data from: " + key)
         try {
             await AsyncStorage.removeItem('@'.concat(key));
         } catch (e) {
@@ -45,10 +46,17 @@ export default class Storage {
     }
 
     async nuke() {
+        console.log("Nuke is on the way");
         try {
+            console.log("Clearing all data");
             await AsyncStorage.clear();
         } catch (e) {
             console.log(e);
         }
+        console.log("Now I am become death");
+    }
+
+    async getAllKeys() {
+        return await AsyncStorage.getAllKeys();
     }
 }

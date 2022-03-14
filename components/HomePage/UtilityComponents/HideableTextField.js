@@ -18,6 +18,8 @@ const TextFieldComponent = (props) => {
         let style = {};
         let totalWidth = (width + secondWidth);
         let letHeight = height;
+        let label = props.label;
+        let data = props.data;
 
         const parentWidth = props.parentWidth;
         const onLayout = (event) => {
@@ -32,19 +34,21 @@ const TextFieldComponent = (props) => {
 
         if (totalWidth+30 > parentWidth && !forceWidth) {
             setMaxWidth(150);
-            setTop(-26);
-            setLeft(200);
+            setTop(-30);
+            setLeft(160);
             setForceWidth(true);
         }
         if (letHeight != 18 && maxWidth == 150 && !heightSet) {
-            setTop(-(22 + (height/3)));
+            setTop(-(22 + (height/2.8)));
             setHeightSet(true);
         }
 
+        if (secondWidth > 150) { console.log("label: " + label + " : " + data) }
+
         return (
             <View style={[ props.style, style, { width: totalWidth, alignContent: "center" }]} onLayout={props.onLayout} >
-                <Text style={{ padding: 2, color: colors.text, fontSize: 16, maxWidth: maxWidth, textAlign: "center", alignSelf: "flex-start" }} onLayout={(event) => { onLayout(event) }} >{props.label}:</Text>
-                <Text style={{ padding: 2, color: colors.text, top: top, marginLeft: 5, marginBottom: -20, left: left, paddingLeft: 10, paddingRight: 10, backgroundColor: colors.bubble, alignSelf: "flex-start", textAlign: "center", textAlignVertical: "center", borderRadius: 15, minWidth: 30 }} onLayout={(event) => { setSecondWidth(event.nativeEvent.layout.width); }} >{props.data}</Text>
+                <Text style={{ padding: 2, color: colors.text, fontSize: 16, maxWidth: maxWidth, textAlign: "center", alignSelf: "flex-start" }} onLayout={(event) => { onLayout(event) }} >{label}:</Text>
+                <Text style={{ padding: 2, color: colors.text, top: top, marginLeft: 5, marginBottom: -20, left: left, paddingLeft: 10, paddingRight: 10, backgroundColor: colors.bubble, alignSelf: "flex-start", textAlign: "center", textAlignVertical: "center", borderRadius: 15, minWidth: 30, maxWidth: maxWidth+45 }} onLayout={(event) => { setSecondWidth(event.nativeEvent.layout.width); }} >{data}</Text>
             </View>
         );
 }

@@ -7,8 +7,6 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import AntIcon from "react-native-vector-icons/AntDesign";
 import * as Localization from 'expo-localization';
 import * as Locale from '../../../Localization/Localization.json';
-import * as DummyWorkOrderList from '../../../Templates/Dummy/DummyWorkOrderList.json';
-import DummyDataspies from '../../../Templates/Dummy/DummyDataspies.json';
 import SelectDropdown from 'react-native-select-dropdown';
 import CreateWorkOrderModal from '../WOLSubComponents/CreateWorkOrderModal';
 import WorkOrderListItem from '../WOLSubComponents/WorkOrderListItem';
@@ -26,9 +24,9 @@ export default function HomeScreen({ navigation }) {
     const [refreshing, setRefreshing] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [dataspy, setDataspy] = useState("");
-    const [respData, setData] = useState({ currentDataspy: { id: "", name: "" }, workOrderList: [] });
-    const [originalData, setOriginalData] = useState({ currentDataspy: { id: "", name: "" }, workOrderList: [] });
-    const [searchData, setSearchData] = useState({ currentDataspy: { id: "", name: "" }, workOrderList: [] });
+    const [respData, setData] = useState(JSON.parse('{ "currentDataspy": { "id": "", "name": "" }, "workOrderList": [] }'));
+    const [originalData, setOriginalData] = useState(JSON.parse('{ "currentDataspy": { "id": "", "name": "" }, "workOrderList": [] }'));
+    const [searchData, setSearchData] = useState(JSON.parse('{ "currentDataspy": { "id": "", "name": "" }, "workOrderList": [] }'));
     const [modalVisible, setModalVisible] = useState(false);
     const [errorModalVisible, setErrorModalVisible] = useState(false);
     const [createModalVisible, setCreatereateModalVisible] = useState(false);
@@ -43,7 +41,6 @@ export default function HomeScreen({ navigation }) {
     const [types, setTypes] = useState([{ code: "", organization: "", description: "", status: "", department: "" }]);
     const [departments, setDepartments] = useState([{ code: "", organization: "", description: "", status: "", department: "" }]);
     const [userGroup, setUserGroup] = useState('');
-    const [user, setUser] = useState('');
     const searchInput = useRef();
     const storage = new Storage();
 
@@ -84,92 +81,81 @@ export default function HomeScreen({ navigation }) {
     }
 
     async function getWorkOrderList(update, id) {
+        console.log("Dataspy: " + id);
+        setRefreshing(true);
 
         let networkState = await Network.getNetworkStateAsync();
+        let workOrderList = await storage.getObject(key);
         let dataSpy = dataspy;
 
-        if (id != null && id != undefined) dataSpy = id; else dataSpy = '';
-
+        if (id != null && id != undefined) dataSpy = id;
         let key = 'workOrderList:' + dataSpy;
-        let workOrderList = await storage.getObject(key);
 
-        if ((!networkState.isConnected || !update) && workOrderList != null && workOrderList != undefined) {
+        if (!networkState.isConnected && !update && workOrderList != null && workOrderList != undefined) {
             setData(workOrderList);
             setSearchData(workOrderList);
             setOriginalData(workOrderList)
             setRefreshing(false);
-            let originalDataspy = originalData.currentDataspy.id == undefined ? "" : originalData.currentDataspy.id;
-            if (dataSpy == '') storage.saveObject('workOrderList:' + originalDataspy, workOrderList);
             return workOrderList;
         }
 
         let host = await storage.getArticle('usableHost');
         let token = await storage.getArticle('token');
 
-        if (host != null && host != undefined) {
-            setRefreshing(true);
-
-            let xhr = new XMLHttpRequest();
-            xhr.timeout = 120000;
-            xhr.ontimeout = () => {
-                xhr.abort;
-                setErrorModalVisible(true);
-                setModalTitle(language.login.modal.timedOut.title);
-                setResponse(language.login.modal.timedOut.response);
-                setButtonText(language.login.modal.timedOut.button);
-                setRefreshing(false);
-            }
-
-            let url = host + '/mobile/workOrderGrid?token=' + token + '&dataspy=' + dataSpy;
-            xhr.open("GET", url);
-
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    let jsonData = { currentDataspy: { id: "", name: "" }, workOrderList: [] };
-                    if (xhr.responseText != null && xhr.responseText != undefined) { jsonData = JSON.parse(xhr.responseText); }
-                    for (let index = 0; index < jsonData.length; index++) {
-                        const element = jsonData[index];
-                        if (element.scheduledStartDate == '') {
-                            element.scheduledStartDate = language.list.notDefined;
-                        }
-                        if (element.dueDate == '') {
-                            element.dueDate = language.list.notDefined;
-                        }
-                        if (element.reportedBy == '') {
-                            element.reportedBy = language.list.notDefined;
-                        }
-                        jsonData[index] = element;
-                    }
-                    if (xhr.status == 200) {
-                        setData(jsonData);
-                        setSearchData(jsonData);
-                        setOriginalData(jsonData);
-                        storage.saveObject('workOrderList:' + jsonData.currentDataspy.id, jsonData);
-                        setDataspy(jsonData.currentDataspy.id);
-                        setRefreshing(false);
-                        return jsonData;
-                    } else if (workOrderList != null) {
-                        setData(workOrderList);
-                        setSearchData(workOrderList);
-                        setOriginalData(workOrderList);
-                        setRefreshing(false);
-                        return workOrderList;
-                    } else {
-                        setErrorModalVisible(true);
-                        setModalTitle(language.login.modal.connectionError.title);
-                        setResponse(jsonData);
-                        setButtonText(language.login.modal.connectionError.button);
-                        setRefreshing(false);
-                    }
-                }
-            };
-
-            xhr.send();
-        } else {
-            setData(DummyWorkOrderList);
-            setSearchData(DummyWorkOrderList);
-            setOriginalData(DummyWorkOrderList);
+        let xhr = new XMLHttpRequest();
+        xhr.timeout = 120000;
+        xhr.ontimeout = () => {
+            xhr.abort;
+            setErrorModalVisible(true);
+            setModalTitle(language.login.modal.timedOut.title);
+            setResponse(language.login.modal.timedOut.response);
+            setButtonText(language.login.modal.timedOut.button);
+            setRefreshing(false);
         }
+
+        let url = host + '/mobile/workOrderGrid?token=' + token + '&dataspy=' + dataSpy;
+        xhr.open("GET", url);
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                let jsonData = JSON.parse(xhr.response)
+                for (let index = 0; index < jsonData.length; index++) {
+                    const element = jsonData[index];
+                    if (element.scheduledStartDate == '') {
+                        element.scheduledStartDate = language.list.notDefined;
+                    }
+                    if (element.dueDate == '') {
+                        element.dueDate = language.list.notDefined;
+                    }
+                    if (element.reportedBy == '') {
+                        element.reportedBy = language.list.notDefined;
+                    }
+                    jsonData[index] = element;
+                }
+                if (xhr.status == 200) {
+                    setData(jsonData);
+                    setSearchData(jsonData);
+                    setOriginalData(jsonData);
+                    storage.saveObject(key, jsonData);
+                    setRefreshing(false);
+                    return jsonData;
+                } else if (workOrderList != null) {
+                    setData(workOrderList);
+                    setSearchData(workOrderList);
+                    setOriginalData(workOrderList);
+                    setRefreshing(false);
+                    return workOrderList;
+                } else {
+                    setErrorModalVisible(true);
+                    setModalTitle(language.login.modal.connectionError.title);
+                    setResponse(jsonData);
+                    setButtonText(language.login.modal.connectionError.button);
+                    setRefreshing(false);
+                }
+            }
+        };
+
+        xhr.send();
     }
 
     function sleep(ms) {
@@ -188,7 +174,7 @@ export default function HomeScreen({ navigation }) {
         let token = await storage.getArticle('token');
 
         let url = host + '/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + woCode + '&organization=' + woOrganization;
-        if (host != null && host != undefined) fetch(url).then(response => response.json()).then((data) => { storage.saveObject(key, data); })
+        fetch(url).then(response => response.json()).then((data) => { storage.saveObject(key, data); })
     }
 
     useEffect(async () => {
@@ -196,22 +182,17 @@ export default function HomeScreen({ navigation }) {
         let networkState = await Network.getNetworkStateAsync();
         let date = await storage.getObject('today');
         let dataspies = await storage.getObject('dataspies');
-        let host = await storage.getArticle('usableHost');
-        let token = await storage.getArticle('token');
 
-        if (dataspies != null && dataspies != undefined) setDataspies(dataspies);
-        else if (host != null && host != undefined) fetch(host + '/mobile/dataSpies?token=' + token).then(response => response.json()).then((data) => { storage.saveObject("dataspies", data); setDataspies(data); });
-        else { setDataspies(DummyDataspies); }
+        setDataspies(dataspies);
 
-        if (networkState.isConnected && networkState.type.includes('WIFI') && new Date().getDate() != date && host != null && host != undefined) {
+        if (networkState.isConnected && networkState.type.includes('WIFI') && new Date().getDate() != date) {
             getWorkOrderList(true);
             storage.saveObject('today', new Date().getDate());
         } else {
             getWorkOrderList(false);
         }
 
-        storage.getArticle('organization').then((userGroup) => { setUserGroup(userGroup) });
-        storage.getArticle('username').then((user) => { setUser(user) });
+        storage.getArticle('organization').then((userGroup) => {setUserGroup(userGroup)});
 
     }, [])
 
@@ -237,16 +218,8 @@ export default function HomeScreen({ navigation }) {
             </View>
 
             <View style={{ borderRadius: 25, position: "absolute", top: 36, right: 25 }}>
-                <SelectDropdown data={dataspies} defaultButtonText={originalData.currentDataspy.name == undefined ? "" : originalData.currentDataspy.name}
-                    dropdownBackgroundColor={colors.card}
-                    dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
-                    rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }}
-                    rowTextStyle={{ color: colors.text, fontSize: 14 }}
-                    buttonStyle={{ backgroundColor: colors.card, borderLeftWidth: 1, borderLeftColor: colors.border, height: 40 }}
-                    buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "left", fontSize: 14 }}
-                    onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(false, selectedItem.id); }}
-                    buttonTextAfterSelection={(selectedItem) => { return selectedItem.name }} rowTextForSelection={(item) => { return item.name }} />
-                <Pressable style={{ borderRadius: 25, padding: 2, width: 40, height: 40, backgroundColor: colors.background, top: -40, right: -185 }} onPress={() => { getWorkOrderList(true, dataspy); focusOut() }} >
+                <SelectDropdown data={dataspies} defaultButtonText={originalData.currentDataspy.name == undefined ? "" : originalData.currentDataspy.name} dropdownBackgroundColor={colors.card} dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }} rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }} rowTextStyle={{ color: colors.text, fontSize: 14 }} buttonStyle={{ backgroundColor: colors.card, borderLeftWidth: 1, borderLeftColor: colors.border, height: 40 }} buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "left", fontSize: 14 }} onSelect={(selectedItem) => { setDataspy(selectedItem.id); getWorkOrderList(true, selectedItem.id); }} buttonTextAfterSelection={(selectedItem) => { return selectedItem.name }} rowTextForSelection={(item) => { return item.name }} />
+                <Pressable style={{ borderRadius: 25, padding: 2, width: 40, height: 40, backgroundColor: colors.background, top: -40, right: -185 }} onPress={() => { getWorkOrderList(true); focusOut() }} >
                     <Icon name="search" style={{ color: colors.text, fontSize: 18, marginLeft: 2, padding: 8 }} color={colors.text} />
                 </Pressable>
             </View>
@@ -267,32 +240,11 @@ export default function HomeScreen({ navigation }) {
                 <WorkOrderListItem item={item} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(item.workOrderCode, item.organization); let selectedItem = item; navigation.navigate('Ordem de Serviço', { selectedItem }); }} />
             } />
 
-            <Pressable style={{ borderRadius: 25, padding: 2, width: 45, height: 45, backgroundColor: colors.complementary4, borderColor: colors.inverted, borderWidth: 1, alignSelf: "center", alignItems: "center", justifyContent: "center", position: "absolute", bottom: 15 }} onPress={() => { setCreatereateModalVisible(true); storage.getObject('assets').then((assets) => setAssets(assets)); storage.getObject('positions').then((positions) => { setPositions(positions) }); storage.getObject('systems').then((systems) => { setSystems(systems) }); storage.getObject('organizations').then((organizations) => { setOrganizations(organizations) }); storage.getObject('departments').then((departments) => { setDepartments(departments) }); storage.getObject('statusAuth').then((status) => { setStatus(status) }); storage.getArticle('organization').then((userGroup) => { setUserGroup(userGroup) }); }} >
+            <Pressable style={{ borderRadius: 25, padding: 2, width: 45, height: 45, backgroundColor: colors.complementary4, borderColor: colors.inverted, borderWidth: 1, alignSelf: "center", alignItems: "center", justifyContent: "center", position: "absolute", bottom: 15 }} onPress={() => { setCreatereateModalVisible(true); storage.getObject('assets').then((assets) => setAssets(assets)); storage.getObject('positions').then((positions) => {setPositions(positions)}); storage.getObject('systems').then((systems) => {setSystems(systems)}); storage.getObject('organizations').then((organizations) => {setOrganizations(organizations)}); storage.getObject('departments').then((departments) => {setDepartments(departments)}); storage.getObject('statusAuth').then((status) => {setStatus(status)}); storage.getArticle('organization').then((userGroup) => {setUserGroup(userGroup)}); }} >
                 <AntIcon name="plus" style={{ color: colors.background, fontSize: 30 }} />
             </Pressable>
 
-            <CreateWorkOrderModal status={status} user={user} userGroup={userGroup} organizations={organizations} assets={assets} positions={positions} systems={systems} departments={departments} types={types} visible={createModalVisible} onRequestClose={() => { setCreatereateModalVisible(false) }}
-                onCreateWorkOrder={async (requestObject) => {
-                    if (originalData.workOrderList != null && originalData.workOrderList != undefined) requestObject.id = originalData.workOrderList.length;
-                    originalData.workOrderList.push(requestObject); setOriginalData(originalData);
-                    let createdWorkOrders = await storage.getObject('createdWorkOrders');
-                    if (createdWorkOrders != null && createdWorkOrders != undefined) {
-                        createdWorkOrders.push(requestObject);
-                        storage.saveObject('createdWorkOrders', createdWorkOrders);
-                        storage.getObject('workOrderList:' + dataspy).then((WOL) => {
-                            console.log(WOL);
-                            WOL.workOrderList.concat(createdWorkOrders);
-                            storage.saveObject('workOrderList:' + dataspy, WOL);
-                        })
-                    } else {
-                        storage.saveObject('createdWorkOrders', [requestObject]);
-                        storage.getObject('workOrderList:' + dataspy).then((WOL) => {
-                            console.log(WOL);
-                            WOL.workOrderList.concat([requestObject]);
-                            storage.saveObject('workOrderList:' + dataspy, WOL);
-                        })
-                    }
-                }} />
+            <CreateWorkOrderModal status={status} userGroup={userGroup} organizations={organizations} assets={assets} positions={positions} systems={systems} departments={departments} types={types} visible={createModalVisible} onRequestClose={() => { setCreatereateModalVisible(false) }} onCreateWorkOrder={(requestObject) => { if (respData.workOrderList != null && respData.workOrderList != undefined) requestObject.id = respData.workOrderList.length; respData.workOrderList.push(requestObject); setData(respData); if (originalData.workOrderList != null && originalData.workOrderList != undefined) requestObject.id = originalData.workOrderList.length; originalData.workOrderList.push(requestObject); setOriginalData(originalData); }}  />
             {renderOverlay(modalVisible)}
         </>
     );

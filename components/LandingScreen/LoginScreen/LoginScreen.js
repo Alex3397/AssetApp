@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
-import { Button, View, SafeAreaView, Pressable } from 'react-native';
-import { ImageBackground, Image, StyleSheet, TextInput, Text, Modal, Keyboard } from "react-native";
+import { Button, View, SafeAreaView, Pressable, ScrollView } from 'react-native';
+import { ImageBackground, Image, StyleSheet, TextInput, Text, Modal, Keyboard, RefreshControl } from "react-native";
 import { useTheme } from '@react-navigation/native';
 import CheckBox from '../../HomePage/UtilityComponents/CheckBox';
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -12,6 +12,8 @@ import * as Network from 'expo-network';
 export default function HomeScreen({ navigation }) {
     const storage = new Storage();
     const { colors, dark } = useTheme();
+
+    const [refreshing, setRefreshing] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [saveUserInfo, setSaveUserInfo] = useState(false);
     const [iconName, setIconName] = useState('eye');
@@ -57,14 +59,19 @@ export default function HomeScreen({ navigation }) {
     }
 
     const validate = async () => {
-
         let organization = await storage.getArticle('organization');
         let tenant = await storage.getArticle('tenant');
         let host = await storage.getArticle('usableHost');
 
-        if ((!user || !pass)) {
-            setWarning(language.login.warning)
-        } else if (organization != null && tenant != null && host != null) {
+        setRefreshing(true);
+
+        if ((tenant == null || tenant == undefined) && (organization == null || organization == undefined)) {
+            setWarning('Tenant and Organization must not be blank');
+        } else if (tenant == null || tenant == undefined) setWarning('Tenant must not be blank');
+        else if (organization == null || organization == undefined) setWarning('Organization must not be blank');
+        else setWarning('');
+
+        if (host != null && host != undefined && tenant != null && tenant != undefined && organization != null && organization != undefined) {
 
             let xhr = new XMLHttpRequest();
             let url = host + '/validate';
@@ -77,7 +84,6 @@ export default function HomeScreen({ navigation }) {
 
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
-                    setModalVisible(true)
 
                     if (xhr.responseText.includes("User validated.")) {
                         setModalTitle(language.login.modal.positive.title);
@@ -86,27 +92,38 @@ export default function HomeScreen({ navigation }) {
                         let token = xhr.responseText.replace("User validated.", "");
                         storage.saveArticle('token', token);
                         setConnected(true);
+                        getData();
                     } else {
                         if (xhr.status == 0) {
                             setModalTitle(language.login.modal.connectionError.title);
                             setResponse(language.login.modal.connectionError.response);
                             setButtonText(language.login.modal.connectionError.button);
                         } else if (xhr.responseText.includes("Please make certain all credentials are entered correctly.")) {
+                            console.log(xhr.responseText)
                             setModalTitle(language.login.modal.invalidUser.title);
                             setResponse(language.login.modal.invalidUser.response);
                             setButtonText(language.login.modal.invalidUser.button);
                         }
                         else if (xhr.responseText.includes('Connection timed out')) {
+                            console.log(xhr.responseText)
                             setModalTitle(language.login.modal.timedOut.title);
                             setResponse(language.login.modal.timedOut.response);
                             setButtonText(language.login.modal.timedOut.button);
                         }
+                        else if (xhr.responseText.includes('lockout')) {
+                            console.log(xhr.responseText)
+                            setModalTitle(language.login.modal.unknown.title);
+                            setResponse(xhr.response);
+                            setButtonText(language.login.modal.unknown.button)
+                        }
                         else {
+                            console.log(xhr.responseText)
                             setModalTitle(language.login.modal.unknown.title);
                             setResponse(xhr.response);
                             setButtonText(language.login.modal.unknown.button)
                         }
                     }
+                    setModalVisible(true);
                     if (saveUserInfo) {
                         saveUserData(user, pass);
                     }
@@ -122,7 +139,10 @@ export default function HomeScreen({ navigation }) {
             xhr.send(JSON.stringify(data));
         }
         else {
-            setWarning('Usuário e/ou senha incorretos.')
+            setModalTitle("Undefined Host");
+            setResponse("Unable to connect, cause: Missing connection data.\n\nOnce connection is established any data generated within the app will be sent to the server and synced.\nAny data previously stored will be used.\n\nOtherwise app will be rendered in preview mode.\nSetting up offline mode.");
+            setButtonText("Continue");
+            setModalVisible(true);
         }
     }
 
@@ -149,8 +169,8 @@ export default function HomeScreen({ navigation }) {
 
             console.log("fetching data with position: " + index + "01");
 
-            let newUrl = url.replace('&position=0',"&position=" + index + "01");
-            fetch(newUrl).then((response) => response.json()).then((newData) => { 
+            let newUrl = url.replace('&position=0', "&position=" + index + "01");
+            fetch(newUrl).then((response) => response.json()).then((newData) => {
                 list = list.concat(newData.list);
                 list.sort(function (a, b) { return a.id - b.id; });
                 if (url.includes("equipments")) storage.saveObject('assets', list);
@@ -193,24 +213,23 @@ export default function HomeScreen({ navigation }) {
     const getData = async () => {
         let networkState = await Network.getNetworkStateAsync();
         let lastUpdated = await storage.getObject("lastUpdated");
-        if ( lastUpdated != new Date().getDate() && networkState.isConnected && connected) {
+        if (lastUpdated != new Date().getDate() && networkState.isConnected && connected) {
 
             let host = await storage.getArticle('usableHost');
             let token = await storage.getArticle('token');
 
             getUserStatusAuth(host, token);
-    
+
             fetch(host + '/mobile/userDefinedFieldsLabels?token=' + token).then(response => response.json()).then((data) => { storage.saveObject("labels", data) });
             fetch(host + '/mobile/fields2show?token=' + token).then(response => response.json()).then((data) => { storage.saveObject("showfields", data) });
-            fetch(host + '/mobile/dataSpies?token=' + token).then(response => response.json()).then((data) => { storage.saveObject("dataspies", data) });
-    
+
             getDataFromUrl(host + '/mobile/equipments?token=' + token + "&position=0");
             getDataFromUrl(host + '/mobile/positions?token=' + token + "&position=0");
             getDataFromUrl(host + '/mobile/systems?token=' + token + "&position=0");
-            
+
             getDataFromUrl(host + '/mobile/organizations?token=' + token + "&position=0");
             getDataFromUrl(host + '/mobile/departments?token=' + token + "&position=0");
-    
+
             storage.saveObject("lastUpdated", new Date().getDate());
         }
     }
@@ -242,7 +261,7 @@ export default function HomeScreen({ navigation }) {
                         <View style={{ margin: 20, backgroundColor: "white", borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
                             <Text style={{ marginBottom: 15, textAlign: "center", color: "black" }}>{modalTitle}</Text>
                             <Text style={{ marginBottom: 15, textAlign: "center", color: "black" }}>{response}</Text>
-                            <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3" }} onPress={async () => { setModalVisible(false); getData(); navigation.navigate('HomePage'); }} >
+                            <Pressable style={{ borderRadius: 20, padding: 8, elevation: 2, backgroundColor: "#2196F3" }} onPress={async () => { setModalVisible(false); navigation.navigate('HomePage'); }} >
                                 <Text style={{ color: "white", fontWeight: "bold", textAlign: "center" }}>{buttonText}</Text>
                             </Pressable>
                         </View>
@@ -257,9 +276,9 @@ export default function HomeScreen({ navigation }) {
                         <Text style={{ color: colors.text, fontFamily: 'serif' }}>{language.login.sub}</Text>
                     </View>
 
-                    <TextInput autoCapitalize='characters' style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 80, marginBottom: 20 }} placeholder={language.login.user} placeholderTextColor={colors.text} onChangeText={user => { setUser(user); saveUserData(user, pass); }} onSubmitEditing={() => { passwordInput.current.focus(); }} defaultValue={user} returnKeyType="next" />
+                    <TextInput autoCapitalize='characters' style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 80, marginBottom: 20 }} placeholder={language.login.user} placeholderTextColor={colors.text} onChangeText={user => { setUser(user); saveUserData(user, pass); }} onSubmitEditing={() => { passwordInput.current.focus(); }} defaultValue={user} returnKeyType="next" blurOnSubmit={false} />
                     <View>
-                        <TextInput autoCapitalize='none' secureTextEntry={iconName == 'eye' ? true : false} style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 20, marginBottom: 5 }} placeholder={language.login.password} placeholderTextColor={colors.text} onChangeText={pass => { setPass(pass); saveUserData(user, pass); }} ref={passwordInput} returnKeyType="send" onSubmitEditing={() => { validate() }} defaultValue={pass} />
+                        <TextInput autoCapitalize='none' secureTextEntry={iconName == 'eye' ? true : false} style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 20, marginBottom: 5 }} placeholder={language.login.password} placeholderTextColor={colors.text} onChangeText={pass => { setPass(pass); saveUserData(user, pass); }} ref={passwordInput} returnKeyType="send" onSubmitEditing={() => { validate(); }} defaultValue={pass} blurOnSubmit={false} />
 
                         <Pressable style={{ position: "absolute", alignSelf: "flex-end", marginTop: 25, padding: 2, paddingRight: 6 }} onPress={() => { iconName == 'eye' ? setIconName('eye-slash') : setIconName('eye') }}>
                             <Icon name={iconName} style={{ fontSize: 20 }} color={colors.text} />

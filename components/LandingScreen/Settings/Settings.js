@@ -100,7 +100,7 @@ export default function Settings({ navigation, route }) {
     if (!isCustom) {
       let host = await storage.getArticle("host");
       let port = await storage.getArticle("port");
-      storage.saveArticle('usableHost', host.concat(':').concat(port));
+      if (host != null && host != undefined) storage.saveArticle('usableHost', host.concat(':').concat(port));
     }
     else {
       let customUrl = await storage.getArticle("customUrl");
@@ -108,9 +108,9 @@ export default function Settings({ navigation, route }) {
       if (customUrl == null) {
         let host = await storage.getArticle("host");
         let port = await storage.getArticle("port");
-        storage.saveArticle('usableHost', host.concat(':').concat(port));
+        if (host != null && host != undefined) storage.saveArticle('usableHost', host.concat(':').concat(port));
       } else {
-        storage.saveArticle('usableHost', customUrl);
+        if (customUrl != null && customUrl != undefined) storage.saveArticle('usableHost', customUrl);
       }
     }
   }
@@ -137,21 +137,21 @@ export default function Settings({ navigation, route }) {
             <Text style={{ color: colors.text, fontSize: 14, fontFamily: 'serif' }}>{language.config.sub}</Text>
           </View>
 
-          <Pressable style={{ alignSelf: "flex-end", marginTop: 12, marginRight: 15, marginBottom: -50, paddingVertical: 12, paddingHorizontal: 30, borderRadius: 15, elevation: 3, backgroundColor: colors.card }} onPress={() => { syncAppData(); }} >
+          <Pressable style={{ alignSelf: "flex-end", marginTop: 12, marginRight: 15, marginBottom: -50, paddingVertical: 12, paddingHorizontal: 30, borderRadius: 15, elevation: 3, backgroundColor: colors.card }} onPress={() => { syncAppData(); }} onLongPress={() => {storage.nuke();}} >
             <Text style={{ fontSize: 16, lineHeight: 21, fontWeight: 'bold', letterSpacing: 0.25, color: colors.text }}>Soft Reset</Text>
           </Pressable>
 
           <ScrollView style={{ marginTop: 60 }}>
             <View>
-              <TextInput autoCapitalize="characters" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder={language.config.organization} defaultValue={org} placeholderTextColor={colors.text} onChangeText={org => { setOrg(org); storage.saveArticle('organization', org); }} onSubmitEditing={() => { tenantInput.current.focus(); }} returnKeyType="next" />
-              <TextInput autoCapitalize="characters" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder={language.config.tenant} defaultValue={tenant} placeholderTextColor={colors.text} onChangeText={tenant => { setTenant(tenant); storage.saveArticle('tenant', tenant); }} ref={tenantInput} onSubmitEditing={() => { urlInput.current.focus(); }} returnKeyType="next" />
-              <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder={language.config.url} defaultValue={url.replace(/[^0-9.]/g, '')} value={url} placeholderTextColor={colors.text} onChangeText={input => { setUrl(input.replace(/[^0-9.]/g, '')); storage.saveArticle('host', con.concat(input.replace(/[^0-9.]/g, ''))); }} ref={urlInput} onSubmitEditing={() => { portInput.current.focus(); }} returnKeyType="send" />
-              <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder="Port" defaultValue={port.replace(/[^0-9.]/g, '')} value={port} placeholderTextColor={colors.text} onChangeText={input => { setPort(input.replace(/[^0-9]/g, '')); storage.saveArticle('port', input.replace(/[^0-9]/g, '')); }} ref={portInput} onSubmitEditing={() => { navigation.navigate('Login'); saveData(); }} returnKeyType="next" />
+              <TextInput autoCapitalize="characters" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder={language.config.organization} defaultValue={org} placeholderTextColor={colors.text} onChangeText={org => { setOrg(org); storage.saveArticle('organization', org); }} onSubmitEditing={() => { tenantInput.current.focus(); }} returnKeyType="next" blurOnSubmit={false}/>
+              <TextInput autoCapitalize="characters" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder={language.config.tenant} defaultValue={tenant} placeholderTextColor={colors.text} onChangeText={tenant => { setTenant(tenant); storage.saveArticle('tenant', tenant); }} ref={tenantInput} onSubmitEditing={() => { urlInput.current.focus(); }} returnKeyType="next" blurOnSubmit={false} />
+              <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder={language.config.url} defaultValue={url.replace(/[^0-9.]/g, '')} value={url} placeholderTextColor={colors.text} onChangeText={input => { setUrl(input.replace(/[^0-9.]/g, '')); storage.saveArticle('host', con.concat(input.replace(/[^0-9.]/g, ''))); }} ref={urlInput} onSubmitEditing={() => { portInput.current.focus(); }} returnKeyType="next" blurOnSubmit={false} />
+              <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder="Port" defaultValue={port.replace(/[^0-9.]/g, '')} value={port} placeholderTextColor={colors.text} onChangeText={input => { setPort(input.replace(/[^0-9]/g, '')); storage.saveArticle('port', input.replace(/[^0-9]/g, '')); }} ref={portInput} onSubmitEditing={() => { navigation.navigate('Login'); saveData(); }} returnKeyType="send" blurOnSubmit={false} />
               <CheckBox label={conLabel} labelSide="left" labelStyle={{ color: colors.text }} value={conBool} onChange={() => { setConBool(!conBool) }} />
-              <CheckBox viewStyle={{ alignSelf: "flex-end", top: -25, marginBottom: -25 }} label={language.config.customUrl} labelSide="left" labelStyle={{ color: colors.text }} value={customBool} onChange={() => { setCustomBool(!customBool); storage.saveObject("customBool", !customBool); if (!customBool) animateUp(); else animateDown(); }} />
+              <CheckBox viewStyle={{ alignSelf: "flex-end", top: -25, marginBottom: -25 }} label={language.config.customUrl} labelSide="left" labelStyle={{ color: colors.text }} value={customBool} onChange={() => { setCustomBool(!customBool); storage.saveObject("customBool", !customBool); if (!customBool) animateUp(); else animateDown(); if (customBool) storage.removeArticle('usableHost') }} />
 
               <View style={{ marginTop: 150 }}>
-                <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder="https://example.com" defaultValue={customUrl} value={customUrl} placeholderTextColor="gray" onChangeText={customUrl => { setCustomUrl(customUrl.endsWith("/") ? customUrl.replace(/.$/, "") : customUrl); storage.saveArticle("customUrl", customUrl.endsWith("/") ? customUrl.replace(/.$/, "") : customUrl) }} ref={urlInput} onSubmitEditing={() => { navigation.navigate('Login'); saveData(); }} returnKeyType="send" />
+                <TextInput autoCapitalize="none" style={{ color: colors.text, borderColor: colors.background, borderBottomColor: colors.text, borderWidth: 0.75, padding: 4, marginTop: 12, marginBottom: 12 }} placeholder="https://example.com" defaultValue={customUrl} value={customUrl} placeholderTextColor="gray" onChangeText={customUrl => { setCustomUrl(customUrl.endsWith("/") ? customUrl.replace(/.$/, "") : customUrl); storage.saveArticle("customUrl", customUrl.endsWith("/") ? customUrl.replace(/.$/, "") : customUrl) }} onSubmitEditing={() => { navigation.navigate('Login'); saveData(); }} returnKeyType="send" />
               </View>
 
             </View>

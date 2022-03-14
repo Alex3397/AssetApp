@@ -76,11 +76,7 @@ export default function CreateWorkOrderModal(props) {
     else if (Localization.locale.includes("es") && language != Locale.es) language = Locale.es;
     else if (language != Locale.en) language = Locale.en;
 
-    let organizations = [];
-    if (props.organizations != null && props.organizations != undefined) organizations = props.organizations;
-
-    let types = [];
-    if (props.types != null && props.types != undefined) types = props.types;
+    console.log("Props.status: " + props.status)
 
     let allStatus = props.status;
     let filteredStatus = [];
@@ -89,11 +85,12 @@ export default function CreateWorkOrderModal(props) {
         for (let index = 0; index < allStatus.length; index++) {
             const element = allStatus[index];
 
-            if ((element.fromStatus == "-" && element.userGroupCode == props.userGroup) && (element.userCode == "*" || element.userCode == props.user) ) filteredStatus = filteredStatus.concat(element);
+            if (element.fromStatus == "-" && element.userGroupCode == props.userGroup) filteredStatus = filteredStatus.concat(element);
         }
     }
 
     let filteredDepartments = []
+    console.log("Props.departments: " + props.departments)
 
     if (props.departments != null && props.departments != undefined) {
         for (let index = 0; index < props.departments.length; index++) {
@@ -105,27 +102,33 @@ export default function CreateWorkOrderModal(props) {
 
     let filteredAssets = []
 
+    console.log("Props.assets: " + props.assets)
+
     if (props.assets != null && props.assets != undefined) {
         for (let index = 0; index < props.assets.length; index++) {
             const element = props.assets[index];
 
-            if ((element.organization == "*" || element.organization == organization) && element.status != "D") filteredAssets = filteredAssets.concat(element)
+            if (element.organization == "*" || element.organization == organization) filteredAssets = filteredAssets.concat(element)
         }
     }
+
+    console.log("Props.positions: " + props.positions)
 
     if (props.positions != null && props.positions != undefined) {
         for (let index = 0; index < props.positions.length; index++) {
             const element = props.positions[index];
 
-            if ((element.organization == "*" || element.organization == organization) && element.status != "D") filteredAssets = filteredAssets.concat(element)
+            if (element.organization == "*" || element.organization == organization) filteredAssets = filteredAssets.concat(element)
         }
     }
+
+    console.log("Props.systems: " + props.systems)
 
     if (props.systems != null && props.systems != undefined) {
         for (let index = 0; index < props.systems.length; index++) {
             const element = props.systems[index];
 
-            if ((element.organization == "*" || element.organization == organization) && element.status != "D") filteredAssets = filteredAssets.concat(element)
+            if (element.organization == "*" || element.organization == organization) filteredAssets = filteredAssets.concat(element)
         }
     }
 
@@ -137,6 +140,7 @@ export default function CreateWorkOrderModal(props) {
         if (requestObject.department == "") { setDepartmentBorderWidth(1); setDepartmentBorderColor("red"); } else { setDepartmentBorderWidth(0.5); setDepartmentBorderColor(colors.inverted); }
         if (requestObject.equipment == "" && requestObject.equipmentOrganization == "") { setAssetBorderWidth(1); setAssetBorderColor("red"); } else { setAssetBorderWidth(0.5); setAssetBorderColor(colors.inverted); }
         if (requestObject.organization != "" && requestObject.description != "" && requestObject.workOrderType != "" && requestObject.workOrderStatus != "" && requestObject.department != "" && (requestObject.equipment != "" || requestObject.equipmentOrganization != "")) {
+            console.log(requestObject);
             props.onCreateWorkOrder(requestObject);
             props.onRequestClose()
         }
@@ -166,7 +170,7 @@ export default function CreateWorkOrderModal(props) {
                         />
                         <Text style={{ textAlign: "center", color: colors.text, fontSize: 18, marginTop: 15 }}>Organização: </Text>
                         <SelectDropdown
-                            data={organizations}
+                            data={props.organizations}
                             defaultButtonText={organization}
                             dropdownBackgroundColor={colors.card}
                             dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
@@ -180,7 +184,7 @@ export default function CreateWorkOrderModal(props) {
                         />
                         <Text style={{ textAlign: "center", color: colors.text, fontSize: 18, marginTop: 15 }}>Tipo: </Text>
                         <SelectDropdown
-                            data={types}
+                            data={props.types}
                             defaultButtonText="Tipo"
                             dropdownBackgroundColor={colors.card}
                             dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}

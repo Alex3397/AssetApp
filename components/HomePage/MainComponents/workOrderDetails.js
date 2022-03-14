@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Text, View, RefreshControl, ScrollView } from "react-native";
 import Storage from '../../../classes/Storage/Storage';
 import * as WorkOrderDetailsTemplate from '../../../Templates/WorkOrderDetailsTemplate.json';
+import * as DummyWorkOrderDetailsLabels from '../../../Templates/Dummy/DummyWorkOrderDetailsLabels.json';
+import * as DummyWorkOrderDetailsData from '../../../Templates/Dummy/DummyWorkOrderDetailsData.json';
 import * as Network from 'expo-network';
 import UserDefinedFields from '../MinorComponents/UserDefinedFields';
 import ComplianceDetails from '../MinorComponents/ComplianceDetails';
@@ -20,7 +22,6 @@ export default function HomeScreen({ navigation, route }) {
     const storage = new Storage();
 
     const { selectedItem } = route.params;
-
     console.log(selectedItem);
 
     const [refreshing, setRefreshing] = useState(false);
@@ -39,36 +40,43 @@ export default function HomeScreen({ navigation, route }) {
 
     async function getWorkOrderDetails(update, selectedItem) {
         setRefreshing(true);
-        let networkState = await Network.getNetworkStateAsync();
-        let key = selectedItem.workOrderCode + " : " + selectedItem.organization;
+        let host = await storage.getArticle('usableHost');
+        let token = await storage.getArticle('token');
 
-        if ((networkState.isConnected && networkState.type.includes('WIFI')) || (networkState.isConnected && update)) {
-            let host = await storage.getArticle('usableHost');
-            let token = await storage.getArticle('token');
-
-            let labelUrl = host + '/mobile/userDefinedFieldsLabels?token=' + token;
-            fetch(labelUrl).then(response => response.json()).then((data) => { setLabels(data); storage.saveObject("labels", data) });
-
-            let url = host + '/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + selectedItem.workOrderCode + '&organization=' + selectedItem.organization;
-            if (!url.includes("undefined")) {
-                fetch(url).then(response => response.json()).then((data) => { setData(data); storage.saveObject(key, data); });
+        if (host != null && host != undefined) {
+            let networkState = await Network.getNetworkStateAsync();
+            let key = selectedItem.workOrderCode + " : " + selectedItem.organization;
+    
+            if ((networkState.isConnected && networkState.type.includes('WIFI')) || (networkState.isConnected && update)) {
+    
+                let labelUrl = host + '/mobile/userDefinedFieldsLabels?token=' + token;
+                fetch(labelUrl).then(response => response.json()).then((data) => { setLabels(data); storage.saveObject("labels", data) });
+    
+                let url = host + '/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + selectedItem.workOrderCode + '&organization=' + selectedItem.organization;
+                if (!url.includes("undefined")) {
+                    fetch(url).then(response => response.json()).then((data) => { setData(data); storage.saveObject(key, data); });
+                }
+            } else {
+                storage.getObject(key).then((data) => { setData(data); });
+                storage.getObject("labels").then((data) => { setLabels(data) });
             }
         } else {
-            storage.getObject(key).then((data) => { setData(data); });
-            storage.getObject("labels").then((data) => { setLabels(data) });
+            setData(DummyWorkOrderDetailsData);
+            setLabels(DummyWorkOrderDetailsLabels);
         }
+
         setRefreshing(false);
     }
 
     useEffect(() => {
         navigation.addListener('focus', () => {
-            getWorkOrderDetails(true, selectedItem);
-            storage.getObject("showfields").then(data => { setShow(data); });
-            storage.getObject("labels").then((data) => { setLabels(data) });
+            getWorkOrderDetails(false, selectedItem);
+            storage.getObject("showfields").then(data => { if (data != null && data != undefined) setShow(data); else {setShow(FieldsToShow)} });
+            storage.getObject("labels").then((data) => { if (data != null && data != undefined) setLabels(data); else {setLabels(WorkOrderDetailsTemplate)} });
         });
         navigation.addListener('blur', () => {
-            setData(WorkOrderDetailsTemplate);
-            setLabels(WorkOrderDetailsTemplate)
+            setData(DummyWorkOrderDetailsData);
+            setLabels(DummyWorkOrderDetailsLabels)
         });
     }, [])
 
@@ -86,7 +94,6 @@ export default function HomeScreen({ navigation, route }) {
                 <IncidentControl labels={labels.incidentControl} item={item} show={show} />
                 <ComplianceDetails labels={labels.compliance} item={item} show={show} />
                 <UserDefinedFields userLabels={labels} item={item} show={show.userDefinedFields} />
-
                 <Sign item={item} show={show} />
 
             </ScrollView>
