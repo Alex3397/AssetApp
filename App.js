@@ -25,9 +25,9 @@ const DarkTheme = {
         complementary3: "rgb(255, 186, 73)",
         complementary4: "rgb(217, 240, 253)",
     },
-  };
+};
 
-const LightTheme ={
+const LightTheme = {
     colors: {
         background: "rgb(242, 242, 242)",
         border: "rgb(216, 216, 216)",
@@ -41,8 +41,8 @@ const LightTheme ={
         complementary2: "rgb(0, 253, 220)",
         complementary3: "rgb(255, 186, 73)",
         complementary4: "rgb(217, 240, 253)",
-      },
-      dark: false,
+    },
+    dark: false,
 }
 
 export default function App() {

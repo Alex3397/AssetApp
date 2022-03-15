@@ -1,10 +1,6 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '@react-navigation/native';
-import { TextInput, Text, RefreshControl, Pressable, FlatList, View, Keyboard, Modal } from "react-native";
-import Storage from '../../../classes/Storage/Storage';
-import * as Network from 'expo-network';
-import Icon from "react-native-vector-icons/FontAwesome";
-import AntIcon from "react-native-vector-icons/AntDesign";
+import { TextInput, Text, Pressable, View, Modal } from "react-native";
 import * as Localization from 'expo-localization';
 import * as Locale from '../../../Localization/Localization.json';
 import SelectDropdown from 'react-native-select-dropdown';
