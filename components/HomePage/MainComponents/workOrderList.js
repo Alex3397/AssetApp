@@ -24,19 +24,22 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
     return BackgroundFetch.BackgroundFetchResult.NewData;
 });
 
-const createWorkOrders = async () => {
+const postWorkOrders = async () => {
+    let networkState = await Network.getNetworkStateAsync();
     let host = await storage.getArticle('usableHost');
     let token = await storage.getArticle('token');
 
-    if (host != null && host != undefined) {
+    if (host != null && host != undefined && networkState.isConnected) {
         let url = host + "/mobile/workOrder?token=" + token;
-
         let createdWorkOrders = await storage.getObject('createdWorkOrders');
 
+        console.log(createdWorkOrders.length);
         if (createdWorkOrders != null && createdWorkOrders != undefined && createdWorkOrders.length > 0) {
             for (let index = 0; index < createdWorkOrders.length; index++) {
                 const element = createdWorkOrders[index];
 
+                console.log("Sending post with payload:")
+                console.log(element);
                 fetch(url, {
                     method: 'POST',
                     headers: {
@@ -45,22 +48,20 @@ const createWorkOrders = async () => {
                     },
                     body: JSON.stringify(element)
                 }).then((response) => {
+                    response.text().then((text) => { console.log(text) });
                     console.log(response.status);
                     if (response.status == 200) {
-                        console.log(createdWorkOrders);
-                        if (createWorkOrders.splice != undefined) createWorkOrders.splice(index, 1);
-                        console.log(createdWorkOrders);
-                        response.text().then((text) => { console.log(text) });
+                        createdWorkOrders.splice(index, 1);
+                        index--;
                     }
                 })
+                createdWorkOrders.splice(index, 1);
+                index--;
+                console.log(createdWorkOrders.length);
             }
-            if (createdWorkOrders != null && createdWorkOrders != undefined) storage.saveObject('createdWorkOrders', createdWorkOrders);
-            else storage.removeArticle('createdWorkOrders');
-        } else {
-            console.log("Did not pass verification");
-            console.log(createdWorkOrders + " : " + createdWorkOrders.length);
+            if (createdWorkOrders.length == 0) storage.removeArticle('createdWorkOrders');
+            else storage.saveObject('createdWorkOrders', createdWorkOrders);
         }
-
     }
 }
 
@@ -96,6 +97,15 @@ export default function HomeScreen({ navigation }) {
     const [userGroup, setUserGroup] = useState('');
     const [user, setUser] = useState('');
     const searchInput = useRef();
+
+    async function registerBackgroundFetchAsync() {
+        console.log("Registering async task: " + BACKGROUND_FETCH_TASK);
+        return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
+            minimumInterval: 60 * 15, // 15 minutes
+            stopOnTerminate: false, // android only,
+            startOnBoot: true, // android only
+        });
+    }
 
     let search = []
 
@@ -244,10 +254,39 @@ export default function HomeScreen({ navigation }) {
         if (host != null && host != undefined) fetch(url).then(response => response.json()).then((data) => { storage.saveObject(key, data); })
     }
 
+    const fixCreatedWorkOrders = async (data) => {
+        let list = data.workOrderList;
+
+        for (let index = 0; index < list.length; index++) {
+            const element = list[index];
+
+            element.id = index;
+            list[index] = element;
+        }
+        data.workOrderList = list;
+        if (data.currentDataspy.id != "") storage.saveObject('workOrderList:' + data.currentDataspy.id, data);
+
+        let createdWorkOrders = await storage.getObject('createdWorkOrders');
+
+        if (createdWorkOrders != null && createdWorkOrders != undefined && createdWorkOrders.length > 0) {
+            for (let index = 0; index < createdWorkOrders.length; index++) {
+                const element = createdWorkOrders[index];
+
+                element.id = list.length + index + 1;
+                createdWorkOrders[index] = element;
+
+            }
+            if (createdWorkOrders != null && createdWorkOrders != undefined) storage.saveObject('createdWorkOrders', createdWorkOrders);
+        }
+    }
+
+    (() => {
+        fixCreatedWorkOrders(originalData);
+    })()
+
     useEffect(async () => {
 
         let networkState = await Network.getNetworkStateAsync();
-        let date = await storage.getObject('today');
         let dataspies = await storage.getObject('dataspies');
         let host = await storage.getArticle('usableHost');
         let token = await storage.getArticle('token');
@@ -256,29 +295,27 @@ export default function HomeScreen({ navigation }) {
         else if (host != null && host != undefined) fetch(host + '/mobile/dataSpies?token=' + token).then(response => response.json()).then((data) => { storage.saveObject("dataspies", data); setDataspies(data); });
         else { setDataspies(DummyDataspies); }
 
-        if (networkState.isConnected && networkState.type.includes('WIFI') && new Date().getDate() != date && host != null && host != undefined) {
-            getWorkOrderList(true);
-            storage.saveObject('today', new Date().getDate());
-        } else {
-            getWorkOrderList(false);
-        }
+        let gotData = await storage.getObject("gotData");
+        if (gotData == null) gotData = false;
+        getWorkOrderList(!gotData);
 
         storage.getArticle('organization').then((userGroup) => { setUserGroup(userGroup) });
         storage.getArticle('username').then((user) => { setUser(user) });
 
     }, [])
 
-    const updateCreatedWOIds = (WOL,createdWorkOrders) => {
+    const updateCreatedWOIds = (WOL, createdWorkOrders) => {
         let wolLength = WOL.workOrderList.length;
 
-        for (let index = 0; index < createdWorkOrders.length; index++) {
-            const element = createdWorkOrders[index];
+        if (createdWorkOrders != null && createdWorkOrders != undefined && createdWorkOrders.length > 0) {
+            for (let index = 0; index < createdWorkOrders.length; index++) {
+                const element = createdWorkOrders[index];
 
-            element.id = wolLength + index + 1;
+                element.id = wolLength + index + 1;
+            }
+            WOL.workOrderList.concat(createdWorkOrders);
+            storage.saveObject('workOrderList:' + dataspy, WOL);
         }
-
-        WOL.workOrderList.concat(createdWorkOrders);
-        storage.saveObject('workOrderList:' + dataspy, WOL);
     }
 
     const addNewWorkOrders = async (requestObject) => {
@@ -356,7 +393,7 @@ export default function HomeScreen({ navigation }) {
                 <AntIcon name="plus" style={{ color: colors.background, fontSize: 30 }} />
             </Pressable>
 
-            <CreateWorkOrderModal status={status} user={user} userGroup={userGroup} organizations={organizations} assets={assets} positions={positions} systems={systems} departments={departments} types={types} visible={createModalVisible} onRequestClose={() => { setCreatereateModalVisible(false) }} onCreateWorkOrder={async (requestObject) => { addNewWorkOrders(requestObject); createWorkOrders(); }} />
+            <CreateWorkOrderModal status={status} user={user} userGroup={userGroup} organizations={organizations} assets={assets} positions={positions} systems={systems} departments={departments} types={types} visible={createModalVisible} onRequestClose={() => { setCreatereateModalVisible(false) }} onCreateWorkOrder={async (requestObject) => { addNewWorkOrders(requestObject); postWorkOrders(); registerBackgroundFetchAsync(); }} />
             {renderOverlay(modalVisible)}
         </>
     );

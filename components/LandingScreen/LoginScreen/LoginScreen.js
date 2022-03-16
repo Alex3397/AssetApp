@@ -20,14 +20,14 @@ function sleep(ms) {
 
 TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
     console.log("Running async task")
-    getData().then(() => {console.log("Task done")});
+    getData().then(() => { console.log("Task done") });
     return BackgroundFetch.BackgroundFetchResult.NewData;
 });
 
 const getFuckingData = async (url, times, list, storage) => {
     for (let index = 1; index <= times; index++) {
 
-        console.log("fetching data with position: " + index + "01\nfrom: " + url );
+        console.log("fetching data with position: " + index + "01\nfrom: " + url);
 
         let newUrl = url.replace('&position=0', "&position=" + index + "01");
         fetch(newUrl).then((response) => response.json()).then((newData) => {
@@ -51,19 +51,30 @@ const getDataFromUrl = async (url) => {
 
     xhr.setRequestHeader("Accept", "*/*");
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onreadystatechange = () => {
+    xhr.onreadystatechange = async () => {
         if (xhr.readyState == 4) {
             let data = JSON.parse(xhr.response);
             let list = data.list;
             let times = Math.floor(data.records / 100);
 
-            if (url.includes("equipments")) storage.saveObject('assets', list);
-            if (url.includes("positions")) storage.saveObject('positions', list);
-            if (url.includes("systems")) storage.saveObject('systems', list);
-            if (url.includes("organizations")) storage.saveObject('organizations', list);
-            if (url.includes("departments")) storage.saveObject('departments', list);
+            let storedList = [];
 
-            getFuckingData(url, times, list, storage);
+            if (url.includes("equipments")) storedList = await storage.getObject('assets');
+            if (url.includes("positions")) storedList = await storage.getObject('positions');
+            if (url.includes("systems")) storedList = await storage.getObject('systems');
+            if (url.includes("organizations")) storedList = await storage.getObject('organizations');
+            if (url.includes("departments")) storedList = await storage.getObject('departments');
+
+            if (storedList == null || data.records > storedList.length) {
+
+                if (url.includes("equipments")) storage.saveObject('assets', list);
+                if (url.includes("positions")) storage.saveObject('positions', list);
+                if (url.includes("systems")) storage.saveObject('systems', list);
+                if (url.includes("organizations")) storage.saveObject('organizations', list);
+                if (url.includes("departments")) storage.saveObject('departments', list);
+
+                getFuckingData(url, times, list, storage);
+            }
         }
     }
 
@@ -88,18 +99,19 @@ const getData = async () => {
         if (host != null && host != undefined && token != null && token != undefined) {
 
             getUserStatusAuth(host, token);
-    
+
             fetch(host + '/mobile/userDefinedFieldsLabels?token=' + token).then(response => response.json()).then((data) => { storage.saveObject("labels", data) });
             fetch(host + '/mobile/fields2show?token=' + token).then(response => response.json()).then((data) => { storage.saveObject("showfields", data) });
-    
+
             getDataFromUrl(host + '/mobile/equipments?token=' + token + "&position=0");
             getDataFromUrl(host + '/mobile/positions?token=' + token + "&position=0");
             getDataFromUrl(host + '/mobile/systems?token=' + token + "&position=0");
-    
+
             getDataFromUrl(host + '/mobile/organizations?token=' + token + "&position=0");
             getDataFromUrl(host + '/mobile/departments?token=' + token + "&position=0");
-    
+
             storage.saveObject("lastUpdated", new Date().getDate());
+            storage.saveObject("gotData", true);
         }
     }
 }
@@ -128,17 +140,17 @@ export default function HomeScreen({ navigation }) {
     async function registerBackgroundFetchAsync() {
         console.log("Registering async task");
         return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-          minimumInterval: 10, // 15 minutes
-          stopOnTerminate: false, // android only,
-          startOnBoot: true, // android only
+            minimumInterval: 60 * 15, // 15 minutes
+            stopOnTerminate: false, // android only,
+            startOnBoot: true, // android only
         });
-      }
+    }
 
-      async function unRegisterBackgroundFetchAsync() {
+    async function unRegisterBackgroundFetchAsync() {
         console.log("Unregistering async task");
 
         return BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
-      }
+    }
 
     let language = {};
 
@@ -175,7 +187,7 @@ export default function HomeScreen({ navigation }) {
 
             xhr.setRequestHeader("Accept", "*/*");
             xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.timeout = 2500;
+            xhr.timeout = 2000;
             xhr.ontimeout = () => { xhr.abort }
 
             xhr.onreadystatechange = function () {

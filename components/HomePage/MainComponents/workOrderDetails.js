@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Text, View, RefreshControl, ScrollView } from "react-native";
+import { RefreshControl, ScrollView, Pressable } from "react-native";
+import MatIcon from "react-native-vector-icons/MaterialIcons";
 import Storage from '../../../classes/Storage/Storage';
 import * as WorkOrderDetailsTemplate from '../../../Templates/WorkOrderDetailsTemplate.json';
 import * as DummyWorkOrderDetailsLabels from '../../../Templates/Dummy/DummyWorkOrderDetailsLabels.json';
@@ -17,9 +18,11 @@ import Schedule from '../MinorComponents/Schedule';
 import BasicData from '../MinorComponents/BasicData';
 import * as FieldsToShow from '../../../Templates/FieldsToShow.json';
 import Sign from '../MinorComponents/Sign';
+import { useTheme } from '@react-navigation/native';
 
 export default function HomeScreen({ navigation, route }) {
     const storage = new Storage();
+    const { colors } = useTheme();
 
     const { selectedItem } = route.params;
     console.log(selectedItem);
@@ -46,12 +49,12 @@ export default function HomeScreen({ navigation, route }) {
         if (host != null && host != undefined) {
             let networkState = await Network.getNetworkStateAsync();
             let key = selectedItem.workOrderCode + " : " + selectedItem.organization;
-    
+
             if ((networkState.isConnected && networkState.type.includes('WIFI')) || (networkState.isConnected && update)) {
-    
+
                 let labelUrl = host + '/mobile/userDefinedFieldsLabels?token=' + token;
                 fetch(labelUrl).then(response => response.json()).then((data) => { setLabels(data); storage.saveObject("labels", data) });
-    
+
                 let url = host + '/mobile/workOrderDetails?token=' + token + '&workOrderCode=' + selectedItem.workOrderCode + '&organization=' + selectedItem.organization;
                 if (!url.includes("undefined")) {
                     fetch(url).then(response => response.json()).then((data) => { setData(data); storage.saveObject(key, data); });
@@ -71,12 +74,12 @@ export default function HomeScreen({ navigation, route }) {
     useEffect(() => {
         navigation.addListener('focus', () => {
             getWorkOrderDetails(false, selectedItem);
-            storage.getObject("showfields").then(data => { if (data != null && data != undefined) setShow(data); else {setShow(FieldsToShow)} });
-            storage.getObject("labels").then((data) => { if (data != null && data != undefined) setLabels(data); else {setLabels(WorkOrderDetailsTemplate)} });
+            storage.getObject("showfields").then(data => { if (data != null && data != undefined) setShow(data); else { setShow(FieldsToShow) } });
+            storage.getObject("labels").then((data) => { if (data != null && data != undefined) setLabels(data); else { setLabels(WorkOrderDetailsTemplate) } });
         });
         navigation.addListener('blur', () => {
             setData(DummyWorkOrderDetailsData);
-            setLabels(DummyWorkOrderDetailsLabels)
+            setLabels(DummyWorkOrderDetailsLabels);
         });
     }, [])
 
@@ -97,6 +100,10 @@ export default function HomeScreen({ navigation, route }) {
                 <Sign item={item} show={show} />
 
             </ScrollView>
+
+            <Pressable style={{ borderRadius: 25, padding: 2, width: 45, height: 45, backgroundColor: colors.complementary4, borderColor: colors.inverted, borderWidth: 1, alignSelf: "center", alignItems: "center", justifyContent: "center", position: "absolute", top: 28, right: 45 }} onPress={() => { console.log("Pressed") }} >
+                <MatIcon name="add-task" style={{ color: colors.background, fontSize: 30 }} />
+            </Pressable>
         </>
     );
 }
