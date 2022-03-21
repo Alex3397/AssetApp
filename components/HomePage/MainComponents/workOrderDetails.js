@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { RefreshControl, ScrollView, Pressable } from "react-native";
+import { RefreshControl, Text, ScrollView, Pressable, Modal } from "react-native";
 import MatIcon from "react-native-vector-icons/MaterialIcons";
 import Storage from '../../../classes/Storage/Storage';
 import * as WorkOrderDetailsTemplate from '../../../Templates/WorkOrderDetailsTemplate.json';
@@ -31,6 +31,7 @@ export default function HomeScreen({ navigation, route }) {
     const [item, setData] = useState(WorkOrderDetailsTemplate);
     const [labels, setLabels] = useState(WorkOrderDetailsTemplate);
     const [show, setShow] = useState(FieldsToShow);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
@@ -101,9 +102,13 @@ export default function HomeScreen({ navigation, route }) {
 
             </ScrollView>
 
-            <Pressable style={{ borderRadius: 25, padding: 2, width: 45, height: 45, backgroundColor: colors.complementary4, borderColor: colors.inverted, borderWidth: 1, alignSelf: "center", alignItems: "center", justifyContent: "center", position: "absolute", top: 28, right: 45 }} onPress={() => { console.log("Pressed") }} >
+            <Pressable style={{ borderRadius: 25, padding: 2, width: 45, height: 45, backgroundColor: colors.complementary4, borderColor: colors.inverted, borderWidth: 1, alignSelf: "center", alignItems: "center", justifyContent: "center", position: "absolute", top: 28, right: 45 }} onPress={() => { console.log("Pressed"); setModalVisible(true) }} >
                 <MatIcon name="add-task" style={{ color: colors.background, fontSize: 30 }} />
             </Pressable>
+
+            <Modal visible={modalVisible}>
+                <Text>Update WorkOrder</Text>
+            </Modal>
         </>
     );
 }

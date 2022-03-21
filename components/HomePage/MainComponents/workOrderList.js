@@ -53,6 +53,8 @@ const postWorkOrders = async () => {
                     if (response.status == 200) {
                         createdWorkOrders.splice(index, 1);
                         index--;
+                    } else {
+                        
                     }
                 })
                 createdWorkOrders.splice(index, 1);
@@ -389,7 +391,7 @@ export default function HomeScreen({ navigation }) {
                 <WorkOrderListItem item={item} onPress={() => { storage.saveObject('selectedItem', item); getWorkOrder(item.workOrderCode, item.organization); let selectedItem = item; navigation.navigate('Ordem de Serviço', { selectedItem }); }} />
             } />
 
-            <Pressable style={{ borderRadius: 25, padding: 2, width: 45, height: 45, backgroundColor: colors.complementary4, borderColor: colors.inverted, borderWidth: 1, alignSelf: "center", alignItems: "center", justifyContent: "center", position: "absolute", bottom: 15 }} onPress={() => { setCreatereateModalVisible(true); storage.getObject('assets').then((assets) => setAssets(assets)); storage.getObject('positions').then((positions) => { setPositions(positions) }); storage.getObject('systems').then((systems) => { setSystems(systems) }); storage.getObject('organizations').then((organizations) => { setOrganizations(organizations) }); storage.getObject('departments').then((departments) => { setDepartments(departments) }); storage.getObject('statusAuth').then((status) => { setStatus(status) }); storage.getArticle('organization').then((userGroup) => { setUserGroup(userGroup) }); }} >
+            <Pressable style={{ borderRadius: 25, padding: 2, width: 45, height: 45, backgroundColor: colors.complementary4, borderColor: colors.inverted, borderWidth: 1, alignSelf: "center", alignItems: "center", justifyContent: "center", position: "absolute", bottom: 15 }} onPress={() => { setCreatereateModalVisible(true); storage.getObject('assets').then((assets) => setAssets(assets)); storage.getObject('positions').then((positions) => { setPositions(positions) }); storage.getObject('systems').then((systems) => { setSystems(systems) }); storage.getObject('organizations').then((organizations) => { setOrganizations(organizations) }); storage.getObject('departments').then((departments) => { setDepartments(departments) }); storage.getObject('statusAuth').then((status) => { setStatus(status) }); storage.getArticle('organization').then((userGroup) => { setUserGroup(userGroup) }); storage.getObject("types").then(types => setTypes(types)) }} >
                 <AntIcon name="plus" style={{ color: colors.background, fontSize: 30 }} />
             </Pressable>
 

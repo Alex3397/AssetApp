@@ -10,8 +10,8 @@ export default function CreateWorkOrderModal(props) {
     let userGroup = props.userGroup;
     const { colors } = useTheme();
 
-    const [selectedOrganization, setSelectedOrganization] = useState(userGroup);
-    const [organization, setOrganization] = useState(userGroup);
+    const [selectedOrganization, setSelectedOrganization] = useState('');
+    const [organization, setOrganization] = useState('');
     const [selectedDescription, setSelectedDescription] = useState('');
     const [selectedWorkOrderType, setSelectedWorkOrderType] = useState('');
     const [selectedWorkOrderStatus, setSelectedWorkOrderStatus] = useState('');
@@ -76,7 +76,21 @@ export default function CreateWorkOrderModal(props) {
     if (props.organizations != null && props.organizations != undefined) organizations = props.organizations;
 
     let types = [];
-    if (props.types != null && props.types != undefined) types = props.types;
+    if (props.types != null && props.types != undefined) types = props.types.list;
+    let filteredTypes = [];
+
+    if (types != null && types != undefined) {
+        for (let index = 0; index < types.length; index++) {
+            const element = types[index];
+    
+            let filteredType = {code: "", description: ""};
+            if ( (element.userGroup == userGroup && element.status.includes("ALLSTATS")) && !element.notUsed && element.code != "IS") {
+                filteredType.code = element.code;
+                filteredType.description = element.description;
+                filteredTypes.push(filteredType);
+            }
+        }
+    }
 
     let allStatus = props.status;
     let filteredStatus = [];
@@ -139,7 +153,7 @@ export default function CreateWorkOrderModal(props) {
     }
 
     return (
-        <Modal animationType="slide" statusBarTranslucent={true} transparent={true} visible={props.visible} onRequestClose={() => { props.onRequestClose() }}>
+        <Modal animationType="fade" statusBarTranslucent={true} transparent={true} visible={props.visible} onRequestClose={() => { props.onRequestClose() }}>
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 25 }}>
                 <View style={{ margin: 20, backgroundColor: colors.card, borderColor: colors.inverted, borderWidth: 1, borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, width: "80%" }}>
                     <Text style={{ marginBottom: 15, textAlign: "center", color: colors.text, fontSize: 22 }}>Nova Ordem de Serviço</Text>
@@ -163,7 +177,7 @@ export default function CreateWorkOrderModal(props) {
                         <Text style={{ textAlign: "center", color: colors.text, fontSize: 18, marginTop: 15 }}>Organização: </Text>
                         <SelectDropdown
                             data={organizations}
-                            defaultButtonText={organization}
+                            defaultButtonText={"Organização"}
                             dropdownBackgroundColor={colors.card}
                             dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
                             rowStyle={{ borderBottomColor: colors.border, borderBottomWidth: 2 }}
@@ -176,7 +190,7 @@ export default function CreateWorkOrderModal(props) {
                         />
                         <Text style={{ textAlign: "center", color: colors.text, fontSize: 18, marginTop: 15 }}>Tipo: </Text>
                         <SelectDropdown
-                            data={types}
+                            data={filteredTypes}
                             defaultButtonText="Tipo"
                             dropdownBackgroundColor={colors.card}
                             dropdownStyle={{ marginTop: -25, borderRadius: 10, borderWidth: 3, borderColor: colors.border }}
@@ -184,9 +198,9 @@ export default function CreateWorkOrderModal(props) {
                             rowTextStyle={{ color: colors.text, fontSize: 14 }}
                             buttonStyle={{ backgroundColor: colors.card, borderColor: typeBorderColor, borderWidth: typeBorderWidth, height: 40, borderRadius: 15, width: "100%" }}
                             buttonTextStyle={{ color: colors.text, textAlignVertical: "center", textAlign: "center", fontSize: 14 }}
-                            onSelect={(selectedItem) => { setSelectedWorkOrderType('*'); }}
-                            buttonTextAfterSelection={(selectedItem) => { return selectedItem.code + " : " + selectedItem.description }}
-                            rowTextForSelection={(item) => { return item.code + " : " + item.description }}
+                            onSelect={(selectedItem) => { setSelectedWorkOrderType(selectedItem.code); }}
+                            buttonTextAfterSelection={(selectedItem) => { return selectedItem.description }}
+                            rowTextForSelection={(item) => { return item.description }}
                         />
                         <Text style={{ textAlign: "center", color: colors.text, fontSize: 18, marginTop: 15 }}>Departamento: </Text>
                         <SelectDropdown

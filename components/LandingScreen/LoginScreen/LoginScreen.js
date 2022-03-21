@@ -95,8 +95,9 @@ const getData = async () => {
 
         let host = await storage.getArticle('usableHost');
         let token = await storage.getArticle('token');
+        let organization = await storage.getArticle('organization');
 
-        if (host != null && host != undefined && token != null && token != undefined) {
+        if (host != null && host != undefined && token != null && token != undefined && organization != null && organization != undefined) {
 
             getUserStatusAuth(host, token);
 
@@ -109,6 +110,8 @@ const getData = async () => {
 
             getDataFromUrl(host + '/mobile/organizations?token=' + token + "&position=0");
             getDataFromUrl(host + '/mobile/departments?token=' + token + "&position=0");
+
+            fetch(host + "/mobile/types?token=" + token + "&userGroup=" + organization).then(response => response.json()).then(data => storage.saveObject("types", data));
 
             storage.saveObject("lastUpdated", new Date().getDate());
             storage.saveObject("gotData", true);
